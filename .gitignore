@@ -1,0 +1,27 @@
+# WordPress sensitive/generated files
+wp-config.php
+wp-config-local.php
+
+# Uploads
+wp-content/uploads/
+
+# Cache
+wp-content/cache/
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+
+# Logs
+*.log
+debug.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+npm-debug.log
+
+# Environment
+.env
+.env.local
