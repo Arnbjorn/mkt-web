@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sliding — koncept</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap');
+
+:root {
+  --black: #14151a;
+  --black-warm: #1c1a16;
+  --dust: #3a2f22;
+  --rust: #6b4226;
+  --orange: #e0842c;
+  --gold: #d4a017;
+  --gold-bright: #e8b830;
+  --cream: #f2ece1;
+  --beige-deep: #e6dcc8;
+  --ink: #241f18;
+  --grey: #8a8578;
+
+  --display: 'Bebas Neue', sans-serif;
+  --condensed: 'Barlow Condensed', sans-serif;
+  --body: 'Barlow', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--black); color: var(--cream); font-family: var(--body); }
+.wrap { max-width: 1200px; margin-inline: auto; padding-inline: 2rem; position: relative; z-index: 2; }
+
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.preview-flag { background: var(--gold); color: var(--black); text-align: center; font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; font-size: 0.8rem; padding: 0.5rem; text-transform: uppercase; position: relative; z-index: 60; }
+
+.nav { display: flex; align-items: center; justify-content: space-between; padding-block: 1rem; border-bottom: 1px solid rgba(212,160,23,0.18); }
+.nav__brand { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; }
+.nav__brand img { height: 52px; width: auto; }
+.nav__brand-text { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8rem; color: var(--grey); line-height: 1.3; }
+.nav__brand-text strong { display: block; font-family: var(--display); font-size: 1rem; letter-spacing: 0.03em; color: var(--cream); }
+.nav__links { display: flex; gap: 2.1rem; list-style: none; }
+.nav__links a { font-family: var(--condensed); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.8rem; color: var(--grey); text-decoration: none; }
+.nav__links a:hover, .nav__links a.is-active { color: var(--gold); }
+.nav__cta { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8rem; color: var(--black); background: var(--gold); padding: 0.6rem 1.2rem; text-decoration: none; }
+
+/* ── Hero ── */
+.hero { position: relative; min-height: 72vh; display: flex; align-items: center; overflow: hidden;
+  background: radial-gradient(ellipse 70% 60% at 78% 20%, rgba(212,160,23,0.14), transparent 60%), radial-gradient(ellipse 80% 70% at 10% 100%, rgba(107,66,38,0.4), transparent 65%), var(--black); }
+.hero__img-wrap { position: absolute; inset: 0; clip-path: polygon(42% 0, 100% 0, 100% 100%, 26% 100%, 34% 58%, 22% 36%); overflow: hidden; }
+@media (max-width: 860px) { .hero__img-wrap { clip-path: none; opacity: 0.25; } }
+.hero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 68% center; filter: brightness(0.78) contrast(1.12) saturate(1.05); }
+.hero__img-tint { position: absolute; inset: 0; background: linear-gradient(150deg, rgba(30,95,140,0.42) 0%, transparent 48%, rgba(224,132,44,0.4) 100%); mix-blend-mode: color; }
+.hero__scrim { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,21,26,0.97) 0%, rgba(20,21,26,0.85) 34%, rgba(20,21,26,0.1) 60%, rgba(20,21,26,0.22) 100%); }
+.hero__content { position: relative; z-index: 2; max-width: 640px; padding-block: 3.5rem; }
+.hero__eyebrow { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; font-size: 0.82rem; color: var(--orange); margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.6rem; }
+.hero__eyebrow::before { content:''; width: 26px; height: 2px; background: var(--gold); }
+.hero__title { font-family: var(--display); font-size: clamp(3.2rem, 8vw, 5.8rem); line-height: 0.87; color: var(--cream); text-transform: uppercase; margin-bottom: 1rem; text-shadow: 0 6px 40px rgba(0,0,0,0.6); }
+.hero__title mark { background: none; color: var(--gold-bright); }
+.hero__sub { font-family: var(--condensed); font-size: clamp(1.02rem, 1.9vw, 1.25rem); color: var(--grey); max-width: 460px; margin-bottom: 1.9rem; line-height: 1.4; }
+.hero__ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.88rem; padding: 0.95rem 1.9rem; text-decoration: none; display: inline-block; }
+.btn--primary { background: var(--gold); color: var(--black); }
+.btn--primary:hover { background: var(--gold-bright); }
+.btn--outline { border: 1px solid rgba(242,236,225,0.4); color: var(--cream); }
+.btn--outline:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ── Facts strip ── */
+.facts { background: linear-gradient(90deg, var(--black-warm), var(--dust) 130%); border-top: 1px solid rgba(212,160,23,0.25); border-bottom: 1px solid rgba(212,160,23,0.25); }
+.facts__inner { display: flex; justify-content: space-between; flex-wrap: wrap; padding-block: 1.8rem; gap: 1.5rem; }
+.fact { text-align: center; flex: 1; min-width: 110px; }
+.fact__num { display: block; font-family: var(--display); font-size: 2.1rem; color: var(--gold-bright); line-height: 1; }
+.fact__label { font-family: var(--condensed); font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--grey); margin-top: 0.3rem; }
+
+/* ── Discipline cards (readable/beige) ── */
+.readable { background: var(--cream); color: var(--ink); padding-block: clamp(3rem, 7vw, 5rem); }
+.readable__head { text-align: center; margin-bottom: 2.5rem; }
+.readable__eyebrow { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; font-size: 0.78rem; color: var(--rust); margin-bottom: 0.6rem; }
+.readable__title { font-family: var(--display); font-size: clamp(1.9rem, 4vw, 2.7rem); color: var(--ink); text-transform: uppercase; margin-bottom: 1rem; }
+.readable__text { font-size: 0.98rem; line-height: 1.7; color: #5a5040; margin-bottom: 1rem; max-width: 640px; }
+
+.discipline-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+@media (max-width: 780px) { .discipline-grid { grid-template-columns: 1fr; } }
+.discipline-card { background: var(--beige-deep); border-left: 3px solid var(--gold); padding: 1.8rem; }
+.discipline-card:nth-child(2) { border-left-color: var(--orange); }
+.discipline-card__icon { font-size: 1.8rem; margin-bottom: 0.9rem; }
+.discipline-card__title { font-family: var(--display); font-size: 1.6rem; letter-spacing: 0.02em; color: var(--ink); text-transform: uppercase; margin-bottom: 0.5rem; }
+.discipline-card__desc { font-size: 0.92rem; color: #5a5040; line-height: 1.6; }
+
+/* ── Partner callout ── */
+.partner { background: var(--black-warm); border-top: 1px solid rgba(212,160,23,0.15); border-bottom: 1px solid rgba(212,160,23,0.15); padding-block: 2.5rem; }
+.partner__inner { display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap; }
+.partner__label { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; font-size: 0.75rem; color: var(--orange); margin-bottom: 0.4rem; }
+.partner__title { font-family: var(--display); font-size: 1.7rem; color: var(--cream); letter-spacing: 0.02em; }
+.partner__desc { font-size: 0.88rem; color: var(--grey); max-width: 440px; margin-top: 0.4rem; line-height: 1.5; }
+.partner__contact { text-align: right; font-family: var(--condensed); }
+.partner__contact-name { display: block; font-weight: 700; color: var(--cream); font-size: 1rem; }
+.partner__contact-phone { color: var(--gold); text-decoration: none; font-weight: 700; }
+
+/* ── Calendar (static visual only at this concept stage) ── */
+.book { background: var(--beige-deep); padding-block: clamp(3rem, 7vw, 5rem); }
+.book__grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 3.5rem; }
+@media (max-width: 900px) { .book__grid { grid-template-columns: 1fr; } }
+.book__needs { background: var(--cream); border-left: 3px solid var(--gold); padding: 1.3rem 1.5rem; margin-top: 1.5rem; }
+.book__needs-title { font-family: var(--condensed); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.85rem; color: var(--rust); margin-bottom: 0.6rem; }
+.book__needs p { font-size: 0.9rem; color: #5a5040; margin-bottom: 0.35rem; }
+
+.tabs { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; }
+.tab { flex: 1; font-family: var(--condensed); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.85rem; padding: 0.7rem 1rem; background: var(--cream); border: 1px solid #cabfa4; color: #5a5040; text-align: center; }
+.tab.is-active { background: var(--gold); border-color: var(--gold); color: var(--black); }
+
+.cal { background: var(--cream); border: 1px solid #cabfa4; padding: 1.3rem; }
+.cal__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; font-family: var(--condensed); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.9rem; color: var(--ink); }
+.cal__weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; text-align: center; font-family: var(--condensed); font-size: 0.7rem; letter-spacing: 0.04em; text-transform: uppercase; color: #7a6f56; }
+.cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal__day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-family: var(--condensed); font-size: 0.85rem; background: #d8cbac; color: var(--ink); border-radius: 2px; }
+.cal__day.is-empty { background: none; }
+.cal__day.is-full { background: transparent; color: #b5a98c; text-decoration: line-through; }
+.cal__day.is-selected { background: var(--gold); color: var(--black); font-weight: 700; }
+.cal__legend { display: flex; gap: 1.2rem; margin-top: 1rem; font-size: 0.78rem; color: #5a5040; }
+.cal__legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.cal__legend i { width: 10px; height: 10px; display: inline-block; border-radius: 2px; background: #d8cbac; }
+
+.note { background: var(--black-warm); padding-block: 3rem; border-top: 1px solid rgba(212,160,23,0.15); }
+.note h2 { font-family: var(--display); font-size: 1.6rem; letter-spacing: 0.02em; color: var(--gold); margin-bottom: 1rem; }
+.note p { font-size: 0.95rem; line-height: 1.7; color: var(--grey); max-width: 780px; margin-bottom: 0.7rem; }
+.note strong { color: var(--cream); }
+
+.site-footer { background: var(--black); border-top: 1px solid rgba(212,160,23,0.12); padding-block: 2.5rem 1.5rem; }
+.site-footer__grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 2.5rem; padding-bottom: 1.8rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+@media (max-width: 780px) { .site-footer__grid { grid-template-columns: 1fr; gap: 1.6rem; } }
+.site-footer__brand { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.7rem; }
+.site-footer__brand img { height: 32px; width: auto; opacity: 0.85; }
+.site-footer__brand span { font-family: var(--condensed); font-weight: 700; font-size: 0.82rem; color: #8a8578; letter-spacing: 0.03em; }
+.site-footer__desc { font-size: 0.8rem; color: #6b6658; line-height: 1.6; max-width: 280px; }
+.site-footer__heading { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; color: #6b6658; margin-bottom: 0.6rem; }
+.site-footer__links { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+.site-footer__links a { font-size: 0.82rem; color: #a8a294; text-decoration: none; }
+.site-footer__links a:hover { color: var(--gold); }
+.site-footer__bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 1.1rem; flex-wrap: wrap; gap: 0.6rem; }
+.site-footer__copy { font-size: 0.75rem; color: #5a564a; }
+.site-footer__bottom a { font-size: 0.75rem; color: #5a564a; text-decoration: none; }
+.site-footer__bottom a:hover { color: var(--gold); }
+
+/* ── Mobile navigation ── */
+.nav__toggle { display: none; }
+@media (max-width: 860px) {
+  .wrap--nav { z-index: 30; }
+  .nav { position: relative; gap: 0.6rem; }
+  .nav__cta { margin-left: auto; white-space: nowrap; }
+  .nav__toggle { display: inline-flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; width: 40px; height: 40px; flex-shrink: 0; background: transparent; border: 1px solid rgba(212,160,23,0.4); cursor: pointer; }
+  .nav__toggle span { display: block; width: 18px; height: 2px; background: var(--gold); }
+  .nav__links { display: none; position: absolute; top: calc(100% + 0.5rem); left: 0; right: 0; flex-direction: column; gap: 0; background: var(--black-warm); border: 1px solid rgba(212,160,23,0.3); padding: 0.4rem 1.2rem; z-index: 40; }
+  .nav__links.is-open { display: flex; }
+  .nav__links li + li { border-top: 1px solid rgba(255,255,255,0.06); }
+  .nav__links a { display: block; padding: 0.9rem 0; font-size: 0.9rem; }
+}
+@media (max-width: 520px) {
+  .nav { gap: 0.4rem; }
+  .nav__brand { gap: 0.5rem; }
+  .nav__brand img { height: 44px; }
+  .nav__brand-text { font-size: 0; line-height: 1; }
+  .nav__brand-text strong { font-size: 0.95rem; }
+  .nav__cta { padding: 0.5rem 0.7rem; font-size: 0.72rem; }
+}
+@media (max-width: 480px) {
+  .wrap { padding-inline: 1.25rem; }
+  h1, h2 { overflow-wrap: break-word; hyphens: auto; }
+}
+@media (max-width: 380px) {
+  .nav__brand-text { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="preview-flag">Konceptexempel — Sliding, samma system som Prova På & startsida</div>
+
+<div class="wrap wrap--nav">
+  <nav class="nav">
+    <a href="#" class="nav__brand">
+      <img src="images/mkt-logo.png" alt="Motorklubben Tändstiftet">
+      <span class="nav__brand-text"><strong>Tändstiftet</strong>Malmö · Sedan 1924</span>
+    </a>
+    <ul class="nav__links" id="huvudmeny">
+      <li><a href="#">Start</a></li>
+      <li><a href="#">Förare & Lag</a></li>
+      <li><a href="#">Prova På</a></li>
+      <li><a href="#" class="is-active">Sliding</a></li>
+    </ul>
+    <a href="#" class="nav__cta">Boka →</a>
+    <button type="button" class="nav__toggle" aria-label="Meny" aria-expanded="false" aria-controls="huvudmeny"><span></span><span></span><span></span></button>
+  </nav>
+</div>
+
+<section class="hero">
+  <div class="hero__img-wrap">
+    <img src="images/action-1.jpg" alt="" class="hero__img">
+    <div class="hero__img-tint"></div>
+  </div>
+  <div class="hero__scrim"></div>
+  <div class="wrap hero__content">
+    <div class="hero__eyebrow">Vuxna · Bokas i förväg</div>
+    <h1 class="hero__title">Känn <mark>sladden</mark></h1>
+    <p class="hero__sub">Flat track eller speedway — ingen erfarenhet krävs. Vi lånar ut allt och har instruktörer på plats.</p>
+    <div class="hero__ctas">
+      <a href="#boka" class="btn btn--primary">Boka din plats →</a>
+      <a href="#" class="btn btn--outline">Se disciplinerna</a>
+    </div>
+  </div>
+</section>
+
+<section class="facts">
+  <div class="wrap facts__inner">
+    <div class="fact"><span class="fact__num">800 kr</span><span class="fact__label">Till klubben</span></div>
+    <div class="fact"><span class="fact__num">225 kr</span><span class="fact__label">Svemo-licens</span></div>
+    <div class="fact"><span class="fact__num">2</span><span class="fact__label">Discipliner</span></div>
+    <div class="fact"><span class="fact__num">1.5h</span><span class="fact__label">Längd</span></div>
+    <div class="fact"><span class="fact__num">0</span><span class="fact__label">Erfarenhet krävs</span></div>
+  </div>
+</section>
+
+<section class="readable">
+  <div class="wrap">
+    <div class="readable__head">
+      <div class="readable__eyebrow">Flat track eller speedway?</div>
+      <h2 class="readable__title">Vi hjälper dig hitta rätt</h2>
+      <p class="readable__text" style="margin-inline:auto;text-align:center">Vilket som passar beror på din erfarenhet och vad som finns tillgängligt just den dagen. Instruktören hjälper dig avgöra om du är osäker.</p>
+    </div>
+    <div class="discipline-grid">
+      <div class="discipline-card">
+        <div class="discipline-card__icon">🏍️</div>
+        <div class="discipline-card__title">Flat Track</div>
+        <div class="discipline-card__desc">Dirt track med bromsar — ofta det naturliga förstavalet för helt nya förare. Mer tillgängligt och förlåtande att lära sig på.</div>
+      </div>
+      <div class="discipline-card">
+        <div class="discipline-card__icon">🏁</div>
+        <div class="discipline-card__title">Speedway</div>
+        <div class="discipline-card__desc">Oval bana utan broms — för dig med tidigare erfarenhet eller som vill utmana dig direkt, i mån av tillgänglig maskin.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="partner">
+  <div class="wrap partner__inner">
+    <div>
+      <div class="partner__label">Flat track i samarbete med</div>
+      <div class="partner__title">The Sparks Flattrack School</div>
+      <p class="partner__desc">Vet du redan att det är flat track du vill köra? Hör av dig direkt till Sparks tränarteam istället.</p>
+    </div>
+    <div class="partner__contact">
+      <span class="partner__contact-name">Sören Teil Hansen</span>
+      <a href="tel:0700055982" class="partner__contact-phone">070-005 59 82</a>
+    </div>
+  </div>
+</section>
+
+<section class="book" id="boka">
+  <div class="wrap book__grid">
+    <div>
+      <div class="readable__eyebrow">Redo?</div>
+      <h2 class="readable__title">Boka din plats</h2>
+      <p class="readable__text">Sliding bokas alltid i förväg — vi tar inte drop-in. Välj ett ledigt datum i kalendern, fyll i formuläret och skicka.</p>
+      <div class="book__needs">
+        <div class="book__needs-title">Vi behöver veta</div>
+        <p>◆ Namn, ålder och kontaktuppgifter</p>
+        <p>◆ Antal personer (om ni är flera / kalas)</p>
+        <p>◆ Skostorlek och ungefärlig längd</p>
+      </div>
+    </div>
+    <div>
+      <div class="tabs">
+        <div class="tab is-active">Speedway</div>
+        <div class="tab">Flat track</div>
+      </div>
+      <div class="cal">
+        <div class="cal__head"><span>←</span><span>September 2026</span><span>→</span></div>
+        <div class="cal__weekdays"><span>Mån</span><span>Tis</span><span>Ons</span><span>Tor</span><span>Fre</span><span>Lör</span><span>Sön</span></div>
+        <div class="cal__grid">
+          <div class="cal__day is-empty"></div>
+          <div class="cal__day">1</div><div class="cal__day">2</div><div class="cal__day is-full">3</div><div class="cal__day">4</div><div class="cal__day">5</div><div class="cal__day">6</div>
+          <div class="cal__day">7</div><div class="cal__day">8</div><div class="cal__day is-selected">9</div><div class="cal__day">10</div><div class="cal__day is-full">11</div><div class="cal__day">12</div><div class="cal__day">13</div>
+          <div class="cal__day">14</div><div class="cal__day">15</div><div class="cal__day">16</div><div class="cal__day">17</div><div class="cal__day">18</div><div class="cal__day is-full">19</div><div class="cal__day">20</div>
+        </div>
+        <div class="cal__legend">
+          <span><i></i> Ledigt</span>
+          <span><i style="background:var(--gold)"></i> Valt</span>
+          <span><i style="background:transparent;border:1px solid #b5a98c"></i> Fullt</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="note">
+  <div class="wrap">
+    <h2>Vad som är nytt jämfört med Prova På</h2>
+    <p><strong>Kalender istället för schemakort:</strong> Sliding kräver bokning i förväg, så samma beige "läsbar"-yta rymmer nu en kalender med flik-val (Speedway/Flat track) istället för fasta veckodagskort.</p>
+    <p><strong>Disciplinkort:</strong> en helt ny sektion eftersom Prova På bara har en disciplin (speedway) medan Sliding låter besökaren välja.</p>
+    <p><strong>Sparks-rutan:</strong> en egen kontrastsektion mellan disciplinkorten och bokningen — mörk med orange etikett, matchar samarbetets egna profil utan att bryta systemet.</p>
+    <p><strong>Obs — funktionaliteten i kalendern</strong> (kapacitet, 24h-spärr, disciplin-filtrering) finns redan byggd i den riktiga sidan. Det här är bara en visuell representation av hur den skulle kunna se ut i den nya stilen.</p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__grid">
+      <div>
+        <div class="site-footer__brand">
+          <img src="images/mkt-logo.png" alt="Motorklubben Tändstiftet">
+          <span>Tändstiftet</span>
+        </div>
+        <p class="site-footer__desc">Motorklubben Tändstiftet · Malmö Motorstadion · Svemo-godkänd klubb sedan 1924.</p>
+      </div>
+      <div>
+        <div class="site-footer__heading">Klubben</div>
+        <ul class="site-footer__links">
+          <li><a href="#">Klubbinfo</a></li>
+          <li><a href="#">Styrelsen</a></li>
+          <li><a href="#">Bli medlem</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="site-footer__heading">Kontakt</div>
+        <ul class="site-footer__links">
+          <li><a href="#">info@tandstiftet.se</a></li>
+          <li><a href="#">040-XX XX XX</a></li>
+          <li><a href="#">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <span class="site-footer__copy">© 2026 Motorklubben Tändstiftet</span>
+      <a href="#">Integritetspolicy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var t = document.querySelector('.nav__toggle'), l = document.querySelector('.nav__links');
+  if (!t || !l) return;
+  t.addEventListener('click', function(){
+    var open = l.classList.toggle('is-open');
+    t.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>

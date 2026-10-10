@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Förare & Lag — koncept</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap');
+
+:root {
+  --black: #14151a;
+  --black-warm: #1c1a16;
+  --dust: #3a2f22;
+  --rust: #6b4226;
+  --orange: #e0842c;
+  --gold: #d4a017;
+  --gold-bright: #e8b830;
+  --cream: #f2ece1;
+  --beige-deep: #e6dcc8;
+  --ink: #241f18;
+  --grey: #8a8578;
+
+  --display: 'Bebas Neue', sans-serif;
+  --condensed: 'Barlow Condensed', sans-serif;
+  --body: 'Barlow', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--black); color: var(--cream); font-family: var(--body); }
+.wrap { max-width: 1200px; margin-inline: auto; padding-inline: 2rem; position: relative; z-index: 2; }
+
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.preview-flag { background: var(--gold); color: var(--black); text-align: center; font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; font-size: 0.8rem; padding: 0.5rem; text-transform: uppercase; position: relative; z-index: 60; }
+
+.nav { display: flex; align-items: center; justify-content: space-between; padding-block: 1rem; border-bottom: 1px solid rgba(212,160,23,0.18); }
+.nav__brand { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; }
+.nav__brand img { height: 52px; width: auto; }
+.nav__brand-text { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8rem; color: var(--grey); line-height: 1.3; }
+.nav__brand-text strong { display: block; font-family: var(--display); font-size: 1rem; letter-spacing: 0.03em; color: var(--cream); }
+.nav__links { display: flex; gap: 2.1rem; list-style: none; }
+.nav__links a { font-family: var(--condensed); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.8rem; color: var(--grey); text-decoration: none; }
+.nav__links a:hover, .nav__links a.is-active { color: var(--gold); }
+.nav__cta { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8rem; color: var(--black); background: var(--gold); padding: 0.6rem 1.2rem; text-decoration: none; }
+
+/* ── Compact page-header hero (no big photo — this page's stars are the rider grid) ── */
+.pagehero {
+  position: relative; padding-block: clamp(3rem, 7vw, 4.5rem); overflow: hidden;
+  background: radial-gradient(ellipse 70% 80% at 85% 0%, rgba(212,160,23,0.12), transparent 55%), radial-gradient(ellipse 70% 70% at 5% 100%, rgba(107,66,38,0.35), transparent 60%), var(--black);
+  border-bottom: 1px solid rgba(212,160,23,0.18);
+}
+.pagehero__eyebrow { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; font-size: 0.82rem; color: var(--orange); margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.6rem; }
+.pagehero__eyebrow::before { content:''; width: 26px; height: 2px; background: var(--gold); }
+.pagehero__title { font-family: var(--display); font-size: clamp(3rem, 7vw, 5rem); line-height: 0.9; color: var(--cream); text-transform: uppercase; margin-bottom: 0.7rem; }
+.pagehero__title mark { background: none; color: var(--gold-bright); }
+.pagehero__sub { font-family: var(--condensed); font-size: 1.1rem; color: var(--grey); max-width: 520px; }
+
+/* ── Facts strip ── */
+.facts { background: linear-gradient(90deg, var(--black-warm), var(--dust) 130%); border-bottom: 1px solid rgba(212,160,23,0.25); }
+.facts__inner { display: flex; justify-content: space-between; flex-wrap: wrap; padding-block: 1.6rem; gap: 1.5rem; }
+.fact { text-align: center; flex: 1; min-width: 110px; }
+.fact__num { display: block; font-family: var(--display); font-size: 1.9rem; color: var(--gold-bright); line-height: 1; }
+.fact__label { font-family: var(--condensed); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--grey); margin-top: 0.3rem; }
+
+/* ── Team section header ── */
+/* ── Youth spotlight (primary section — celebrates youth riders, beige/warm to stand apart from the senior grid) ── */
+.youth { background: var(--cream); color: var(--ink); padding-block: clamp(3rem, 7vw, 5rem); }
+.youth__head { text-align: center; margin-bottom: 2.2rem; }
+.youth__eyebrow { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; font-size: 0.8rem; color: var(--rust); margin-bottom: 0.6rem; }
+.youth__title { font-family: var(--display); font-size: clamp(2.1rem, 4.5vw, 3.2rem); color: var(--ink); text-transform: uppercase; margin-bottom: 0.8rem; }
+.youth__intro { font-size: 1rem; line-height: 1.7; color: #5a5040; max-width: 640px; margin-inline: auto; }
+.youth-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; margin-top: 2.2rem; }
+
+.youth-card { position: relative; aspect-ratio: 3/4; overflow: hidden; }
+.youth-card__img { width: 100%; height: 100%; object-fit: cover; }
+.youth-card__ribbon { position: absolute; top: 0.9rem; left: 0.9rem; background: var(--gold); color: var(--black); font-family: var(--condensed); font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; font-size: 0.72rem; padding: 0.3rem 0.7rem; }
+.youth-card__scrim { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(36,31,24,0.9) 0%, rgba(36,31,24,0.05) 55%, transparent 75%); }
+.youth-card__body { position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem; }
+.youth-card__name { font-family: var(--condensed); font-weight: 700; text-transform: uppercase; font-size: 1rem; color: var(--cream); }
+.youth-card__role { font-family: var(--condensed); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--gold-bright); margin-top: 0.1rem; }
+.youth__cta { text-align: center; margin-top: 2rem; }
+.youth__cta a { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.88rem; color: var(--rust); text-decoration: underline; }
+
+.team { padding-block: clamp(3rem, 7vw, 5rem); }
+.team__head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.2rem; flex-wrap: wrap; gap: 1rem; }
+.team__eyebrow { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; font-size: 0.78rem; color: var(--orange); margin-bottom: 0.5rem; }
+.team__title { font-family: var(--display); font-size: clamp(2rem, 4.5vw, 3rem); color: var(--cream); text-transform: uppercase; }
+.team__filter { display: flex; gap: 0.6rem; }
+.team__filter span { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.78rem; padding: 0.45rem 1rem; border: 1px solid rgba(212,160,23,0.3); color: var(--grey); }
+.team__filter span.is-active { background: var(--gold); border-color: var(--gold); color: var(--black); }
+
+/* ── Rider grid ── */
+.rider-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.4rem; }
+@media (max-width: 980px) { .rider-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.rider-card { position: relative; aspect-ratio: 3/4; overflow: hidden; background: var(--black-warm); }
+.rider-card__img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.82) contrast(1.1) saturate(0.95); transition: filter 0.2s; }
+.rider-card:hover .rider-card__img { filter: brightness(0.95) contrast(1.1) saturate(1.05); }
+.rider-card__scrim { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(20,21,26,0.95) 0%, rgba(20,21,26,0.1) 55%, transparent 75%); }
+.rider-card__num { position: absolute; top: 0.9rem; left: 0.9rem; font-family: var(--display); font-size: 1.6rem; color: var(--gold-bright); background: rgba(20,21,26,0.55); padding: 0.1rem 0.6rem; line-height: 1.3; }
+.rider-card__body { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.1rem; }
+.rider-card__name { font-family: var(--condensed); font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; font-size: 1.05rem; color: var(--cream); }
+.rider-card__role { font-family: var(--condensed); font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--orange); margin-top: 0.15rem; }
+
+/* ── Next match strip (reused from homepage) ── */
+.event { background: linear-gradient(90deg, var(--black-warm), var(--dust) 130%); padding-block: 2.6rem; border-top: 1px solid rgba(212,160,23,0.25); border-bottom: 1px solid rgba(212,160,23,0.25); }
+.event__inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+.event__eyebrow { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; font-size: 0.78rem; color: var(--gold); margin-bottom: 0.5rem; }
+.event__title { font-family: var(--display); font-size: clamp(2rem, 5vw, 3rem); line-height: 0.9; color: var(--cream); }
+.event__dates { font-family: var(--condensed); font-weight: 700; font-size: 1.15rem; color: var(--gold-bright); }
+.event__venue { font-family: var(--condensed); font-size: 0.85rem; color: var(--orange); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.3rem; }
+.btn { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.88rem; padding: 0.9rem 1.8rem; text-decoration: none; display: inline-block; border: 1px solid rgba(242,236,225,0.4); color: var(--cream); }
+.btn:hover { border-color: var(--gold); color: var(--gold); }
+
+.note { background: var(--black-warm); padding-block: 3rem; border-top: 1px solid rgba(212,160,23,0.15); }
+.note h2 { font-family: var(--display); font-size: 1.6rem; letter-spacing: 0.02em; color: var(--gold); margin-bottom: 1rem; }
+.note p { font-size: 0.95rem; line-height: 1.7; color: var(--grey); max-width: 780px; margin-bottom: 0.7rem; }
+.note strong { color: var(--cream); }
+
+.site-footer { background: var(--black); border-top: 1px solid rgba(212,160,23,0.12); padding-block: 2.5rem 1.5rem; }
+.site-footer__grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 2.5rem; padding-bottom: 1.8rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+@media (max-width: 780px) { .site-footer__grid { grid-template-columns: 1fr; gap: 1.6rem; } }
+.site-footer__brand { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.7rem; }
+.site-footer__brand img { height: 32px; width: auto; opacity: 0.85; }
+.site-footer__brand span { font-family: var(--condensed); font-weight: 700; font-size: 0.82rem; color: #8a8578; letter-spacing: 0.03em; }
+.site-footer__desc { font-size: 0.8rem; color: #6b6658; line-height: 1.6; max-width: 280px; }
+.site-footer__heading { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; color: #6b6658; margin-bottom: 0.6rem; }
+.site-footer__links { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+.site-footer__links a { font-size: 0.82rem; color: #a8a294; text-decoration: none; }
+.site-footer__links a:hover { color: var(--gold); }
+.site-footer__bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 1.1rem; flex-wrap: wrap; gap: 0.6rem; }
+.site-footer__copy { font-size: 0.75rem; color: #5a564a; }
+.site-footer__bottom a { font-size: 0.75rem; color: #5a564a; text-decoration: none; }
+.site-footer__bottom a:hover { color: var(--gold); }
+
+/* ── Mobile navigation ── */
+.nav__toggle { display: none; }
+@media (max-width: 860px) {
+  .wrap--nav { z-index: 30; }
+  .nav { position: relative; gap: 0.6rem; }
+  .nav__cta { margin-left: auto; white-space: nowrap; }
+  .nav__toggle { display: inline-flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; width: 40px; height: 40px; flex-shrink: 0; background: transparent; border: 1px solid rgba(212,160,23,0.4); cursor: pointer; }
+  .nav__toggle span { display: block; width: 18px; height: 2px; background: var(--gold); }
+  .nav__links { display: none; position: absolute; top: calc(100% + 0.5rem); left: 0; right: 0; flex-direction: column; gap: 0; background: var(--black-warm); border: 1px solid rgba(212,160,23,0.3); padding: 0.4rem 1.2rem; z-index: 40; }
+  .nav__links.is-open { display: flex; }
+  .nav__links li + li { border-top: 1px solid rgba(255,255,255,0.06); }
+  .nav__links a { display: block; padding: 0.9rem 0; font-size: 0.9rem; }
+}
+@media (max-width: 520px) {
+  .nav { gap: 0.4rem; }
+  .nav__brand { gap: 0.5rem; }
+  .nav__brand img { height: 44px; }
+  .nav__brand-text { font-size: 0; line-height: 1; }
+  .nav__brand-text strong { font-size: 0.95rem; }
+  .nav__cta { padding: 0.5rem 0.7rem; font-size: 0.72rem; }
+}
+@media (max-width: 480px) {
+  .wrap { padding-inline: 1.25rem; }
+  h1, h2 { overflow-wrap: break-word; hyphens: auto; }
+}
+@media (max-width: 380px) {
+  .nav__brand-text { display: none; }
+}
+@media (max-width: 560px) {
+  .rider-grid, .youth-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+  .rider-card__num { font-size: 1.2rem; top: 0.6rem; left: 0.6rem; }
+  .rider-card__body { padding: 0.8rem; }
+  .rider-card__name { font-size: 0.88rem; }
+  .rider-card__role { font-size: 0.7rem; }
+  .youth-card__ribbon { font-size: 0.64rem; padding: 0.2rem 0.5rem; top: 0.6rem; left: 0.6rem; }
+  .youth-card__body { padding: 0.8rem; }
+  .youth-card__name { font-size: 0.88rem; }
+  .youth-card__role { font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="preview-flag">Konceptexempel — Förare & Lag, samma system som övriga sidor</div>
+
+<div class="wrap wrap--nav">
+  <nav class="nav">
+    <a href="#" class="nav__brand">
+      <img src="images/mkt-logo.png" alt="Motorklubben Tändstiftet">
+      <span class="nav__brand-text"><strong>Tändstiftet</strong>Malmö · Sedan 1924</span>
+    </a>
+    <ul class="nav__links" id="huvudmeny">
+      <li><a href="#">Start</a></li>
+      <li><a href="#" class="is-active">Förare & Lag</a></li>
+      <li><a href="#">Prova På</a></li>
+      <li><a href="#">Sliding</a></li>
+    </ul>
+    <a href="#" class="nav__cta">Prova på →</a>
+    <button type="button" class="nav__toggle" aria-label="Meny" aria-expanded="false" aria-controls="huvudmeny"><span></span><span></span><span></span></button>
+  </nav>
+</div>
+
+<section class="pagehero">
+  <div class="wrap">
+    <div class="pagehero__eyebrow">Säsong 2026</div>
+    <h1 class="pagehero__title">Förare & <mark>Lag</mark></h1>
+    <p class="pagehero__sub">Truppen som representerar Tändstiftet på och utanför banan — Division 1 speedway och våra flat track-förare.</p>
+  </div>
+</section>
+
+<section class="facts">
+  <div class="wrap facts__inner">
+    <div class="fact"><span class="fact__num">12</span><span class="fact__label">Förare i truppen</span></div>
+    <div class="fact"><span class="fact__num">Div. 1</span><span class="fact__label">Serie</span></div>
+    <div class="fact"><span class="fact__num">2</span><span class="fact__label">Discipliner</span></div>
+    <div class="fact"><span class="fact__num">1924</span><span class="fact__label">Grundad</span></div>
+  </div>
+</section>
+
+<section class="youth">
+  <div class="wrap">
+    <div class="youth__head">
+      <div class="youth__eyebrow">Framtidens förare</div>
+      <h2 class="youth__title">Ungdomslaget</h2>
+      <p class="youth__intro">Alla våra ungdomsförare började precis som du kan göra — på en helt vanlig Prova På-träning. Här är några av dem som klivit vidare från att testa till att tävla.</p>
+    </div>
+    <div class="youth-grid">
+      <div class="youth-card">
+        <img src="images/rider-card-3.jpg" alt="" class="youth-card__img">
+        <div class="youth-card__scrim"></div>
+        <div class="youth-card__ribbon">Ungdom</div>
+        <div class="youth-card__body">
+          <div class="youth-card__name">Ungdomsförare</div>
+          <div class="youth-card__role">Speedway · U19</div>
+        </div>
+      </div>
+      <div class="youth-card" style="display:flex;align-items:center;justify-content:center;background:var(--beige-deep);border:1px dashed var(--rust)">
+        <span style="font-family:var(--condensed);color:#5a5040;font-size:0.85rem;text-align:center;padding:1rem">+ fler ungdomsförare i den riktiga sidan</span>
+      </div>
+      <div class="youth-card" style="display:flex;align-items:center;justify-content:center;background:var(--beige-deep);border:1px dashed var(--rust)">
+        <span style="font-family:var(--condensed);color:#5a5040;font-size:0.85rem;text-align:center;padding:1rem">+ fler ungdomsförare i den riktiga sidan</span>
+      </div>
+    </div>
+    <div class="youth__cta"><a href="#">Vill ditt barn också börja? Se Prova På →</a></div>
+  </div>
+</section>
+
+<section class="team">
+  <div class="wrap">
+    <div class="team__head">
+      <div>
+        <div class="team__eyebrow">Division 1</div>
+        <h2 class="team__title">Säsongens förare</h2>
+      </div>
+    </div>
+    <div class="rider-grid">
+      <div class="rider-card">
+        <img src="images/rider-card-1.jpg" alt="" class="rider-card__img">
+        <div class="rider-card__scrim"></div>
+        <div class="rider-card__num">32X</div>
+        <div class="rider-card__body">
+          <div class="rider-card__name">Förare 32X</div>
+          <div class="rider-card__role">Speedway</div>
+        </div>
+      </div>
+      <div class="rider-card">
+        <img src="images/rider-card-2.jpg" alt="" class="rider-card__img">
+        <div class="rider-card__scrim"></div>
+        <div class="rider-card__num">32</div>
+        <div class="rider-card__body">
+          <div class="rider-card__name">Förare 32</div>
+          <div class="rider-card__role">Flat track</div>
+        </div>
+      </div>
+      <div class="rider-card">
+        <img src="images/rider-card-3.jpg" alt="" class="rider-card__img">
+        <div class="rider-card__scrim"></div>
+        <div class="rider-card__num">U19</div>
+        <div class="rider-card__body">
+          <div class="rider-card__name">Ungdomsförare</div>
+          <div class="rider-card__role">Speedway</div>
+        </div>
+      </div>
+      <div class="rider-card" style="display:flex;align-items:center;justify-content:center;border:1px dashed rgba(212,160,23,0.35)">
+        <span style="font-family:var(--condensed);color:var(--grey);font-size:0.85rem;text-align:center;padding:1rem">+ 9 fler förare i den riktiga sidan</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="event">
+  <div class="wrap event__inner">
+    <div>
+      <div class="event__eyebrow">Division 1 · Nästa hemmamatch</div>
+      <h2 class="event__title">Speedway</h2>
+    </div>
+    <div>
+      <div class="event__dates">13 September · 26 September</div>
+      <div class="event__venue">Malmö Motorstadion</div>
+    </div>
+    <a href="#" class="btn">Matchinfo →</a>
+  </div>
+</section>
+
+<section class="note">
+  <div class="wrap">
+    <h2>Vad som är nytt jämfört med Prova På & Sliding</h2>
+    <p><strong>Ungdomslaget fick en egen, primär sektion:</strong> placerad direkt efter faktarutan, före tävlingstruppen — inte som en eftertanke längst ner. Beige/varm bakgrund (samma "läsbar"-yta som Prova På) för att kännas välkomnande och skild från den mörkare, hårdare tävlingstruppen som följer efter.</p>
+    <p><strong>Tydlig koppling till Prova På:</strong> texten och call-to-action-länken ("Vill ditt barn också börja?") knyter ihop hela resan — Prova På → Ungdomslag → eventuellt Tävlingstrupp — vilket stärker hela poängen med att Prova På är gratis och central för klubbens framtid.</p>
+    <p><strong>Ingen stor hero-bild:</strong> den här sidans "hjältar" är förarna själva i rutnätet, så toppen hålls kompakt och mörk istället för att konkurrera med en stor bakgrundsbild.</p>
+    <p><strong>Förarkort istället för formulär:</strong> varje kort använder samma beskärning (3:4, samma proportion som `rider-card`-bildstorleken som redan finns i temat), numret överst i guld, namn/roll i en mörk gradient längst ner — läsbart även ovanpå actionbilder.</p>
+    <p><strong>Inget filter just nu:</strong> Division 1 är den enda kategorin i den nedre sektionen i dagsläget, så inget filter behövs — bara onödig UI. Ungdomarna har redan sin egen sektion ovanför. Den dagen ni har vuxna förare utanför Division 1, eller vill dela upp per disciplin (speedway/flat track), går det att lägga till filterknapparna igen då — samma mönster, bara aktiverat när det faktiskt finns något att filtrera mellan.</p>
+    <p><strong>"Nästa match"-raden återanvänds rakt av</strong> från startsidan — samma komponent, inte omdesignad, vilket är precis poängen med ett återanvändbart system.</p>
+    <p><strong>Bildval:</strong> foton är beskurna versioner av bilder vi redan har — riktiga porträtt/actionbilder för hela ungdomslaget och tävlingstruppen behövs för den färdiga sidan.</p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__grid">
+      <div>
+        <div class="site-footer__brand">
+          <img src="images/mkt-logo.png" alt="Motorklubben Tändstiftet">
+          <span>Tändstiftet</span>
+        </div>
+        <p class="site-footer__desc">Motorklubben Tändstiftet · Malmö Motorstadion · Svemo-godkänd klubb sedan 1924.</p>
+      </div>
+      <div>
+        <div class="site-footer__heading">Klubben</div>
+        <ul class="site-footer__links">
+          <li><a href="#">Klubbinfo</a></li>
+          <li><a href="#">Styrelsen</a></li>
+          <li><a href="#">Bli medlem</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="site-footer__heading">Kontakt</div>
+        <ul class="site-footer__links">
+          <li><a href="#">info@tandstiftet.se</a></li>
+          <li><a href="#">040-XX XX XX</a></li>
+          <li><a href="#">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <span class="site-footer__copy">© 2026 Motorklubben Tändstiftet</span>
+      <a href="#">Integritetspolicy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var t = document.querySelector('.nav__toggle'), l = document.querySelector('.nav__links');
+  if (!t || !l) return;
+  t.addEventListener('click', function(){
+    var open = l.classList.toggle('is-open');
+    t.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>

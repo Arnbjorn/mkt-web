@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prova På — koncept</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap');
+
+:root {
+  --black: #14151a;
+  --black-warm: #1c1a16;
+  --dust: #3a2f22;
+  --rust: #6b4226;
+  --orange: #e0842c;
+  --gold: #d4a017;
+  --gold-bright: #e8b830;
+  --cream: #f2ece1;
+  --beige-deep: #e6dcc8;
+  --ink: #241f18;
+  --grey: #8a8578;
+
+  --display: 'Bebas Neue', sans-serif;
+  --condensed: 'Barlow Condensed', sans-serif;
+  --body: 'Barlow', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--black); color: var(--cream); font-family: var(--body); }
+.wrap { max-width: 1200px; margin-inline: auto; padding-inline: 2rem; position: relative; z-index: 2; }
+
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.preview-flag {
+  background: var(--gold); color: var(--black); text-align: center;
+  font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em;
+  font-size: 0.8rem; padding: 0.5rem; text-transform: uppercase;
+  position: relative; z-index: 60;
+}
+
+/* ── Nav (matches approved homepage concept) ── */
+.nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-block: 1rem; border-bottom: 1px solid rgba(212,160,23,0.18);
+}
+.nav__brand { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; }
+.nav__brand img { height: 52px; width: auto; }
+.nav__brand-text { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8rem; color: var(--grey); line-height: 1.3; }
+.nav__brand-text strong { display: block; font-family: var(--display); font-size: 1rem; letter-spacing: 0.03em; color: var(--cream); }
+.nav__links { display: flex; gap: 2.1rem; list-style: none; }
+.nav__links a { font-family: var(--condensed); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.8rem; color: var(--grey); text-decoration: none; }
+.nav__links a:hover, .nav__links a.is-active { color: var(--gold); }
+.nav__cta { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8rem; color: var(--black); background: var(--gold); padding: 0.6rem 1.2rem; text-decoration: none; }
+
+/* ── Hero ── */
+.hero {
+  position: relative; min-height: 72vh; display: flex; align-items: center; overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 60% at 78% 20%, rgba(212,160,23,0.14), transparent 60%),
+    radial-gradient(ellipse 80% 70% at 10% 100%, rgba(107,66,38,0.4), transparent 65%),
+    var(--black);
+}
+.hero__eyebrow { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; font-size: 0.82rem; color: var(--orange); margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.6rem; }
+.hero__eyebrow::before { content:''; width: 26px; height: 2px; background: var(--gold); }
+.hero__title { font-family: var(--display); font-size: clamp(3.2rem, 8vw, 5.8rem); line-height: 0.87; color: var(--cream); text-transform: uppercase; margin-bottom: 1rem; text-shadow: 0 6px 40px rgba(0,0,0,0.6); }
+.hero__title mark { background: none; color: var(--gold-bright); }
+.hero__sub { font-family: var(--condensed); font-size: clamp(1.02rem, 1.9vw, 1.25rem); color: var(--grey); max-width: 440px; margin-bottom: 1.9rem; line-height: 1.4; }
+.hero__ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.88rem; padding: 0.95rem 1.9rem; text-decoration: none; display: inline-block; }
+.btn--primary { background: var(--gold); color: var(--black); }
+.btn--primary:hover { background: var(--gold-bright); }
+.btn--outline { border: 1px solid rgba(242,236,225,0.4); color: var(--cream); }
+.btn--outline:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ── Hero (alternativ D: affischrubrik + foto i ram) ── */
+.hero__inner { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3rem; align-items: center; padding-block: 3.5rem; width: 100%; }
+@media (max-width: 860px) { .hero__inner { grid-template-columns: 1fr; gap: 2.4rem; } }
+.hero .speckle { position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(rgba(224,132,44,0.5) 1.2px, transparent 1.8px), radial-gradient(rgba(242,236,225,0.24) 1px, transparent 1.6px), radial-gradient(rgba(212,160,23,0.42) 1.5px, transparent 2.2px);
+  background-size: 43px 47px, 71px 59px, 97px 89px; background-position: 0 0, 17px 23px, 41px 7px;
+  -webkit-mask-image: linear-gradient(100deg, transparent 30%, #000 75%); mask-image: linear-gradient(100deg, transparent 30%, #000 75%); }
+.a-title-line { display: block; position: relative; width: fit-content; }
+.a-stroke { position: absolute; left: -3%; bottom: -0.16em; width: 106%; height: 0.3em; z-index: -1; overflow: visible; }
+.hero__title .a-title-line:last-child { color: var(--cream); }
+.hero .hero__sub { margin-top: 1.6rem; }
+.c-visual { position: relative; display: grid; place-items: center; padding: 1rem 1rem 2.5rem; }
+.polaroid { position: relative; width: min(330px, 78%); background: var(--cream); padding: 10px 10px 40px; transform: rotate(2.5deg); box-shadow: 0 30px 60px -20px rgba(0,0,0,0.75); }
+.polaroid img { display: block; width: 100%; aspect-ratio: 3/4; object-fit: cover; filter: contrast(1.05) saturate(1.05); }
+.polaroid__cap { position: absolute; left: 0; right: 0; bottom: 12px; text-align: center; font-family: var(--condensed); font-weight: 700; font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: #6b6048; }
+.tape { position: absolute; top: -14px; left: 50%; width: 92px; height: 26px; margin-left: -46px; background: rgba(212,160,23,0.78); transform: rotate(-4deg); }
+.sticker { border-radius: 50%; background: var(--gold); color: var(--black); display: grid; place-items: center; text-align: center; transform: rotate(-9deg); box-shadow: 0 18px 40px -12px rgba(0,0,0,0.65); position: relative; }
+.sticker::before { content: ''; position: absolute; inset: 6px; border-radius: 50%; border: 2px dashed rgba(20,21,26,0.45); }
+.sticker__big { font-family: var(--display); font-size: 2.1rem; line-height: 0.9; text-transform: uppercase; }
+.sticker__small { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.62rem; margin-top: 0.15rem; }
+.polaroid .sticker { position: absolute; right: -46px; bottom: -34px; z-index: 2; width: 128px; height: 128px; }
+@media (max-width: 480px) { .polaroid .sticker { right: -14px; } }
+
+/* ── Facts strip ── */
+.facts { background: linear-gradient(90deg, var(--black-warm), var(--dust) 130%); border-top: 1px solid rgba(212,160,23,0.25); border-bottom: 1px solid rgba(212,160,23,0.25); }
+.facts__inner { display: flex; justify-content: space-between; flex-wrap: wrap; padding-block: 1.8rem; gap: 1.5rem; }
+.fact { text-align: center; flex: 1; min-width: 110px; }
+.fact__num { display: block; font-family: var(--display); font-size: 2.1rem; color: var(--gold-bright); line-height: 1; }
+.fact__label { font-family: var(--condensed); font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--grey); margin-top: 0.3rem; }
+
+/* ── Readable content (beige) ── */
+.readable { background: var(--cream); color: var(--ink); padding-block: clamp(3rem, 7vw, 5rem); }
+.readable__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+@media (max-width: 860px) { .readable__grid { grid-template-columns: 1fr; } }
+.readable__eyebrow { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; font-size: 0.78rem; color: var(--rust); margin-bottom: 0.6rem; }
+.readable__title { font-family: var(--display); font-size: clamp(1.9rem, 4vw, 2.7rem); color: var(--ink); text-transform: uppercase; margin-bottom: 1rem; }
+.readable__text { font-size: 0.98rem; line-height: 1.7; color: #5a5040; margin-bottom: 1rem; }
+.safety-note { background: var(--beige-deep); border-left: 3px solid var(--orange); padding: 1.1rem 1.3rem; font-size: 0.9rem; line-height: 1.6; color: #4a4030; }
+.safety-note strong { color: var(--ink); }
+
+.schedule-cards { display: flex; flex-direction: column; gap: 1rem; }
+.schedule-card { background: var(--beige-deep); border-left: 3px solid var(--gold); padding: 1.3rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+.schedule-card__day { font-family: var(--condensed); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; font-size: 1.05rem; color: var(--ink); }
+.schedule-card__time { font-family: var(--display); font-size: 1.6rem; color: var(--rust); }
+
+/* ── Steps ── */
+.steps { padding-block: clamp(3rem, 7vw, 5rem); }
+.steps__head { text-align: center; margin-bottom: 2.5rem; }
+.steps__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; counter-reset: step; }
+@media (max-width: 860px) { .steps__grid { grid-template-columns: 1fr 1fr; } }
+.step { position: relative; padding-top: 2.2rem; }
+.step::before { counter-increment: step; content: counter(step); font-family: var(--display); font-size: 2.4rem; color: var(--gold); position: absolute; top: -0.6rem; left: 0; opacity: 0.5; }
+.step__title { font-family: var(--condensed); font-weight: 700; text-transform: uppercase; font-size: 0.98rem; color: var(--cream); margin-bottom: 0.4rem; }
+.step__desc { font-size: 0.86rem; color: var(--grey); line-height: 1.55; }
+
+/* ── Booking form (beige — readability matters here) ── */
+.book { background: var(--beige-deep); padding-block: clamp(3rem, 7vw, 5rem); }
+.book__grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 3.5rem; }
+@media (max-width: 900px) { .book__grid { grid-template-columns: 1fr; } }
+.book__needs { background: var(--cream); border-left: 3px solid var(--gold); padding: 1.3rem 1.5rem; margin-top: 1.5rem; }
+.book__needs-title { font-family: var(--condensed); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.85rem; color: var(--rust); margin-bottom: 0.6rem; }
+.book__needs p { font-size: 0.9rem; color: #5a5040; margin-bottom: 0.35rem; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+@media (max-width: 520px) { .form-row { grid-template-columns: 1fr; } }
+.field { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+.field label { font-family: var(--condensed); font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; font-size: 0.78rem; color: var(--ink); }
+.field input, .field select, .field textarea {
+  font-family: var(--body); font-size: 0.95rem; color: var(--ink);
+  background: var(--cream); border: 1px solid #cabfa4; padding: 0.7rem 0.85rem;
+  border-radius: 2px;
+}
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--orange); }
+.book__submit {
+  font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  font-size: 0.9rem; padding: 0.95rem 2rem; background: var(--gold); color: var(--black);
+  border: none; cursor: pointer; width: 100%; margin-top: 0.4rem;
+}
+.book__submit:hover { background: var(--gold-bright); }
+
+.note { background: var(--black-warm); padding-block: 3rem; border-top: 1px solid rgba(212,160,23,0.15); }
+.note h2 { font-family: var(--display); font-size: 1.6rem; letter-spacing: 0.02em; color: var(--gold); margin-bottom: 1rem; }
+.note p { font-size: 0.95rem; line-height: 1.7; color: var(--grey); max-width: 780px; margin-bottom: 0.7rem; }
+.note strong { color: var(--cream); }
+
+.site-footer { background: var(--black); border-top: 1px solid rgba(212,160,23,0.12); padding-block: 2.5rem 1.5rem; }
+.site-footer__grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 2.5rem; padding-bottom: 1.8rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+@media (max-width: 780px) { .site-footer__grid { grid-template-columns: 1fr; gap: 1.6rem; } }
+.site-footer__brand { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.7rem; }
+.site-footer__brand img { height: 32px; width: auto; opacity: 0.85; }
+.site-footer__brand span { font-family: var(--condensed); font-weight: 700; font-size: 0.82rem; color: #8a8578; letter-spacing: 0.03em; }
+.site-footer__desc { font-size: 0.8rem; color: #6b6658; line-height: 1.6; max-width: 280px; }
+.site-footer__heading { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.7rem; color: #6b6658; margin-bottom: 0.6rem; }
+.site-footer__links { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+.site-footer__links a { font-size: 0.82rem; color: #a8a294; text-decoration: none; }
+.site-footer__links a:hover { color: var(--gold); }
+.site-footer__bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 1.1rem; flex-wrap: wrap; gap: 0.6rem; }
+.site-footer__copy { font-size: 0.75rem; color: #5a564a; }
+.site-footer__bottom a { font-size: 0.75rem; color: #5a564a; text-decoration: none; }
+.site-footer__bottom a:hover { color: var(--gold); }
+
+/* ── Mobile navigation ── */
+.nav__toggle { display: none; }
+@media (max-width: 860px) {
+  .wrap--nav { z-index: 30; }
+  .nav { position: relative; gap: 0.6rem; }
+  .nav__cta { margin-left: auto; white-space: nowrap; }
+  .nav__toggle { display: inline-flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; width: 40px; height: 40px; flex-shrink: 0; background: transparent; border: 1px solid rgba(212,160,23,0.4); cursor: pointer; }
+  .nav__toggle span { display: block; width: 18px; height: 2px; background: var(--gold); }
+  .nav__links { display: none; position: absolute; top: calc(100% + 0.5rem); left: 0; right: 0; flex-direction: column; gap: 0; background: var(--black-warm); border: 1px solid rgba(212,160,23,0.3); padding: 0.4rem 1.2rem; z-index: 40; }
+  .nav__links.is-open { display: flex; }
+  .nav__links li + li { border-top: 1px solid rgba(255,255,255,0.06); }
+  .nav__links a { display: block; padding: 0.9rem 0; font-size: 0.9rem; }
+}
+@media (max-width: 520px) {
+  .nav { gap: 0.4rem; }
+  .nav__brand { gap: 0.5rem; }
+  .nav__brand img { height: 44px; }
+  .nav__brand-text { font-size: 0; line-height: 1; }
+  .nav__brand-text strong { font-size: 0.95rem; }
+  .nav__cta { padding: 0.5rem 0.7rem; font-size: 0.72rem; }
+}
+@media (max-width: 480px) {
+  .wrap { padding-inline: 1.25rem; }
+  h1, h2 { overflow-wrap: break-word; hyphens: auto; }
+}
+@media (max-width: 380px) {
+  .nav__brand-text { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="preview-flag">Konceptexempel — Prova På, samma system som godkänd startsida</div>
+
+<div class="wrap wrap--nav">
+  <nav class="nav">
+    <a href="#" class="nav__brand">
+      <img src="images/mkt-logo.png" alt="Motorklubben Tändstiftet">
+      <span class="nav__brand-text"><strong>Tändstiftet</strong>Malmö · Sedan 1924</span>
+    </a>
+    <ul class="nav__links" id="huvudmeny">
+      <li><a href="#">Start</a></li>
+      <li><a href="#">Förare & Lag</a></li>
+      <li><a href="#" class="is-active">Prova På</a></li>
+      <li><a href="#">Sliding</a></li>
+    </ul>
+    <a href="#" class="nav__cta">Boka →</a>
+    <button type="button" class="nav__toggle" aria-label="Meny" aria-expanded="false" aria-controls="huvudmeny"><span></span><span></span><span></span></button>
+  </nav>
+</div>
+
+<section class="hero">
+  <div class="speckle"></div>
+  <div class="wrap hero__inner">
+    <div>
+      <div class="hero__eyebrow">Barn & Ungdom · från 6 år</div>
+      <h1 class="hero__title">
+        <span class="a-title-line"><mark>Prova på</mark></span>
+        <span class="a-title-line">speedway
+          <svg class="a-stroke" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true">
+            <defs><filter id="rough" x="-5%" y="-40%" width="110%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.035 0.25" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9"/></filter></defs>
+            <path filter="url(#rough)" d="M4 24 C70 10 150 30 230 17 S360 8 396 21 L392 31 C330 37 262 26 192 34 S62 40 6 33 Z" fill="#d4a017"/>
+          </svg>
+        </span>
+      </h1>
+      <p class="hero__sub">Kom till en vanlig träning, låna all utrustning och känn efter om det är din grej. Ingen erfarenhet krävs, ingen bokning krävs.</p>
+      <div class="hero__ctas">
+        <a href="#" class="btn btn--primary">Se träningstider →</a>
+        <a href="#" class="btn btn--outline">Hör av dig innan</a>
+      </div>
+    </div>
+    <div class="c-visual">
+      <div class="polaroid">
+        <span class="tape"></span>
+        <img src="images/provapa-kid-photo.jpg" alt="">
+        <div class="polaroid__cap">Platshållarfoto</div>
+        <div class="sticker"><div><div class="sticker__big">0 kr</div><div class="sticker__small">under 12 år</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="facts">
+  <div class="wrap facts__inner">
+    <div class="fact"><span class="fact__num">0 kr</span><span class="fact__label">Kostnad</span></div>
+    <div class="fact"><span class="fact__num">Ons 17</span><span class="fact__label">Onsdagar</span></div>
+    <div class="fact"><span class="fact__num">Lör 10</span><span class="fact__label">Lördagar</span></div>
+    <div class="fact"><span class="fact__num">6+ år</span><span class="fact__label">Ålder</span></div>
+    <div class="fact"><span class="fact__num">225 kr</span><span class="fact__label">Licens vid 12+ (Svemo)</span></div>
+    <div class="fact"><span class="fact__num">0</span><span class="fact__label">Erfarenhet krävs</span></div>
+  </div>
+</section>
+
+<section class="readable">
+  <div class="wrap readable__grid">
+    <div>
+      <div class="readable__eyebrow">Hur det går till</div>
+      <h2 class="readable__title">Kom till en vanlig träning</h2>
+      <p class="readable__text">Det räcker att dyka upp på ordinarie barnträning — ingen anmälan krävs. Vi rekommenderar ändå starkt att höra av er innan, eftersom det annars finns risk att vi inte hunnit förbereda en motorcykel eller är redo att ta emot er just det tillfället.</p>
+      <div class="safety-note"><strong>Bra att veta:</strong> vi lånar ut hjälm, stövlar och overall på plats. Kom i kläder som får bli smutsiga.</div>
+      <div class="safety-note" style="margin-top:0.9rem;border-left-color:var(--gold)"><strong>Licens vid 12+ år:</strong> Svemo kräver en prova på-licens (225 kr) för barn från 12 år. Under 12 år kostar det inget alls. Licensen betalas separat till Svemo, inte till klubben.</div>
+    </div>
+    <div class="schedule-cards">
+      <div class="schedule-card"><span class="schedule-card__day">Onsdagar</span><span class="schedule-card__time">17:00</span></div>
+      <div class="schedule-card"><span class="schedule-card__day">Lördagar</span><span class="schedule-card__time">10:00</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="steps">
+  <div class="wrap">
+    <div class="steps__head">
+      <div class="hero__eyebrow" style="justify-content:center">Vad händer på plats</div>
+      <h2 class="readable__title" style="color:var(--cream)">Fyra enkla steg</h2>
+    </div>
+    <div class="steps__grid">
+      <div class="step"><div class="step__title">Ankomst</div><div class="step__desc">Kom i god tid till starttiden, vi tar emot er.</div></div>
+      <div class="step"><div class="step__title">Utrustning</div><div class="step__desc">Vi lånar ut hjälm, stövlar och overall.</div></div>
+      <div class="step"><div class="step__title">Träning</div><div class="step__desc">Delta i ordinarie träning i din egen takt.</div></div>
+      <div class="step"><div class="step__title">Eftersnack</div><div class="step__desc">Fråga oss vad som helst efteråt.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="book" id="boka">
+  <div class="wrap book__grid">
+    <div>
+      <div class="readable__eyebrow">Redo?</div>
+      <h2 class="readable__title">Hör av dig innan du kommer</h2>
+      <p class="readable__text">Det räcker att dyka upp — men vi rekommenderar starkt att höra av er innan, så vi hinner förbereda en motorcykel och är redo att ta emot er.</p>
+      <div class="book__needs">
+        <div class="book__needs-title">Bra att veta om ni hör av er</div>
+        <p>◆ Namn och ålder</p>
+        <p>◆ Skostorlek (för stövlar)</p>
+        <p>◆ Ungefärlig längd (för overall)</p>
+        <p>◆ Vilket träningstillfälle ni planerar komma till</p>
+      </div>
+    </div>
+    <form onsubmit="return false">
+      <div class="form-row">
+        <div class="field"><label>Namn *</label><input type="text" placeholder="För- och efternamn"></div>
+        <div class="field"><label>Ålder</label><input type="text" placeholder="t.ex. 9"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>E-post *</label><input type="email" placeholder="namn@exempel.se"></div>
+        <div class="field"><label>Telefon</label><input type="tel" placeholder="07X-XXX XX XX"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Skostorlek</label><input type="text" placeholder="t.ex. 36"></div>
+        <div class="field"><label>Längd (cm)</label><input type="text" placeholder="t.ex. 140"></div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>Träningstillfälle</label>
+          <select><option>Onsdag kl 17:00</option><option>Lördag kl 10:00</option><option>Vet ej ännu</option></select>
+        </div>
+        <div class="field">
+          <label>Provat på förut?</label>
+          <select><option>Nej, första gången</option><option>Ja, vill prova igen</option></select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Övrigt</label>
+        <textarea rows="3" placeholder="Frågor, tidigare erfarenhet etc."></textarea>
+      </div>
+      <button type="submit" class="book__submit">Skicka</button>
+    </form>
+  </div>
+</section>
+
+<section class="note">
+  <div class="wrap">
+    <h2>Vad som är samma / nytt jämfört med startsidan</h2>
+    <p><strong>Samma system:</strong> nav, logga, mörk botten, grain-textur, guld/orange-strip för fakta — identiskt återanvänt från den godkända startsidan.</p>
+    <p><strong>Nytt här:</strong> en beige "läsbar"-sektion specifikt för schema och säkerhetsinfo (två saker föräldrar behöver kunna läsa snabbt och tydligt), och en sifferbaserad stegsektion i mörkt för själva upplevelsen på plats.</p>
+    <p><strong>Medvetet mjukare ton:</strong> eyebrow-texten och rubriken lutar mer mot "välkomnande" än "dramatisk" jämfört med startsidan, eftersom målgruppen är föräldrar som ska känna sig trygga, inte bara barn som ska bli hajpade.</p>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__grid">
+      <div>
+        <div class="site-footer__brand">
+          <img src="images/mkt-logo.png" alt="Motorklubben Tändstiftet">
+          <span>Tändstiftet</span>
+        </div>
+        <p class="site-footer__desc">Motorklubben Tändstiftet · Malmö Motorstadion · Svemo-godkänd klubb sedan 1924.</p>
+      </div>
+      <div>
+        <div class="site-footer__heading">Klubben</div>
+        <ul class="site-footer__links">
+          <li><a href="#">Klubbinfo</a></li>
+          <li><a href="#">Styrelsen</a></li>
+          <li><a href="#">Bli medlem</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="site-footer__heading">Kontakt</div>
+        <ul class="site-footer__links">
+          <li><a href="#">info@tandstiftet.se</a></li>
+          <li><a href="#">040-XX XX XX</a></li>
+          <li><a href="#">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <span class="site-footer__copy">© 2026 Motorklubben Tändstiftet</span>
+      <a href="#">Integritetspolicy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var t = document.querySelector('.nav__toggle'), l = document.querySelector('.nav__links');
+  if (!t || !l) return;
+  t.addEventListener('click', function(){
+    var open = l.classList.toggle('is-open');
+    t.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>

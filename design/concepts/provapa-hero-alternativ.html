@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prova På — hero-alternativ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap');
+
+:root {
+  --black: #14151a; --black-warm: #1c1a16; --dust: #3a2f22; --rust: #6b4226;
+  --orange: #e0842c; --gold: #d4a017; --gold-bright: #e8b830;
+  --cream: #f2ece1; --ink: #241f18; --grey: #8a8578;
+  --display: 'Bebas Neue', sans-serif; --condensed: 'Barlow Condensed', sans-serif; --body: 'Barlow', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--black); color: var(--cream); font-family: var(--body); }
+body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.wrap { max-width: 1200px; margin-inline: auto; padding-inline: 2rem; position: relative; z-index: 2; width: 100%; }
+@media (max-width: 480px) { .wrap { padding-inline: 1.25rem; } h1, h2 { overflow-wrap: break-word; hyphens: auto; } }
+
+.preview-flag { background: var(--gold); color: var(--black); text-align: center; font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; font-size: 0.8rem; padding: 0.5rem; text-transform: uppercase; }
+.opt-label { background: #0c0c0f; color: var(--grey); font-family: var(--condensed); font-weight: 700; font-size: 0.82rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 1rem 2rem; border-top: 3px solid var(--gold); position: relative; z-index: 3; }
+.opt-label b { color: var(--gold-bright); }
+.opt-label span { display: block; margin-top: 0.3rem; letter-spacing: 0.02em; text-transform: none; font-weight: 400; font-size: 0.88rem; color: #a8a294; max-width: 720px; }
+
+/* ── shared hero ── */
+.hero { position: relative; overflow: hidden; min-height: 540px; display: flex; align-items: center;
+  background: radial-gradient(ellipse 70% 60% at 78% 25%, rgba(212,160,23,0.16), transparent 60%), radial-gradient(ellipse 80% 70% at 8% 100%, rgba(107,66,38,0.42), transparent 65%), var(--black); }
+.hero__inner { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3rem; align-items: center; padding-block: 3.5rem; }
+@media (max-width: 860px) { .hero__inner { grid-template-columns: 1fr; gap: 2.4rem; } }
+.hero__eyebrow { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; font-size: 0.82rem; color: var(--orange); margin-bottom: 0.9rem; display: flex; align-items: center; gap: 0.6rem; }
+.hero__eyebrow::before { content: ''; width: 26px; height: 2px; background: var(--gold); }
+.hero__title { font-family: var(--display); font-size: clamp(3.4rem, 8vw, 6rem); line-height: 0.87; text-transform: uppercase; margin-bottom: 1.2rem; color: var(--cream); text-shadow: 0 6px 40px rgba(0,0,0,0.55); }
+.hero__title mark { background: none; color: var(--gold-bright); }
+.hero__sub { font-family: var(--condensed); font-size: clamp(1.02rem, 1.9vw, 1.25rem); color: #a8a294; max-width: 460px; margin-bottom: 1.9rem; line-height: 1.4; }
+.hero__ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.88rem; padding: 0.95rem 1.9rem; text-decoration: none; display: inline-block; }
+.btn--primary { background: var(--gold); color: var(--black); }
+.btn--outline { border: 1px solid rgba(242,236,225,0.4); color: var(--cream); }
+
+/* ── sticker (reused in A and C) ── */
+.sticker { width: 210px; height: 210px; border-radius: 50%; background: var(--gold); color: var(--black); display: grid; place-items: center; text-align: center; transform: rotate(-9deg); box-shadow: 0 18px 40px -12px rgba(0,0,0,0.65); position: relative; }
+.sticker::before { content: ''; position: absolute; inset: 9px; border-radius: 50%; border: 2px dashed rgba(20,21,26,0.45); }
+.sticker__big { font-family: var(--display); font-size: 3.6rem; line-height: 0.9; text-transform: uppercase; }
+.sticker__small { font-family: var(--condensed); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.8rem; margin-top: 0.15rem; }
+.sticker--sm { width: 128px; height: 128px; }
+.sticker--sm .sticker__big { font-size: 2.1rem; }
+.sticker--sm .sticker__small { font-size: 0.62rem; }
+.sticker--sm::before { inset: 6px; }
+
+/* ── A: poster, no photo ── */
+.speckle { position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(rgba(224,132,44,0.5) 1.2px, transparent 1.8px), radial-gradient(rgba(242,236,225,0.24) 1px, transparent 1.6px), radial-gradient(rgba(212,160,23,0.42) 1.5px, transparent 2.2px);
+  background-size: 43px 47px, 71px 59px, 97px 89px; background-position: 0 0, 17px 23px, 41px 7px;
+  -webkit-mask-image: linear-gradient(100deg, transparent 30%, #000 75%); mask-image: linear-gradient(100deg, transparent 30%, #000 75%); }
+.a-title-line { display: block; position: relative; width: fit-content; }
+.hero--a .hero__sub { margin-top: 1.6rem; }
+.a-stroke { position: absolute; left: -3%; bottom: -0.16em; width: 106%; height: 0.3em; z-index: -1; overflow: visible; }
+.a-visual { position: relative; display: grid; place-items: center; min-height: 340px; }
+.a-pill { position: absolute; bottom: 8%; left: 6%; transform: rotate(3deg); background: var(--cream); color: var(--ink); font-family: var(--condensed); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.85rem; padding: 0.55rem 1rem; box-shadow: 0 10px 24px -10px rgba(0,0,0,0.6); }
+.a-ring { position: absolute; width: 330px; height: 330px; border-radius: 50%; border: 2px solid rgba(212,160,23,0.22); }
+.a-ring--2 { width: 430px; height: 430px; border-color: rgba(224,132,44,0.12); }
+
+@media (max-width: 860px) { .a-visual { min-height: 270px; } .a-ring { width: 250px; height: 250px; } .a-ring--2 { width: 330px; height: 330px; } .hero--a .sticker { width: 170px; height: 170px; } .hero--a .sticker__big { font-size: 2.9rem; } }
+
+/* ── B: full-bleed photo, no tint ── */
+.b-img { position: absolute; inset: 0; clip-path: polygon(42% 0, 100% 0, 100% 100%, 26% 100%, 34% 58%, 22% 36%); }
+.b-img img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; filter: brightness(0.8) contrast(1.1); }
+.b-scrim { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,21,26,0.97) 0%, rgba(20,21,26,0.85) 34%, rgba(20,21,26,0.1) 60%, rgba(20,21,26,0.2) 100%); }
+.b-note { position: absolute; right: 1.2rem; bottom: 1rem; z-index: 3; font-family: var(--condensed); font-size: 0.75rem; color: #a8a294; background: rgba(20,21,26,0.7); padding: 0.3rem 0.7rem; }
+@media (max-width: 860px) { .b-img { clip-path: none; opacity: 0.25; } .hero--b .hero__inner { grid-template-columns: 1fr; } }
+
+/* ── C: framed photo + sticker ── */
+.c-visual { position: relative; display: grid; place-items: center; padding: 1rem 1rem 2.5rem; }
+.polaroid { position: relative; width: min(330px, 78%); background: var(--cream); padding: 10px 10px 40px; transform: rotate(2.5deg); box-shadow: 0 30px 60px -20px rgba(0,0,0,0.75); }
+.polaroid img { display: block; width: 100%; aspect-ratio: 3/4; object-fit: cover; filter: contrast(1.05) saturate(1.05); }
+.polaroid__cap { position: absolute; left: 0; right: 0; bottom: 12px; text-align: center; font-family: var(--condensed); font-weight: 700; font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: #6b6048; }
+.tape { position: absolute; top: -14px; left: 50%; width: 92px; height: 26px; margin-left: -46px; background: rgba(212,160,23,0.78); transform: rotate(-4deg); }
+.polaroid .sticker { position: absolute; right: -46px; bottom: -34px; z-index: 2; }
+@media (max-width: 480px) { .polaroid .sticker { right: -14px; } }
+
+.note { background: var(--black-warm); padding-block: 2.6rem; border-top: 1px solid rgba(212,160,23,0.15); }
+.note h2 { font-family: var(--display); font-size: 1.6rem; color: var(--gold); margin-bottom: 0.9rem; }
+.note p { font-size: 0.95rem; line-height: 1.7; color: var(--grey); max-width: 780px; margin-bottom: 0.7rem; }
+.note strong { color: var(--cream); }
+</style>
+</head>
+<body>
+
+<div class="preview-flag">Prova På — hero-alternativ A, B, C och D (kombination)</div>
+
+<!-- ══════════ A ══════════ -->
+<div class="opt-label"><b>Alternativ A</b> — Affisch, inget foto
+  <span>Bygger på er egen "Prova på speedway"-affisch: guld/vit text, penseldrag, gnistor. Funkar utan en enda bild — och ni behöver aldrig fråga vårdnadshavare om bildtillstånd för sidans viktigaste yta.</span></div>
+<section class="hero hero--a">
+  <div class="speckle"></div>
+  <div class="wrap hero__inner">
+    <div>
+      <div class="hero__eyebrow">Barn & ungdom · från 6 år</div>
+      <h1 class="hero__title">
+        <span class="a-title-line"><mark>Prova på</mark></span>
+        <span class="a-title-line">speedway
+          <svg class="a-stroke" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true">
+            <defs><filter id="rough" x="-5%" y="-40%" width="110%" height="180%"><feTurbulence type="fractalNoise" baseFrequency="0.035 0.25" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="9"/></filter></defs>
+            <path filter="url(#rough)" d="M4 24 C70 10 150 30 230 17 S360 8 396 21 L392 31 C330 37 262 26 192 34 S62 40 6 33 Z" fill="#d4a017"/>
+          </svg>
+        </span>
+      </h1>
+      <p class="hero__sub">Kom till en vanlig träning, låna all utrustning och känn efter om det är din grej. Ingen erfarenhet krävs.</p>
+      <div class="hero__ctas"><a href="#" class="btn btn--primary">Se träningstider →</a><a href="#" class="btn btn--outline">Hör av dig innan</a></div>
+    </div>
+    <div class="a-visual">
+      <div class="a-ring a-ring--2"></div><div class="a-ring"></div>
+      <div class="sticker"><div><div class="sticker__big">Gratis</div><div class="sticker__small">första gången</div></div></div>
+      <div class="a-pill">Ons 17:00 · Lör 10:00</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ B ══════════ -->
+<div class="opt-label"><b>Alternativ B</b> — Foto i fullbredd, utan toning
+  <span>Samma upplägg som innan men ren bild med bara mörk toning åt vänster. Kräver ett högupplöst, rent foto (minst ~1600px brett) — det vi har nu är 562px och syns som mjukt när det sträcks.</span></div>
+<section class="hero hero--b">
+  <div class="b-img"><img src="images/provapa-kid-photo.jpg" alt=""></div>
+  <div class="b-scrim"></div>
+  <div class="b-note">Platshållarfoto</div>
+  <div class="wrap hero__inner">
+    <div>
+      <div class="hero__eyebrow">Barn & ungdom · helt gratis</div>
+      <h1 class="hero__title">Prova på <mark>speedway</mark></h1>
+      <p class="hero__sub">Kom till en vanlig träning, låna all utrustning och känn efter om det är din grej. Ingen erfarenhet krävs.</p>
+      <div class="hero__ctas"><a href="#" class="btn btn--primary">Se träningstider →</a><a href="#" class="btn btn--outline">Hör av dig innan</a></div>
+    </div>
+    <div></div>
+  </div>
+</section>
+
+<!-- ══════════ C ══════════ -->
+<div class="opt-label"><b>Alternativ C</b> — Foto i ram med klistermärke
+  <span>Fotot visas som ett "föremål" i ungefär sin egen storlek, så låg upplösning spelar ingen roll. Lekfullt och barnvänligt, och det går att byta bild utan att något annat ändras.</span></div>
+<section class="hero hero--c">
+  <div class="speckle"></div>
+  <div class="wrap hero__inner">
+    <div>
+      <div class="hero__eyebrow">Barn & ungdom · från 6 år</div>
+      <h1 class="hero__title">Prova på <mark>speedway</mark></h1>
+      <p class="hero__sub">Kom till en vanlig träning, låna all utrustning och känn efter om det är din grej. Ingen erfarenhet krävs.</p>
+      <div class="hero__ctas"><a href="#" class="btn btn--primary">Se träningstider →</a><a href="#" class="btn btn--outline">Hör av dig innan</a></div>
+    </div>
+    <div class="c-visual">
+      <div class="polaroid">
+        <span class="tape"></span>
+        <img src="images/provapa-kid-photo.jpg" alt="">
+        <div class="polaroid__cap">Platshållarfoto</div>
+        <div class="sticker sticker--sm"><div><div class="sticker__big">0 kr</div><div class="sticker__small">under 12 år</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ D ══════════ -->
+<div class="opt-label"><b>Alternativ D</b> — A + C kombinerat
+  <span>Affischrubriken med penseldrag från A, fotot i ram med klistermärke från C. Gnistor i bakgrunden. Bildplatsen är utbytbar när ni har ett riktigt foto.</span></div>
+<section class="hero hero--d">
+  <div class="speckle"></div>
+  <div class="wrap hero__inner">
+    <div>
+      <div class="hero__eyebrow">Barn & ungdom · från 6 år</div>
+      <h1 class="hero__title">
+        <span class="a-title-line"><mark>Prova på</mark></span>
+        <span class="a-title-line">speedway
+          <svg class="a-stroke" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true">
+            <path filter="url(#rough)" d="M4 24 C70 10 150 30 230 17 S360 8 396 21 L392 31 C330 37 262 26 192 34 S62 40 6 33 Z" fill="#d4a017"/>
+          </svg>
+        </span>
+      </h1>
+      <p class="hero__sub" style="margin-top:1.6rem">Kom till en vanlig träning, låna all utrustning och känn efter om det är din grej. Ingen erfarenhet krävs.</p>
+      <div class="hero__ctas"><a href="#" class="btn btn--primary">Se träningstider →</a><a href="#" class="btn btn--outline">Hör av dig innan</a></div>
+    </div>
+    <div class="c-visual">
+      <div class="polaroid">
+        <span class="tape"></span>
+        <img src="images/provapa-kid-photo.jpg" alt="">
+        <div class="polaroid__cap">Platshållarfoto</div>
+        <div class="sticker sticker--sm"><div><div class="sticker__big">0 kr</div><div class="sticker__small">under 12 år</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="note">
+  <div class="wrap">
+    <h2>Min rekommendation</h2>
+    <p><strong>Alternativ C om ni vill ha foto, alternativ A om ni vill ha en trygg lösning.</strong> C gör det lätt att byta bild i WordPress (en Utvald bild) och tål olika bildformat. A kräver inga bilder alls och passar er egen affisch — men har mindre "människor"-känsla.</p>
+    <p><strong>Oavsett val:</strong> bilder på identifierbara barn kräver vårdnadshavares medgivande innan de läggs på en publik sida — värt att ha en enkel rutin för, särskilt eftersom Prova På-sidan är riktad just till föräldrar.</p>
+  </div>
+</section>
+
+</body>
+</html>

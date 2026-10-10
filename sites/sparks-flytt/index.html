@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Sparks Flattrack School har flyttat</title>
+<meta name="description" content="The Sparks Flattrack School finns numera på en egen webbplats.">
+<link rel="icon" href="data:,">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap');
+
+:root {
+  --navy: #0a1628;
+  --navy-mid: #132033;
+  --navy-line: #1e3352;
+  --gold: #d4a017;
+  --gold-light: #e8b830;
+  --cream: #e8eef5;
+  --grey: #a8bcd0;
+
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-condensed: 'Barlow Condensed', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--navy);
+  color: var(--cream);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  line-height: 1.6;
+}
+
+.card {
+  max-width: 560px;
+  width: 100%;
+  background: var(--navy-mid);
+  border: 1px solid var(--navy-line);
+  border-top: 4px solid var(--gold);
+  padding: 3rem 2.5rem;
+  text-align: center;
+}
+
+.label {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 6vw, 2.6rem);
+  line-height: 1.1;
+  margin-bottom: 1.25rem;
+  color: var(--cream);
+}
+
+p {
+  color: var(--grey);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.btn {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  padding: 0.9rem 1.5rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 2px solid transparent;
+}
+
+.btn--primary { background: var(--gold); color: var(--navy); }
+.btn--primary:hover { background: var(--gold-light); }
+
+.btn--outline { border-color: var(--navy-line); color: var(--cream); }
+.btn--outline:hover { border-color: var(--gold); color: var(--gold); }
+
+.fineprint {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--navy-line);
+  font-size: 0.82rem;
+  color: #7a8fa8;
+}
+.fineprint a { color: var(--grey); text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="label">The Sparks Flattrack School</div>
+  <h1>Vi har flyttat</h1>
+  <p>Den här adressen har använts för att stötta uppstarten av flat track i Malmö och Skåne, som en del av Motorklubben Tändstiftets arbete för att hjälpa track racing växa i regionen.</p>
+  <p>The Sparks Flattrack School har nu vuxit och driver sin verksamhet vidare på egen hand. Du hittar dem på deras egen webbplats:</p>
+
+  <div class="actions">
+    <a href="https://thesparks.vercel.app/" class="btn btn--primary">Besök The Sparks Flattrack School →</a>
+    <a href="https://www.tändstiftet.se/" class="btn btn--outline">Till Motorklubben Tändstiftet</a>
+  </div>
+
+  <div class="fineprint">
+    Permanent adress kommer snart vara <a href="https://www.thesparks.se/">thesparks.se</a> eller <a href="https://www.thesparksflattrackschool.se/">thesparksflattrackschool.se</a>.
+  </div>
+</div>
+
+</body>
+</html>

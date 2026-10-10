@@ -1,0 +1,200 @@
+# Copyright (C) 2024 Tändstiftet MC
+# This file is distributed under the same license as the Tändstiftet MC package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Tändstiftet MC 1.0.0\n"
+"Report-Msgid-Bugs-To: https://www.xn--tndstiftet-q5a.se/\n"
+"POT-Creation-Date: 2024-01-01 00:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: sv_SE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: WP-CLI 2.x\n"
+"X-Domain: tandstiftet\n"
+
+# NOTE: This is a stub. Generate the full .pot using WP-CLI:
+#   wp i18n make-pot . languages/tandstiftet.pot --domain=tandstiftet
+#
+# Then copy to sv_SE.po, translate, and compile:
+#   msgfmt languages/sv_SE.po -o languages/sv_SE.mo
+
+msgid "Speedway & Flattrack"
+msgstr "Speedway & Flattrack"
+
+msgid "Nästa tävling:"
+msgstr ""
+
+msgid "Primär navigation"
+msgstr ""
+
+msgid "Startsida"
+msgstr ""
+
+msgid "Om oss"
+msgstr ""
+
+msgid "Förare & Lag"
+msgstr ""
+
+msgid "Tävlingar"
+msgstr ""
+
+msgid "Galleri"
+msgstr ""
+
+msgid "Regler & Info"
+msgstr ""
+
+msgid "Kontakt"
+msgstr ""
+
+msgid "Se kommande tävlingar"
+msgstr ""
+
+msgid "Möt förarna"
+msgstr ""
+
+msgid "Grundat"
+msgstr ""
+
+msgid "Seriespel"
+msgstr ""
+
+msgid "Aktiva förare"
+msgstr ""
+
+msgid "Hemmatrack"
+msgstr ""
+
+msgid "Kalender"
+msgstr ""
+
+msgid "Kommande tävlingar"
+msgstr ""
+
+msgid "Visa hela tävlingskalendern"
+msgstr ""
+
+msgid "Senaste nytt"
+msgstr ""
+
+msgid "Nyheter"
+msgstr ""
+
+msgid "Alla nyheter"
+msgstr ""
+
+msgid "Division 1"
+msgstr ""
+
+msgid "Laget"
+msgstr ""
+
+msgid "Se alla förare & lag"
+msgstr ""
+
+msgid "Tack till"
+msgstr ""
+
+msgid "Våra sponsorer"
+msgstr ""
+
+msgid "Tändstiftet MC är en speedway- och flattrack-klubb med passion för motorsport."
+msgstr ""
+
+msgid "Alla rättigheter förbehållna."
+msgstr ""
+
+msgid "Förare & Lag"
+msgstr ""
+
+msgid "Möt kluubens aktiva förare, ledare och tränare."
+msgstr ""
+
+msgid "Hoppa till sektion"
+msgstr ""
+
+msgid "Vuxna"
+msgstr ""
+
+msgid "Ungdomar"
+msgstr ""
+
+msgid "Lagledare / Tränare (ej nödvändigtvis förare)"
+msgstr ""
+
+msgid "Ledarroll (t.ex. Lagkapten, Tränare)"
+msgstr ""
+
+msgid "Inga Division 1-förare publicerade ännu."
+msgstr ""
+
+msgid "Tillbaka till toppen"
+msgstr ""
+
+msgid "Tävlingar & Evenemang"
+msgstr ""
+
+msgid "Fullständig kalender för säsongen."
+msgstr ""
+
+msgid "Kommande"
+msgstr ""
+
+msgid "Datum"
+msgstr ""
+
+msgid "Tävling"
+msgstr ""
+
+msgid "Plats"
+msgstr ""
+
+msgid "Typ"
+msgstr ""
+
+msgid "Info"
+msgstr ""
+
+msgid "Biljetter"
+msgstr ""
+
+msgid "Resultat & Tidigare tävlingar"
+msgstr ""
+
+msgid "Kontakt & Medlemskap"
+msgstr ""
+
+msgid "Välkommen att höra av dig eller ansöka om medlemskap."
+msgstr ""
+
+msgid "Gå med oss"
+msgstr ""
+
+msgid "Bli medlem"
+msgstr ""
+
+msgid "Fyll i formuläret nedan så kontaktar vi dig med information om hur du ansluter dig till Tändstiftet MC."
+msgstr ""
+
+msgid "Tack för din ansökan! Vi hör av oss snart."
+msgstr ""
+
+msgid "Skicka ansökan"
+msgstr ""
+
+msgid "Frågor?"
+msgstr ""
+
+msgid "Kontakta oss"
+msgstr ""
+
+msgid "Tack för ditt meddelande! Vi återkommer inom kort."
+msgstr ""
+
+msgid "Skicka meddelande"
+msgstr ""

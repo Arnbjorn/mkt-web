@@ -1,0 +1,51 @@
+name: Release
+
+# Pushing a tag like v2.1.0 builds the theme and attaches the zip to a GitHub Release.
+# (Creating a release with a new tag in the GitHub web UI also pushes the tag.)
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write   # needed to create/update the release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Taggen måste stämma med versionen i style.css
+        run: |
+          source scripts/common.sh
+          VERSION="$(theme_version)"
+          if [ "${GITHUB_REF_NAME}" != "v${VERSION}" ]; then
+            echo "::error::Taggen är ${GITHUB_REF_NAME} men style.css säger Version: ${VERSION}. Höj versionen (bash scripts/bump-version.sh) och tagga om."
+            exit 1
+          fi
+          echo "VERSION=${VERSION}" >> "$GITHUB_ENV"
+
+      - name: PHP-tester
+        run: php tests/php/run.php
+
+      - name: Bygg
+        run: bash scripts/build.sh
+
+      - name: Skriv release-anteckningar från CHANGELOG.md
+        run: bash scripts/changelog-section.sh "${VERSION}" > release-notes.md
+
+      - name: Skapa release med zip-filen
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Tändstiftet-tema ${{ env.VERSION }}
+          body_path: release-notes.md
+          files: dist/*.zip
+          fail_on_unmatched_files: true

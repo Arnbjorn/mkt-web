@@ -1,0 +1,73 @@
+name: CI
+
+# Runs on every push to main and on every pull request.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Kontroller och PHP/CSS-tester
+    runs-on: ubuntu-latest
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Statiska kontroller (syntax, CSS-parenteser, version, ändringslogg)
+        run: bash scripts/check.sh
+      - name: PHP-tester
+        run: php tests/php/run.php
+      - name: CSS-tester (kontrast och textstorlek)
+        run: python3 tests/css/run.py
+
+  browser:
+    name: Webbläsartester
+    runs-on: ubuntu-latest
+    env:
+      CI: "true"
+      REQUIRE_FONTS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Typsnitt (så att rubriktesterna körs med riktiga Bebas Neue)
+        run: sudo apt-get update && sudo apt-get install -y fonts-bebas-neue
+      - name: Playwright + Chromium
+        run: |
+          pip install -r tests/browser/requirements.txt
+          python -m playwright install --with-deps chromium
+      - name: Webbläsartester
+        run: python tests/browser/run.py
+
+  build:
+    name: Bygg tema-paketet
+    needs: [checks, browser]
+    runs-on: ubuntu-latest
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: bash scripts/build.sh
+      - name: Spara zip-filen (finns under "Artifacts" på körningen i 90 dagar)
+        uses: actions/upload-artifact@v4
+        with:
+          name: tema-paket
+          path: dist/*.zip
+          if-no-files-found: error

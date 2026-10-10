@@ -1,27 +1,24 @@
-# WordPress sensitive/generated files
-wp-config.php
-wp-config-local.php
+# built packages and test output
+dist/
+tests/browser/.out/
+test-results/
+*.zip
 
-# Uploads
-wp-content/uploads/
+# tools
+node_modules/
+__pycache__/
+*.pyc
+.venv/
 
-# Cache
-wp-content/cache/
-wp-content/advanced-cache.php
-wp-content/wp-cache-config.php
-
-# Logs
-*.log
-debug.log
-
-# OS files
+# editors / OS
 .DS_Store
 Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
 
-# Node
-node_modules/
-npm-debug.log
-
-# Environment
+# never commit credentials or local WordPress config
+wp-config.php
 .env
-.env.local
+*.sql
