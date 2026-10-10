@@ -3,6 +3,7 @@
 WordPress-temat för Tändstiftet MC, plus designunderlag, tester och skript som bygger ett installerbart tema-paket.
 
 > **Första gången?** Börja med [docs/KOMMA-IGANG.md](docs/KOMMA-IGANG.md) — hur du får upp repot på GitHub, steg för steg.
+> **Arbetar du med Claude Code?** Starta den i den här mappen — den läser [CLAUDE.md](CLAUDE.md) själv. Hela bakgrunden, besluten och att-göra-listan står i [docs/PROJEKTKONTEXT.md](docs/PROJEKTKONTEXT.md).
 
 ## Vad som finns här
 
@@ -13,7 +14,8 @@ sites/sparks-flytt/           den fristående "Sparks har flyttat"-sidan
 archive/                      sparade backuper (t.ex. den gamla "Ytterligare CSS")
 scripts/                      bygg-, kontroll- och versionsskript
 tests/                        automatiska tester (PHP, CSS, webbläsare)
-docs/                         designguide och instruktioner
+docs/                         designguide, projektbakgrund och instruktioner
+CLAUDE.md                     instruktioner som Claude Code läser automatiskt (arbetssätt, regler, status)
 .github/workflows/            automatik: testar varje ändring, bygger zip vid ny version
 ```
 
