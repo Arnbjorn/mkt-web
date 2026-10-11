@@ -57,7 +57,25 @@ def plain_page(n_items):
 <p style="margin-top:2rem"><a class="btn btn--primary" href="#">Primär knapp</a> <a class="btn btn--outline" href="#">Outline</a></p></div></section></main>'''
     return wrap(header(n_items) + main + footer(), f"{n_items} menyalternativ")
 
-def home_page(torn=True, slides=False):
+def events_section(state):
+    """Mirrors the competitions part of front-page.php (upcoming / season_over)."""
+    if state == "upcoming":
+        cards = "".join(f'''<article class="event-card"><div class="event-card__date-box"><span class="event-card__day">{d}</span><span class="event-card__month">{m}</span></div>
+<div class="event-card__info"><h3 class="event-card__title"><a href="#">{t}</a></h3><p class="event-card__meta">{loc} · 19:00</p><p class="event-card__desc">Gnistorna, Lag B, Lag C, Lag D</p></div></article>'''
+            for d, m, t, loc in (("24", "maj", "Division 1 — omgång 2", "Malmö Motorstadion"), ("7", "jun", "Division 1 — omgång 3", "Borta (Ort)")))
+        return f'''<section class="section section--dark home-events home-events--upcoming" id="evenemang"><div class="container">
+<div class="section-header"><div class="label" style="margin-bottom:0.4rem">Kalender</div><h2 class="section-title">Kommande tävlingar</h2></div>
+<div class="grid grid--2">{cards}</div><p class="home-events__earlier">Tidigare i år: 3 tävlingar · <a href="#">Se hela säsongen →</a></p></div></section>'''
+    rows = "".join(f'''<li><span class="home-season-list__date">{d}</span><span class="home-season-list__title">{t}<span class="home-season-list__meta">{loc} · Gnistorna, Lag B, Lag C, Lag D</span></span><a href="#">Matchinfo →</a></li>'''
+        for d, t, loc in (("27 sep", "Division 1 — omgång 6", "Malmö Motorstadion"), ("6 sep", "Division 1 — omgång 5", "Borta (Ort)"), ("16 aug", "Division 1 — omgång 4", "Malmö Motorstadion")))
+    return f'''<section class="section section--dark home-events home-events--season_over" id="evenemang"><div class="container">
+<div class="section-header"><div class="label" style="margin-bottom:0.4rem">Säsongen 2026</div><h2 class="section-title">Tack för i år!</h2></div>
+<p class="home-events__intro">Tävlingssäsongen är över — men klubben lever året runt. Här är årets tävlingar, och nedan vad som händer under vintern.</p>
+<ul class="home-season-list">{rows}</ul><p class="home-events__earlier"><a href="#">Se hela säsongen →</a></p>
+<div class="home-season-next"><a href="#"><strong>Nyheter</strong><span>Läs vad som händer i klubben</span></a><a href="#"><strong>Prova På</strong><span>Öppnar igen 1 april 2027</span></a><a href="#"><strong>Medlemsmöten</strong><span>Första onsdagen varje månad kl. 18</span></a></div>
+</div></section>'''
+
+def home_page(torn=True, slides=False, events="upcoming"):
     cls = "hero" + (" hero--slideshow" if slides else "") + (" hero--torn" if torn else "")
     img1, img2 = url(IMG / "action-1.jpg"), url(IMG / "rider-card-1.jpg")
     if slides:
@@ -69,12 +87,13 @@ def home_page(torn=True, slides=False):
 <h3 class="news-card__title"><a href="#">{t}</a></h3><p class="news-card__excerpt">Kort sammanfattning av nyheten så att man hinner se vad den handlar om innan man klickar vidare.</p><a href="#" class="news-card__link">Läs mer</a></div></article>'''
         for i, d, t in (("action-1.jpg", "12 sep 2026", "Säsongsavslutning på banan"), ("rider-card-1.jpg", "28 aug 2026", "Nya ungdomsförare tog steget"), ("rider-card-2.jpg", "3 aug 2026", "Tack för en fantastisk match")))
     spons = "".join(f'<a class="sponsor-item" href="#"><span style="font-family:var(--font-condensed);font-weight:700;font-size:0.9rem;color:#666">{n}</span></a>' for n in ("Malmö Bil", "Skånska El", "Verkstan AB", "Café Gnistan"))
+    banner = '''<section class="next-event-banner"><div class="container"><div class="next-event-banner__inner"><div class="next-event-banner__left"><div class="label" style="margin-bottom:0.4rem">Nästa tävling</div><div class="next-event-banner__date"><span class="next-event-banner__day">13</span><span class="next-event-banner__month">September 2026</span></div><h2 class="next-event-banner__title">Tändstiftet — Vikingarna</h2><p class="next-event-banner__meta">Malmö Motorstadion · 19:00</p></div><div class="next-event-banner__right"><a href="#" class="btn btn--primary">Matchinfo →</a><span class="next-event-banner__price">180 kr · Biljetter säljs på plats</span></div></div></div></section>''' if events == "upcoming" else ""
     body = f'''{header(4)}
 <section class="{cls}">{bg}<div class="hero__overlay"></div><img class="hero__watermark" src="{url(IMG / "mkt-logo.png")}" alt="" aria-hidden="true">
 <div class="hero__content"><p class="hero__kicker">Speedway &amp; Flattrack · Malmö</p><h1 class="hero__title">Motorklubben <span>Tändstiftet</span></h1><p class="hero__subtitle">Vi kör dirt track med hjärta. Välkommen till klubben.</p>
 <div class="hero__actions"><a href="#" class="btn btn--primary">Prova På — gratis →</a><a href="#" class="btn btn--outline">Se kommande tävlingar</a></div></div><div class="hero__diagonal"></div></section>
 <div class="stats-bar"><div class="stats-bar__inner"><div class="stat-item"><div class="stat-item__number">1924</div><div class="stat-item__label">Grundat</div></div><div class="stat-item"><div class="stat-item__number">Div 1</div><div class="stat-item__label">Seriespel</div></div><div class="stat-item"><div class="stat-item__number">20+</div><div class="stat-item__label">Aktiva förare</div></div><div class="stat-item"><div class="stat-item__number">Malmö</div><div class="stat-item__label">Hemmatrack</div></div></div></div>
-<section class="next-event-banner"><div class="container"><div class="next-event-banner__inner"><div class="next-event-banner__left"><div class="label" style="margin-bottom:0.4rem">Nästa tävling</div><div class="next-event-banner__date"><span class="next-event-banner__day">13</span><span class="next-event-banner__month">September 2026</span></div><h2 class="next-event-banner__title">Tändstiftet — Vikingarna</h2><p class="next-event-banner__meta">Malmö Motorstadion · 19:00</p></div><div class="next-event-banner__right"><a href="#" class="btn btn--primary">Matchinfo →</a><span class="next-event-banner__price">180 kr · Biljetter säljs på plats</span></div></div></div></section>
+{banner}{events_section(events)}
 <section class="section section--beige" id="nyheter"><div class="container"><div class="section-header"><div class="label" style="margin-bottom:0.4rem">Senaste nytt</div><h2 class="section-title">Nyheter</h2></div><div class="grid grid--3">{news}</div><div style="text-align:center;margin-top:var(--space-xl)"><a href="#" class="btn btn--outline">Alla nyheter</a></div></div></section>
 <section class="sponsors-section" id="sponsorer"><div class="container"><div class="section-header"><div class="label" style="margin-bottom:0.4rem">Tack till</div><h2 class="section-title">Våra sponsorer</h2></div><div class="sponsors-grid">{spons}</div></div></section>
 {footer()}'''
@@ -118,6 +137,7 @@ PAGES = {
     "home":       lambda: home_page(torn=True),
     "home-full":  lambda: home_page(torn=False),
     "home-slides":lambda: home_page(torn=True, slides=True),
+    "home-season-over": lambda: home_page(torn=True, events="season_over"),
 }
 if HAVE_PHP:
     PAGES.update({

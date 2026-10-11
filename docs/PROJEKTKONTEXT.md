@@ -95,6 +95,8 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 
 **Disciplinerna (Speedway, Flat track, Veteraner)** — beslut 2026-10-11: korten tas **bort från startsidan** (kryssruta *Startsida — Visa/dölj sektioner → Discipliner*) och läggs som länkar i footerns kolumn **Trackracing** (meny i *Utseende → Menyer*). Varje disciplin får en **enkel egen sida** (slug `speedway`, `flat-track`, `veteraner`). Skäl: Veteraner är bara 2 personer och flat track ligger på is (stödet finns kvar). ⬜ **Delprojekt senare:** gå igenom och utveckla innehållet på de tre sidorna. ⚠ Standardtexterna i temat ("500cc utan broms", "40+ år") är inte verifierade. Obs: footermenyn döljer inte Flat track-länken automatiskt när `tmc_flattrack_enabled` är av.
 
+**Startsidans tävlingar (önskemål 2026-10-11):** visa inte "kommande" när inga finns; visa årets tävlingar och att säsongen är över — "det är inte en död klubb". **Tävlingssäsongen** ≈ 1 april – första söndagen i oktober (start/slut kan vara fast datum eller första söndagen i en månad). ✅ Byggt i 2.1.0 (fyra lägen). ❓ Rutorna i "Tack för i år" (Nyheter, Prova På, Medlemsmöten) är mitt förslag — bekräfta. Lagen i en tävling skrivs tills vidare i tävlingens *utdrag* (inga lagfält än).
+
 **Startsida** ✅🟡 — hero, statistikrad, nästa tävling (utan biljettknapp), sektioner, Prova På-ruta, kommande tävlingar, **nyheter på beige**, förare, värderingar, **sponsorer på beige** (en saknad öppnande `<section>` rättades).
 
 **Footer** — tre/fyra kolumner (brand, menyer, kontakt) + Svemo/Bingolotto-länkar; menyerna sätts i *Utseende → Menyer*.

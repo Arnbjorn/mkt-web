@@ -211,28 +211,74 @@ $hero_title_html = tmc_hero_title_html( get_theme_mod( 'tmc_hero_title', '' ) ?:
 </section>
 <?php endif; ?>
 
-<!-- ═══ UPCOMING EVENTS ═══ -->
-<?php if ( get_theme_mod('tmc_show_events', true) ) : ?>
-<section class="section section--dark" id="evenemang">
+<!-- ═══ TÄVLINGAR — kommande / fler kommer / tack för i år / dold (Anpassa → Startsida — Tävlingar) ═══ -->
+<?php if ( get_theme_mod('tmc_show_events', true) ) :
+	$today        = date( 'Y-m-d' );
+	$events       = tmc_get_upcoming_events( 4 );
+	$season_year  = tmc_competition_season_year( $today );
+	$season_query = tmc_get_season_events( $season_year, 8 );
+	$ev_state     = tmc_home_events_state( $today, $events->have_posts(), $season_query->found_posts );
+	$he           = 'tmc_home_events_text';
+	$ev_archive   = get_post_type_archive_link( 'tmc_event' );
+	$with_year    = function ( $s ) use ( $season_year ) { return str_replace( '{år}', $season_year, $s ); };
+	if ( $ev_state !== 'hidden' ) : ?>
+<section class="section section--dark home-events home-events--<?php echo esc_attr( $ev_state ); ?>" id="evenemang">
 	<div class="container">
+	<?php if ( $ev_state === 'upcoming' ) : ?>
 		<div class="section-header">
-			<div class="label" style="margin-bottom:0.4rem"><?php esc_html_e('Kalender','tandstiftet'); ?></div>
-			<h2 class="section-title"><?php esc_html_e('Kommande tävlingar','tandstiftet'); ?></h2>
+			<?php if ( $he( 'upcoming_label' ) ) : ?><div class="label" style="margin-bottom:0.4rem"><?php echo esc_html( $he( 'upcoming_label' ) ); ?></div><?php endif; ?>
+			<h2 class="section-title"><?php echo esc_html( $he( 'upcoming_title' ) ); ?></h2>
 		</div>
-		<?php $events = tmc_get_upcoming_events(4); ?>
-		<?php if ($events->have_posts()) : ?>
-			<div class="grid grid--2">
-				<?php while ($events->have_posts()) : $events->the_post(); tmc_event_card(get_the_ID()); endwhile; wp_reset_postdata(); ?>
+		<div class="grid grid--2">
+			<?php while ( $events->have_posts() ) : $events->the_post(); tmc_event_card( get_the_ID() ); endwhile; wp_reset_postdata(); ?>
+		</div>
+		<p class="home-events__earlier">
+			<?php if ( $season_year === (int) substr( $today, 0, 4 ) && $season_query->found_posts > 0 && $he( 'earlier_text' ) ) : ?>
+				<?php echo esc_html( str_replace( '{antal}', (int) $season_query->found_posts, $he( 'earlier_text' ) ) ); ?> ·
+			<?php endif; ?>
+			<?php if ( $ev_archive && $he( 'archive_link' ) ) : ?><a href="<?php echo esc_url( $ev_archive ); ?>"><?php echo esc_html( $he( 'archive_link' ) ); ?></a><?php endif; ?>
+		</p>
+	<?php else :
+		$k = $ev_state === 'season_over' ? 'over' : 'more'; ?>
+		<div class="section-header">
+			<?php if ( $he( $k . '_label' ) ) : ?><div class="label" style="margin-bottom:0.4rem"><?php echo esc_html( $with_year( $he( $k . '_label' ) ) ); ?></div><?php endif; ?>
+			<h2 class="section-title"><?php echo esc_html( $with_year( $he( $k . '_title' ) ) ); ?></h2>
+		</div>
+		<?php if ( $he( $k . '_text' ) ) : ?><p class="home-events__intro"><?php echo esc_html( $with_year( $he( $k . '_text' ) ) ); ?></p><?php endif; ?>
+		<ul class="home-season-list">
+			<?php while ( $season_query->have_posts() ) : $season_query->the_post();
+				$d    = get_post_meta( get_the_ID(), 'tmc_event_date', true );
+				$loc  = get_post_meta( get_the_ID(), 'tmc_event_location', true );
+				$meta = array_filter( [ $loc, get_the_excerpt() ] ); ?>
+				<li>
+					<span class="home-season-list__date"><?php echo $d ? esc_html( date_i18n( 'j M', strtotime( $d ) ) ) : ''; ?></span>
+					<span class="home-season-list__title"><?php the_title(); ?>
+						<?php if ( $meta ) : ?><span class="home-season-list__meta"><?php echo esc_html( implode( ' · ', $meta ) ); ?></span><?php endif; ?>
+					</span>
+					<a href="<?php the_permalink(); ?>"><?php esc_html_e( 'Matchinfo', 'tandstiftet' ); ?> →</a>
+				</li>
+			<?php endwhile; wp_reset_postdata(); ?>
+		</ul>
+		<?php if ( $ev_archive && $he( 'archive_link' ) ) : ?><p class="home-events__earlier"><a href="<?php echo esc_url( $ev_archive ); ?>"><?php echo esc_html( $he( 'archive_link' ) ); ?></a></p><?php endif; ?>
+
+		<?php if ( $ev_state === 'season_over' ) :
+			$pp       = tmc_signup_state( 'provapa' );
+			$pp_words = $pp['open'] ? __( 'Kom och prova!', 'tandstiftet' ) : ( $pp['reopens'] ? sprintf( __( 'Öppnar igen %s', 'tandstiftet' ), tmc_swedish_date( $pp['reopens'] ) ) : __( 'Hör av dig till oss', 'tandstiftet' ) );
+			$boxes    = array_filter( array_map( function ( $i ) use ( $he, $pp_words ) {
+				return [ 'title' => $he( "box_{$i}_title" ), 'text' => str_replace( '{provapa}', $pp_words, $he( "box_{$i}_text" ) ), 'url' => $he( "box_{$i}_url" ) ];
+			}, [ 1, 2, 3 ] ), function ( $b ) { return $b['title'] !== ''; } );
+			if ( $boxes ) : ?>
+			<div class="home-season-next">
+				<?php foreach ( $boxes as $b ) : ?>
+					<a href="<?php echo esc_url( $b['url'] ?: '#' ); ?>"><strong><?php echo esc_html( $b['title'] ); ?></strong><?php if ( $b['text'] ) : ?><span><?php echo esc_html( $b['text'] ); ?></span><?php endif; ?></a>
+				<?php endforeach; ?>
 			</div>
-			<div style="text-align:center;margin-top:var(--space-xl)">
-				<a href="<?php echo esc_url(get_post_type_archive_link('tmc_event')); ?>" class="btn btn--outline"><?php esc_html_e('Visa hela kalendern','tandstiftet'); ?></a>
-			</div>
-		<?php else : ?>
-			<p style="text-align:center;color:var(--color-grey-mid)"><?php esc_html_e('Inga kommande tävlingar just nu. Håll utkik!','tandstiftet'); ?></p>
+			<?php endif; ?>
 		<?php endif; ?>
+	<?php endif; ?>
 	</div>
 </section>
-<?php endif; ?>
+<?php endif; endif; // tmc_show_events / hidden ?>
 
 <!-- ═══ LATEST NEWS ═══ -->
 <?php if ( get_theme_mod('tmc_show_news', true) ) : ?>

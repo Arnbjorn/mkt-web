@@ -115,10 +115,23 @@ with sync_playwright() as p:
     (ok if clip == "none" else bad)("kryssrutan 'Rivd bildkant' av → ingen klippning")
     pg.close()
 
+    # 5b. competitions on the homepage ------------------------------------------------------
+    print("\nStartsidans tävlingar")
+    pg = open_page("home", 390)
+    st = pg.evaluate("""(()=>{const b=document.querySelector('.event-card__date-box'), m=document.querySelector('.event-card__month');
+        return {fits: m.getBoundingClientRect().right <= b.getBoundingClientRect().right + 0.5, banner: !!document.querySelector('.next-event-banner')}})()""")
+    (ok if st["fits"] else bad)("månaden i tävlingskortets datumruta får plats (klipptes förut: \"24 MA…\")")
+    (ok if st["banner"] else bad)("med kommande tävlingar visas \"Nästa tävling\"-remsan")
+    pg.close()
+    pg = open_page("home-season-over", 1280)
+    st = pg.evaluate("({banner: !!document.querySelector('.next-event-banner'), rows: document.querySelectorAll('.home-season-list li').length, boxes: document.querySelectorAll('.home-season-next a').length})")
+    (ok if not st["banner"] and st["rows"] >= 1 and st["boxes"] == 3 else bad)(f"säsongen över: ingen \"Nästa tävling\"-remsa, årets tävlingar och tre rutor ({st})")
+    pg.close()
+
     # 6. the smallest text actually rendered --------------------------------------------
     print("\nMinsta renderade textstorlek")
     MIN_PX = 13.0
-    checks = [("home", 1280), ("home", 390), ("menu4", 1280), ("menu4", 390)]
+    checks = [("home", 1280), ("home", 390), ("home-season-over", 390), ("menu4", 1280), ("menu4", 390)]
     if harness.HAVE_PHP: checks += [("provapa", 1280), ("provapa", 390), ("provapa-closed", 390), ("page", 1280), ("page", 390), ("sliding", 1280), ("sliding", 390), ("sliding-paused", 390)]
     for name, w in checks:
         pg = open_page(name, w)

@@ -4,7 +4,7 @@
    and the special pages must get their own, ordered panels. */
 tmc_load( [
 	'tmc_page_text_sets', 'tmc_page_sections', 'tmc_page_section_hideable',
-	'tmc_provapa_fields', 'tmc_sliding_fields',
+	'tmc_provapa_fields', 'tmc_sliding_fields', 'tmc_home_events_fields',
 ] );
 
 if ( ! function_exists( 'add_action' ) ) {
@@ -101,4 +101,11 @@ test( 'Sliding-pausen och Flat track-växeln ligger under Sida: Sliding → Anm�
 	same( 'tmc_panel_sliding_signup', $c->controls['tmc_sliding_enabled']['section'] );
 	same( 'tmc_panel_sliding_signup', $c->controls['tmc_flattrack_enabled']['section'] );
 	same( 'tmc_panel_provapa_signup', $c->controls['tmc_provapa_season_message']['section'] );
+} );
+
+test( 'Startsida — Tävlingar: säsongen (1 april – första söndagen i oktober) och alla texter finns', function () {
+	$c = $GLOBALS['__customizer'];
+	same( 'tmc_panel', $c->sections['tmc_home_events']['panel'] ?? null );
+	same( [ 'date', 4, 1, 'first_sunday', 10 ], [ $c->settings['tmc_comp_start_rule']['default'], $c->settings['tmc_comp_start_month']['default'], $c->settings['tmc_comp_start_day']['default'], $c->settings['tmc_comp_end_rule']['default'], $c->settings['tmc_comp_end_month']['default'] ] );
+	foreach ( tmc_home_events_fields() as $key => $f ) same( 'tmc_home_events', $c->controls[ 'tmc_he_' . $key ]['section'] ?? null, "kontroll tmc_he_$key" );
 } );

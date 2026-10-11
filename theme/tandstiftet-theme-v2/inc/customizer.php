@@ -242,7 +242,7 @@ add_action( 'customize_register', function( $wp_customize ) {
         'tmc_show_next_event'   => __('Nästa tävling-banner', 'tandstiftet'),
         'tmc_show_disciplines'  => __('Discipliner (Speedway, Flat Track, Veteran)', 'tandstiftet'),
         'tmc_show_provapa'      => __('Prova På-sektion', 'tandstiftet'),
-        'tmc_show_events'       => __('Kalender / Kommande tävlingar', 'tandstiftet'),
+        'tmc_show_events'       => __('Tävlingar (kommande / säsongen — se Startsida — Tävlingar)', 'tandstiftet'),
         'tmc_show_news'         => __('Nyheter', 'tandstiftet'),
         'tmc_show_riders'       => __('Förare & Lag', 'tandstiftet'),
         'tmc_show_values'       => __('Vi tar hand om varandra', 'tandstiftet'),
@@ -642,6 +642,39 @@ function tmc_customizer_add_text_fields( $wp_customize, $section, array $fields,
     }
 }
 
+
+/* =========================================================
+   Startsida — Tävlingar (kommande / fler kommer / tack för i år / dold)
+   ========================================================= */
+add_action( 'customize_register', function( $wp_customize ) {
+
+    $wp_customize->add_section( 'tmc_home_events', [
+        'title'       => __( 'Startsida — Tävlingar', 'tandstiftet' ),
+        'description' => __( 'Tävlingsdelen på startsidan väljer själv vad den visar: kommande tävlingar när sådana finns; "Fler tävlingar kommer" vid uppehåll under säsongen; "Tack för i år" med årets tävlingar när säsongen är slut (även under vintern, tills nästa säsong börjar); och ingenting alls om säsongen saknar tävlingar. Ange tävlingssäsongen nedan.', 'tandstiftet' ),
+        'panel'       => 'tmc_panel',
+        'priority'    => 6,
+    ]);
+
+    $months = [ 1 => 'januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december' ];
+    $add = function ( $id, $default, $control ) use ( $wp_customize ) {
+        $wp_customize->add_setting( $id, [ 'default' => $default, 'sanitize_callback' => $control['type'] === 'radio' ? 'sanitize_key' : 'absint' ] );
+        $wp_customize->add_control( $id, $control + [ 'section' => 'tmc_home_events' ] );
+    };
+    $add( 'tmc_comp_start_rule', 'date', [ 'type' => 'radio', 'priority' => 1, 'label' => __( 'Tävlingssäsongen börjar', 'tandstiftet' ), 'choices' => [
+        'date'         => __( 'Ett fast datum (standard: 1 april)', 'tandstiftet' ),
+        'first_sunday' => __( 'Första söndagen i månaden nedan', 'tandstiftet' ),
+    ] ] );
+    $add( 'tmc_comp_start_month', 4,  [ 'type' => 'select', 'priority' => 2, 'label' => __( 'Börjar — månad', 'tandstiftet' ), 'choices' => $months ] );
+    $add( 'tmc_comp_start_day',   1,  [ 'type' => 'number', 'priority' => 3, 'label' => __( 'Börjar — dag (bara vid fast datum)', 'tandstiftet' ), 'input_attrs' => [ 'min' => 1, 'max' => 31 ] ] );
+    $add( 'tmc_comp_end_rule', 'first_sunday', [ 'type' => 'radio', 'priority' => 4, 'label' => __( 'Tävlingssäsongen slutar', 'tandstiftet' ), 'choices' => [
+        'first_sunday' => __( 'Första söndagen i månaden nedan (standard: oktober)', 'tandstiftet' ),
+        'date'         => __( 'Ett fast datum (dag + månad nedan)', 'tandstiftet' ),
+    ] ] );
+    $add( 'tmc_comp_end_month',  10, [ 'type' => 'select', 'priority' => 5, 'label' => __( 'Slutar — månad', 'tandstiftet' ), 'choices' => $months ] );
+    $add( 'tmc_comp_end_day',    1,  [ 'type' => 'number', 'priority' => 6, 'label' => __( 'Slutar — dag (bara vid fast datum)', 'tandstiftet' ), 'input_attrs' => [ 'min' => 1, 'max' => 31 ] ] );
+
+    tmc_customizer_add_text_fields( $wp_customize, 'tmc_home_events', tmc_home_events_fields(), 'tmc_he_', 10 );
+});
 
 /* =========================================================
    v2 — Header & meny

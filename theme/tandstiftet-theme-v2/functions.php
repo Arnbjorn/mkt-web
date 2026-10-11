@@ -665,6 +665,7 @@ function tmc_page_text_sets() {
 	return [
 		'provapa' => [ 'tmc_provapa_fields', 'tmc_pp_' ],
 		'sliding' => [ 'tmc_sliding_fields', 'tmc_sl_' ],
+		'home_events' => [ 'tmc_home_events_fields', 'tmc_he_' ],
 	];
 }
 function tmc_page_text( $set, $key ) {
@@ -972,6 +973,96 @@ function tmc_signup_state( $set, $today = null ) {
 			: tmc_page_text( $set, 'closed_msg' );
 	}
 	return $state;
+}
+
+
+/* =========================================================
+   Startsidan — tävlingar och tävlingssäsongen
+   (Anpassa → Startsida — Tävlingar)
+   ========================================================= */
+
+/* Texts for the competitions part of the homepage. Same format as the page field lists. */
+function tmc_home_events_fields() {
+	return [
+		'upcoming_label' => [ 'Tävlingar', 'Kommande — liten rad', __( 'Kalender', 'tandstiftet' ), 'text' ],
+		'upcoming_title' => [ 'Tävlingar', 'Kommande — rubrik', __( 'Kommande tävlingar', 'tandstiftet' ), 'text' ],
+		'earlier_text'   => [ 'Tävlingar', 'Kommande — rad om årets körda tävlingar ({antal} = hur många)', __( 'Tidigare i år: {antal} tävlingar', 'tandstiftet' ), 'text' ],
+		'archive_link'   => [ 'Tävlingar', 'Länktext till alla tävlingar', __( 'Se hela säsongen →', 'tandstiftet' ), 'text' ],
+		'more_label'     => [ 'Tävlingar', 'Uppehåll under säsongen — liten rad ({år})', __( 'Säsongen {år}', 'tandstiftet' ), 'text' ],
+		'more_title'     => [ 'Tävlingar', 'Uppehåll under säsongen — rubrik', __( 'Fler tävlingar kommer', 'tandstiftet' ), 'text' ],
+		'more_text'      => [ 'Tävlingar', 'Uppehåll under säsongen — text', __( 'Just nu finns inga fler tävlingar inlagda — håll utkik! Här är årets tävlingar hittills.', 'tandstiftet' ), 'textarea' ],
+		'over_label'     => [ 'Tävlingar', 'Säsongen är över — liten rad ({år})', __( 'Säsongen {år}', 'tandstiftet' ), 'text' ],
+		'over_title'     => [ 'Tävlingar', 'Säsongen är över — rubrik', __( 'Tack för i år!', 'tandstiftet' ), 'text' ],
+		'over_text'      => [ 'Tävlingar', 'Säsongen är över — text', __( 'Tävlingssäsongen är över — men klubben lever året runt. Här är årets tävlingar, och nedan vad som händer under vintern.', 'tandstiftet' ), 'textarea' ],
+		'box_1_title'    => [ 'Rutor', 'Ruta 1 — rubrik (tom = dold)', __( 'Nyheter', 'tandstiftet' ), 'text' ],
+		'box_1_text'     => [ 'Rutor', 'Ruta 1 — text', __( 'Läs vad som händer i klubben', 'tandstiftet' ), 'text' ],
+		'box_1_url'      => [ 'Rutor', 'Ruta 1 — länk', '#nyheter', 'url' ],
+		'box_2_title'    => [ 'Rutor', 'Ruta 2 — rubrik (tom = dold)', __( 'Prova På', 'tandstiftet' ), 'text' ],
+		'box_2_text'     => [ 'Rutor', 'Ruta 2 — text ({provapa} = "Öppnar igen 1 april 2027" eller "Kom och prova!")', '{provapa}', 'text' ],
+		'box_2_url'      => [ 'Rutor', 'Ruta 2 — länk', '/prova-pa/', 'url' ],
+		'box_3_title'    => [ 'Rutor', 'Ruta 3 — rubrik (tom = dold)', __( 'Medlemsmöten', 'tandstiftet' ), 'text' ],
+		'box_3_text'     => [ 'Rutor', 'Ruta 3 — text', __( 'Första onsdagen varje månad kl. 18', 'tandstiftet' ), 'text' ],
+		'box_3_url'      => [ 'Rutor', 'Ruta 3 — länk', '/klubbinfo/#medlemsmoten', 'url' ],
+	];
+}
+function tmc_home_events_text( $key ) {
+	return tmc_page_text( 'home_events', $key );
+}
+
+/* The competition season of a year: [ 'Y-m-d' start, 'Y-m-d' end ].
+   Each end is either a fixed date or "the first Sunday of <month>" (Anpassa → Startsida — Tävlingar).
+   Default: 1 April until the first Sunday of October. */
+function tmc_competition_season( $year ) {
+	$year = (int) $year;
+	$edge = function ( $which, $rule, $month, $day ) use ( $year ) {
+		$rule  = get_theme_mod( "tmc_comp_{$which}_rule", $rule );
+		$month = min( 12, max( 1, (int) get_theme_mod( "tmc_comp_{$which}_month", $month ) ) );
+		if ( $rule === 'first_sunday' ) {
+			$d = new DateTime( sprintf( '%04d-%02d-01', $year, $month ) );
+			$d->modify( '+' . ( ( 7 - (int) $d->format( 'w' ) ) % 7 ) . ' days' );   // 'w': 0 = Sunday
+			return $d->format( 'Y-m-d' );
+		}
+		return sprintf( '%04d-%s', $year, tmc_season_md( $month, get_theme_mod( "tmc_comp_{$which}_day", $day ) ) );
+	};
+	return [ $edge( 'start', 'date', 4, 1 ), $edge( 'end', 'first_sunday', 10, 1 ) ];
+}
+
+/* Which season the homepage talks about: this year's once it has started,
+   otherwise last year's (so January–March still shows "Säsongen 2026 — tack för i år"). */
+function tmc_competition_season_year( $today ) {
+	$year = (int) substr( (string) $today, 0, 4 );
+	list( $start ) = tmc_competition_season( $year );
+	return $today >= $start ? $year : $year - 1;
+}
+
+/* What the competitions part of the homepage should show:
+   'upcoming'    — there are coming competitions (the "Nästa tävling" strip shows too)
+   'more_coming' — none coming, but we are still inside the season
+   'season_over' — the season has ended; thank you + this season's competitions
+   'hidden'      — nothing coming and nothing this season: leave the part out */
+function tmc_home_events_state( $today, $has_upcoming, $season_count ) {
+	if ( $has_upcoming ) return 'upcoming';
+	if ( (int) $season_count < 1 ) return 'hidden';
+	list( , $end ) = tmc_competition_season( tmc_competition_season_year( $today ) );
+	return $today <= $end ? 'more_coming' : 'season_over';
+}
+
+/* Competitions already held in a season (newest first). */
+function tmc_get_season_events( $year, $count = 8 ) {
+	list( $start ) = tmc_competition_season( $year );
+	$today = date( 'Y-m-d' );
+	// From the season start to New Year's Eve, so a late competition after the season end still counts.
+	return new WP_Query( [
+		'post_type'      => 'tmc_event',
+		'posts_per_page' => $count,
+		'meta_key'       => 'tmc_event_date',
+		'orderby'        => 'meta_value',
+		'order'          => 'DESC',
+		'meta_query'     => [
+			[ 'key' => 'tmc_event_date', 'value' => [ $start, sprintf( '%04d-12-31', $year ) ], 'compare' => 'BETWEEN', 'type' => 'DATE' ],
+			[ 'key' => 'tmc_event_date', 'value' => $today, 'compare' => '<', 'type' => 'DATE' ],
+		],
+	] );
 }
 
 /* Automatically strip any "Sliding" link from every nav menu while paused,

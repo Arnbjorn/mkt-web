@@ -5044,3 +5044,75 @@ h3.footer-nav-col__title,
 .sliding-paused .btn { max-width: 100%; letter-spacing: 0.06em; overflow-wrap: anywhere; line-height: 1.2; }   /* a long e-mail address must not push the page wider */
 .sliding-paused .btn--outline { border-color: var(--color-ink); color: var(--color-ink); }
 .sliding-paused .btn--outline:hover { background: var(--color-ink); color: var(--color-beige); }
+
+
+/* =========================================================
+   v2 — STARTSIDA: TÄVLINGAR (front-page.php, Anpassa → Startsida — Tävlingar)
+   upcoming = cards · more_coming / season_over = this season's list (+ boxes)
+   ========================================================= */
+/* Event cards: day above month (side by side, the month was cut off: "24 MA…") */
+.event-card { grid-template-columns: 4.6rem 1fr; }
+.event-card__date-box { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.55rem 0.3rem; }
+.event-card__day,
+.event-card__month { display: block; }
+.event-card__month { font-size: 0.9rem; letter-spacing: 0.06em; margin-top: 0.15rem; }
+.event-card__title { font-size: 1.5rem; }
+.home-events .grid--2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }   /* one column when two do not fit */
+.event-card { min-width: 0; }
+.event-card__title { overflow-wrap: anywhere; }
+
+.home-events__earlier { text-align: center; margin-top: 1.6rem; font-size: 1.05rem; color: var(--color-grey-light); }
+.home-events__earlier a { color: var(--color-gold); font-weight: 600; text-underline-offset: 3px; }
+.home-events__earlier a:hover { color: var(--color-gold-light); }
+.home-events__intro { text-align: center; max-width: 46rem; margin: -1.2rem auto 2rem; font-size: 1.1rem; line-height: 1.7; color: var(--color-grey-light); }
+
+.home-season-list { list-style: none; margin: 0 auto; padding: 0; max-width: 50rem; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+.home-season-list li {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr auto;
+  gap: 0.4rem 1rem;
+  align-items: center;
+  padding: 0.95rem 0.2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.home-season-list__date { font-family: var(--font-display); font-size: 1.6rem; line-height: 1; color: var(--color-gold-light); }
+.home-season-list__title {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-cream);
+}
+.home-season-list__meta {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-grey-light);
+}
+.home-season-list a { color: var(--color-gold); font-weight: 600; white-space: nowrap; text-underline-offset: 3px; }
+.home-season-list a:hover { color: var(--color-gold-light); }
+@media (max-width: 600px) {
+  .home-season-list li { grid-template-columns: 4.4rem 1fr; }
+  .home-season-list a { grid-column: 2; }
+}
+
+.home-season-next { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 60rem; margin: 2.6rem auto 0; }
+.home-season-next a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: var(--color-asphalt);
+  border-top: 3px solid var(--color-gold);
+  padding: 1.1rem 1.25rem;
+  text-decoration: none;
+  transition: border-color 0.2s;
+}
+.home-season-next a:hover { border-top-color: var(--color-orange); }
+.home-season-next strong { font-family: var(--font-condensed); font-size: 1.2rem; letter-spacing: 0.03em; text-transform: uppercase; color: var(--color-gold-light); }
+.home-season-next span { font-size: 1rem; color: var(--color-grey-light); }
+@media (max-width: 760px) { .home-season-next { grid-template-columns: 1fr; } }
