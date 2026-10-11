@@ -78,6 +78,8 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 - **Sparks-ruta** ("Flat track i samarbete med The Sparks Flattrack School") har kontaktnamn/telefon **hårdkodade i `templates/page-sliding.php`** → ⬜ gör till Customizer-fält så de kan ändras/tömmas (inget tränarteam just nu). Försvinner redan helt när Flat track stängs av.
 - ⬜ Kalenderns små dag-etiketter ("Fullt"/"Ring oss", ≈12 px) är för små för målgruppen — korta texten och/eller gör rutorna större när sidan tas.
 
+**Division 1-laget heter Gnistorna.** (Konceptsidornas lagnamn/motståndare är fortfarande platshållare.)
+
 **Förare & Lag**
 - Två sektioner: **Ungdomslaget** (primär, beige, *före*) som hyllar barn/ungdomar som gått från Prova På till tävling, med länk "Vill ditt barn också börja? → Prova På", och **Division 1 / Säsongens förare** (mörk). **Inget filter** just nu. **Vuxna förare (utanför Div 1) finns inga just nu** — lägg till sektion/filter när de finns (eller uppdelning speedway/flat track).
 - Data: CPT `tmc_rider`, taxonomi `tmc_division` (`division-1`, `vuxen`, `ungdom`), kortformat 3:4 (`rider-card`).
@@ -131,6 +133,7 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 - *Bildfilerna för styrelsefoton, favicons och bakgrundsbilder ligger **inte** i repot (personbilder/binärt). Be användaren om dem vid behov.*
 
 ### Senare
+- **Gnistorna-merch (idé 2026-10-11):** användaren vill ha alternativ 1 eller 2 — inte en riktig webbutik (WooCommerce). Förslag: en "Gnistorna"-sida på sajten; kläder/kepsar via gratis print-on-demand-butik (t.ex. Spreadshop) som sajten länkar till; stickade supporterhalsdukar som parti (ofta min. 50 st) som säljs på plats + beställningsformulär med Swish. ❓ Rätt till Gnistorna-loggan, moms/bokföring (kassören), har klubben Swish för förening? Ingen plats i ordningen bestämd än.
 - Textstorleksknapp (A/A+/A++), uppdatering av temat direkt från GitHub-releaser i wp-admin, exportskript för Customizer-inställningar (säkerhetskopia), Barlow-test.
 
 ## 7. Tekniska lärdomar
