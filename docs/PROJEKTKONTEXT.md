@@ -96,7 +96,7 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 ## 6. Att göra
 
 ### Verifiera live (användaren)
-- ⬜ **Testsajten test.tändstiftet.se är en ny tom WordPress.** För att se v2 där: publicera temat (knappen, `docs/PUBLICERA.md`) och aktivera det; skapa sidorna (Start som statisk startsida, Prova På med mallen *Prova På (Barn & Ungdom)* och slug `prova-pa`, Sliding m.fl.); sätt menyerna; ladda upp logga och bilder. Importen från v1 gör ingenting här (inget v1-tema på den sajten).
+- 🟡 **Testsajten test.tändstiftet.se är en ny tom WordPress.** Klart: temat publicerat och aktivt, sidan Prova På skapad. Kvar: logga (*Anpassa → Webbplatsidentitet*), övriga sidor, menyer. För att se v2 där: publicera temat (knappen, `docs/PUBLICERA.md`) och aktivera det; skapa sidorna (Start som statisk startsida, Prova På med mallen *Prova På (Barn & Ungdom)* och slug `prova-pa`, Sliding m.fl.); sätt menyerna; ladda upp logga och bilder. Importen från v1 gör ingenting här (inget v1-tema på den sajten).
 - ⬜ Aktivera `tandstiftet-theme-v2` på betasajten; kolla att **inställningarna följde med** (logga, kontakt, hero, menyer). *Importen är enhetstestad men aldrig körd i riktig WordPress.*
 - ⬜ Titta på startsidan på dator **och** mobil. Rensa one.com-cachen först.
 - ⬜ **Statistikraden:** standardvärdet för "Grundat" är **1970**, men loggan/footern säger **1924**. ❓ Vilket stämmer? (Anpassa → Statistikrad)
@@ -111,7 +111,7 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 - ❓ Textstorleksknapp — efter att sidorna setts live.
 
 ### Kodbacklog (i föreslagen ordning)
-1. 🟡 **Prova På** i temat enligt `koncept-provapa.html` + hero D (v2.1.0). Texter i *Anpassa → Prova På — Sidan*. Godkänd av användaren 2026-10-11 (inkl. fällbara frågor och "6+ år"). ⬜ Verifiera live; byt platshållarfotot mot riktigt foto (Utvald bild) med vårdnadshavares medgivande.
+1. 🟡 **Prova På** i temat enligt `koncept-provapa.html` + hero D (v2.1.0). Texter i *Anpassa → Prova På — Sidan*. Godkänd av användaren 2026-10-11 (inkl. fällbara frågor och "6+ år"). ✅ Publicerad via knappen och kontrollerad på test.tändstiftet.se/prova-pa/ 2026-10-11 (dator + mobil, riktiga typsnitt, ingen sidledsscroll). ⬜ byt platshållarfotot mot riktigt foto (Utvald bild) med vårdnadshavares medgivande.
 2. **Sliding** (kalender, flikar, disciplinkort, redigerbar Sparks-ruta, större dag-etiketter).
 3. **Förare & Lag** (Ungdomslaget först).
 4. **Tävlingar:** lista + enskild match + nya datafält (motståndare, hemma/borta, resultat, laguppställning).
