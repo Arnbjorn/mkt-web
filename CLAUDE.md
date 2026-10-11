@@ -85,7 +85,7 @@ Hamburgermeny ≤1099 px. Beige läsyta för längre text. Konceptsidorna i `des
 - **Tävlingar** nås via "Nästa match"-remsan på startsidan, inte huvudmenyn (kryssruta i Anpassa slår på det). Huvudmeny: Start · Förare & Lag · Prova På · Sliding.
 - **Prova På (barn & ungdom):** gratis; kom på ordinarie barnträning ons 17:00 / lör 10:00; ingen anmälan *krävs* men man bör höra av sig (annars risk att motorcyklar inte är förberedda). **Från 12 år krävs Svemo prova på-licens, 225 kr**, betalas separat till Svemo.
 - **Sliding (vuxna):** 800 kr till klubben + 225 kr Svemo-licens; bokas alltid i förväg; kalas/möhippa/företag går bra. Kapacitet per kalenderlucka = tränarens tak (standard 8). **Ej bokningsbart inom 24 h** ("Ring oss"). "Fullt" visas bara när kapaciteten är nådd.
-- **Flat track kan stängas av helt** och **Sliding kan pausas** (bakgrund: oenighet kring Sparks — behandla diskret, skriv aldrig om det publikt). **Sparks tränarteam finns inte just nu.**
+- **Flat track kan stängas av helt** och **Sliding kan pausas**. **Läget okt 2026:** banan är godkänd för flat track och klubben kan stötta, men det finns **inga flat track-tränare** → flat track i Sliding är **av som standard**. **Sparks Flattrack School finns inte längre** (inte heller kopplingen till Sören Teil Hansen) — nämn dem inte på sajten. Bakgrunden (oenighet kring Sparks) är känslig — skriv aldrig om den publikt.
 - **Läsbarhet:** inget under ca 14 px, kontrast ≥ 6:1 för dämpad text, inget tunt typsnitt.
 - **Foton på barn** kräver vårdnadshavares medgivande innan de används publikt.
 

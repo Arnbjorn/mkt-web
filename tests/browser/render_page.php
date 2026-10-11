@@ -98,6 +98,6 @@ tmc_load( [
 	'tmc_signup_settings', 'tmc_signup_open_on', 'tmc_signup_state',
 ] );
 // Theme mods arrive as strings from the command line; '0' must mean "off" like WordPress' stored false.
-foreach ( $GLOBALS['__mods'] as $k => $v ) { if ( $v === '0' ) $GLOBALS['__mods'][ $k ] = false; }
+foreach ( $GLOBALS['__mods'] as $k => $v ) { if ( $v === '0' ) $GLOBALS['__mods'][ $k ] = false; elseif ( $v === '1' ) $GLOBALS['__mods'][ $k ] = true; }
 
 include TMC_THEME . '/' . $template;

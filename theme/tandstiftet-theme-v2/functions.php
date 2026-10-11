@@ -541,7 +541,9 @@ function tmc_sliding_enabled() {
    callout, no Flat Track option in the booking form, and no Flat Track slots
    in the calendar — Speedway keeps working as normal. */
 function tmc_flattrack_enabled() {
-	return (bool) get_theme_mod( 'tmc_flattrack_enabled', true );
+	// Off by default since 2.1.0: the track is approved for flat track, but the club has no
+	// flat track instructors right now, so Sliding (which includes an instructor) is speedway only.
+	return (bool) get_theme_mod( 'tmc_flattrack_enabled', false );
 }
 
 /* Prova På (barn & ungdom) — säsong öppen/stängd. Styrs från
@@ -779,15 +781,16 @@ function tmc_sliding_fields() {
 		'sw_title'           => [ 'Discipliner', 'Speedway — rubrik', __( 'Speedway', 'tandstiftet' ), 'text' ],
 		'sw_text'            => [ 'Discipliner', 'Speedway — text', __( 'Oval bana utan broms — för dig med tidigare erfarenhet av motorcykel eller som vill utmana dig direkt, i mån av tillgänglig maskin.', 'tandstiftet' ), 'textarea' ],
 
-		// Samarbetsruta (visas bara när Flat track är på; tom rubrik = rutan döljs)
+		// Samarbetsruta för flat track (visas bara när Flat track är på). Tom som standard —
+		// fyll i rubriken om klubben får en samarbetspartner/tränare för flat track.
 		'partner_label'         => [ 'Samarbete', 'Liten rad (tom rubrik nedan = hela rutan döljs)', __( 'Flat track i samarbete med', 'tandstiftet' ), 'text' ],
-		'partner_title'         => [ 'Samarbete', 'Rubrik — töm för att dölja rutan', 'The Sparks Flattrack School', 'text' ],
-		'partner_text'          => [ 'Samarbete', 'Text', __( 'Vet du redan att det är flat track du vill köra? Då kan du höra av dig direkt till Sparks tränarteam i stället för att boka via formuläret nedan.', 'tandstiftet' ), 'textarea' ],
-		'partner_url'           => [ 'Samarbete', 'Länkadress (tom = ingen länk)', 'https://sparks.tändstiftet.se/', 'url' ],
-		'partner_link'          => [ 'Samarbete', 'Länktext', __( 'Läs mer om Sparks Flattrack School →', 'tandstiftet' ), 'text' ],
-		'partner_contact_name'  => [ 'Samarbete', 'Kontaktperson — namn (tom = ingen kontakt visas)', 'Sören Teil Hansen', 'text' ],
-		'partner_contact_role'  => [ 'Samarbete', 'Kontaktperson — titel', __( 'Regerande svensk mästare, Hooligan Class Flattrack (Harley-Davidson)', 'tandstiftet' ), 'text' ],
-		'partner_contact_phone' => [ 'Samarbete', 'Kontaktperson — telefon', '070-005 59 82', 'text' ],
+		'partner_title'         => [ 'Samarbete', 'Samarbetspartnerns namn — tomt = rutan visas inte', '', 'text' ],
+		'partner_text'          => [ 'Samarbete', 'Text', '', 'textarea' ],
+		'partner_url'           => [ 'Samarbete', 'Länkadress (tom = ingen länk)', '', 'url' ],
+		'partner_link'          => [ 'Samarbete', 'Länktext', __( 'Läs mer →', 'tandstiftet' ), 'text' ],
+		'partner_contact_name'  => [ 'Samarbete', 'Kontaktperson — namn (tom = ingen kontakt visas)', '', 'text' ],
+		'partner_contact_role'  => [ 'Samarbete', 'Kontaktperson — titel', '', 'text' ],
+		'partner_contact_phone' => [ 'Samarbete', 'Kontaktperson — telefon', '', 'text' ],
 
 		// Steg
 		'steps_eyebrow'     => [ 'Steg', 'Liten rad ovanför rubriken', __( 'Steg för steg', 'tandstiftet' ), 'text' ],

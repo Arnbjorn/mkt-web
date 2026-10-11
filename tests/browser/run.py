@@ -205,6 +205,11 @@ with sync_playwright() as p:
         (ok if "Speedway" in st["facts"] and "2" not in st["facts"] else bad)(f"Flat track avstängt: faktaremsan säger Speedway ({st['facts']})")
         (ok if "flat track eller speedway" not in st["text"] else bad)("Flat track avstängt: texterna nämner inte flat track som val")
         pg.close()
+        pg = open_page("sliding-default", 1280)
+        st = pg.evaluate("({tabs: !!document.querySelector('.pp-discipline-tabs'), partner: !!document.querySelector('.sliding-partner'), text: document.body.innerText})")
+        (ok if not st['tabs'] and not st['partner'] and 'Sparks' not in st['text'] and 'Sören' not in st['text'] else bad)(
+            'standard: Sliding är bara speedway (inga flat track-tränare) och ingen samarbetsruta eller gamla kontaktuppgifter visas')
+        pg.close()
         pg = open_page("sliding-paused", 1280)
         st = pg.evaluate("({form: !!document.querySelector('#pp-sliding-form'), cal: !!document.querySelector('#pp-calendar'), paused: !!document.querySelector('.sliding-paused')})")
         (ok if st == {"form": False, "cal": False, "paused": True} else bad)(f"Sliding pausat: pausmeddelande, ingen kalender och inget formulär ({st})")

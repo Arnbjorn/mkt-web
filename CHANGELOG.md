@@ -20,6 +20,8 @@ Prova På-sidan (barn & ungdom) i v2-stilen, enligt `design/concepts/koncept-pro
 - Webbläsartesterna återger nu den **riktiga** PHP-mallen för Prova På (`tests/browser/render_page.php`) och kontrollerar bl.a. bredder, klistermärket, säsongsstängning och minsta textstorlek.
 
 ### Ändrat
+- **Flat track i Sliding är avstängt som standard** (`tmc_flattrack_enabled` = av): banan är godkänd för flat track men klubben har inga flat track-tränare just nu, och Sliding inkluderar instruktör. Slå på under *Sida: Sliding → Anmälan och säsong* när det finns tränare.
+- **Samarbetsrutan på Sliding är tom som standard** — Sparks Flattrack School och kontaktpersonen är borttagna (finns inte längre). Fälten finns kvar för en eventuell framtida partner.
 - Prova På: texten om att höra av sig säger nu att det annars är risk att motorcyklar inte är förberedda (inte "väder eller banans skick").
 - Prova På: formuläret visas igen tillsammans med felmeddelandet (förut försvann det), med ifyllda fält kvar. Fälten har nu etiketter kopplade till rutorna (bättre för skärmläsare). "Namn" heter "Barnets namn".
 - Prova På: utrustning, säkerhet, fler tillfällen och "nästa steg" (medlemskap, trackracing-skolan, tävla) ligger nu som frågor under "Bra att veta" i stället för egna långa sektioner.

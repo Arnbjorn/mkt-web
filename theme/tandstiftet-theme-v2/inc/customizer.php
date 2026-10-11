@@ -282,14 +282,14 @@ add_action( 'customize_register', function( $wp_customize ) {
     ]);
 
     $wp_customize->add_setting('tmc_flattrack_enabled', [
-        'default'           => true,
+        'default'           => false,   // no flat track instructors right now (2.1.0)
         'sanitize_callback' => 'rest_sanitize_boolean',
     ]);
     $wp_customize->add_control('tmc_flattrack_enabled', [
         'section'     => 'tmc_panel_sliding_signup',
         'priority'    => 31,
         'label'       => __('Flat track är en del av Sliding just nu (bocka ur för att stänga av helt)', 'tandstiftet'),
-        'description' => __('Avbockad: inget Flat track-kort, ingen Sparks-ruta, inget Flat track-alternativ i bokningsformuläret, och inga Flat track-luckor i kalendern. Speedway påverkas inte.', 'tandstiftet'),
+        'description' => __('Avbockad (standard just nu — klubben har inga flat track-tränare): inget Flat track-kort, ingen samarbetsruta, inget Flat track-alternativ i bokningsformuläret, och inga Flat track-luckor i kalendern. Speedway påverkas inte.', 'tandstiftet'),
         'type'        => 'checkbox',
     ]);
 });
