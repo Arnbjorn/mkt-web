@@ -267,21 +267,18 @@ add_action( 'customize_register', function( $wp_customize ) {
    ========================================================= */
 add_action( 'customize_register', function( $wp_customize ) {
 
-    $wp_customize->add_section('tmc_sliding_toggle', [
-        'title'       => __('Sliding — Paus/Aktiv', 'tandstiftet'),
-        'description' => __('En enda växel för hela Sliding-erbjudandet. Avbockad: Sliding-sidan visar ett "pausad"-meddelande istället för sitt vanliga innehåll, länken till Sliding tas bort från Prova På-sidan och startsidan, och "Sliding" försvinner ur menyerna automatiskt. Bocka i igen när ni vill återställa allt exakt som det var.', 'tandstiftet'),
-        'panel'       => 'tmc_panel',
-        'priority'    => 4,
-    ]);
+    // The controls live in Anpassa → Sida: Sliding → Anmälan och säsong (tmc_panel_sliding_signup).
 
     $wp_customize->add_setting('tmc_sliding_enabled', [
         'default'           => true,
         'sanitize_callback' => 'rest_sanitize_boolean',
     ]);
     $wp_customize->add_control('tmc_sliding_enabled', [
-        'section' => 'tmc_sliding_toggle',
-        'label'   => __('Sliding är aktivt (bocka ur för att pausa tillfälligt)', 'tandstiftet'),
-        'type'    => 'checkbox',
+        'section'     => 'tmc_panel_sliding_signup',
+        'priority'    => 30,
+        'label'       => __('Sliding är aktivt (bocka ur för att pausa HELA Sliding)', 'tandstiftet'),
+        'description' => __('Avbockad: Sliding-sidan visar bara ett pausmeddelande, och Sliding försvinner ur menyerna, från startsidan och från Prova På-sidan. Bocka i igen för att återställa allt.', 'tandstiftet'),
+        'type'        => 'checkbox',
     ]);
 
     $wp_customize->add_setting('tmc_flattrack_enabled', [
@@ -289,7 +286,8 @@ add_action( 'customize_register', function( $wp_customize ) {
         'sanitize_callback' => 'rest_sanitize_boolean',
     ]);
     $wp_customize->add_control('tmc_flattrack_enabled', [
-        'section'     => 'tmc_sliding_toggle',
+        'section'     => 'tmc_panel_sliding_signup',
+        'priority'    => 31,
         'label'       => __('Flat track är en del av Sliding just nu (bocka ur för att stänga av helt)', 'tandstiftet'),
         'description' => __('Avbockad: inget Flat track-kort, ingen Sparks-ruta, inget Flat track-alternativ i bokningsformuläret, och inga Flat track-luckor i kalendern. Speedway påverkas inte.', 'tandstiftet'),
         'type'        => 'checkbox',
@@ -383,7 +381,7 @@ add_action( 'customize_register', function( $wp_customize ) {
     /* ── Flat track ── */
     $wp_customize->add_section('tmc_sliding_booking_flattrack', [
         'title'       => __('Sliding — Flat track-schema', 'tandstiftet'),
-        'description' => __('Samma som Speedway-schemat, men för Flat track. Hela den här sektionen är verkningslös om Flat track är avstängt under Sliding — Paus/Aktiv.', 'tandstiftet'),
+        'description' => __('Samma som Speedway-schemat, men för Flat track. Hela den här sektionen är verkningslös om Flat track är avstängt (Sida: Sliding → Anmälan och säsong).', 'tandstiftet'),
         'panel'       => 'tmc_panel',
         'priority'    => 6,
         'active_callback' => 'tmc_flattrack_enabled',
@@ -523,78 +521,123 @@ add_action( 'customize_register', function( $wp_customize ) {
 });
 
 /* =========================================================
-   Prova På — Säsong öppen/stängd
+   Specialsidor — en egen panel per sida i Anpassa:
+     Sida: Prova På  /  Sida: Sliding
+   Överst "Anmälan och säsong", sedan en rubrik per del av sidan
+   (i samma ordning som på sidan) med "Visa den här delen" + delens texter.
+   Delarna och texterna kommer från tmc_page_sections() och
+   tmc_provapa_fields() / tmc_sliding_fields() i functions.php.
    ========================================================= */
 add_action( 'customize_register', function( $wp_customize ) {
 
-    $wp_customize->add_section('tmc_provapa_season', [
-        'title'       => __('Prova På — Säsong', 'tandstiftet'),
-        'description' => __('Stänger bokningsdelen av Prova På-sidan (barn & ungdom) och visar ett säsongsmeddelande istället. Resten av sidan (utrustning, hur det går till, licensinfo) ligger kvar som vanligt — bara "hör av dig"-formuläret och uppmaningarna att bara dyka upp stängs av.', 'tandstiftet'),
-        'panel'       => 'tmc_panel',
-        'priority'    => 4,
-    ]);
+    tmc_customizer_page_panel( $wp_customize, 'provapa', 'tmc_panel_provapa',
+        __( 'Sida: Prova På', 'tandstiftet' ),
+        __( 'Allt på Prova På-sidan (barn och ungdom). Börja med "Anmälan och säsong". Varje del av sidan har en egen rubrik här, i samma ordning som på sidan: bocka ur "Visa den här delen" för att dölja den, eller ändra texterna. Ett tomt textfält döljer just den texten. Fotot i ramen är sidans Utvald bild (Sidor → Prova På). Kom ihåg vårdnadshavares medgivande för bilder på barn.', 'tandstiftet' ),
+        30 );
 
-    $wp_customize->add_setting('tmc_provapa_season_open', [
-        'default'           => true,
-        'sanitize_callback' => 'rest_sanitize_boolean',
-    ]);
-    $wp_customize->add_control('tmc_provapa_season_open', [
-        'section' => 'tmc_provapa_season',
-        'label'   => __('Prova På tar emot fler för säsongen (bocka ur när säsongen är slut)', 'tandstiftet'),
-        'type'    => 'checkbox',
-    ]);
-
-    $wp_customize->add_setting('tmc_provapa_season_message', [
-        'default'           => __('Vi har just nu inga fler Prova På-tillfällen den här säsongen. Vi öppnar upp igen till nästa säsong — håll utkik här eller på våra sociala kanaler!', 'tandstiftet'),
-        'sanitize_callback' => 'sanitize_textarea_field',
-    ]);
-    $wp_customize->add_control('tmc_provapa_season_message', [
-        'section'     => 'tmc_provapa_season',
-        'label'       => __('Säsongsmeddelande', 'tandstiftet'),
-        'type'        => 'textarea',
-        'input_attrs' => [ 'rows' => 4 ],
-    ]);
+    tmc_customizer_page_panel( $wp_customize, 'sliding', 'tmc_panel_sliding',
+        __( 'Sida: Sliding', 'tandstiftet' ),
+        __( 'Allt på Sliding-sidan (vuxna). Börja med "Anmälan och säsong" — där finns även paus av hela Sliding och av/på för Flat track. Varje del av sidan har en egen rubrik här, i samma ordning som på sidan. Texter märkta "(när Flat track är avstängt)" används automatiskt när Flat track är av. Fotot i toppen är sidans Utvald bild. Veckoschema och antal platser: Anpassa → Tändstiftet → Sliding — Speedway-/Flat track-schema.', 'tandstiftet' ),
+        31 );
 });
 
+/* One panel for one special page: a section per part of the page. */
+function tmc_customizer_page_panel( $wp_customize, $set, $panel_id, $title, $description, $priority ) {
+    $sets = tmc_page_text_sets();
+    list( $fields_fn, $prefix ) = $sets[ $set ];
+    $fields = call_user_func( $fields_fn );
 
-/* =========================================================
-   Prova På — Sidan (alla texter på Prova På-sidan)
-   Fälten kommer från tmc_provapa_fields() i functions.php.
-   ========================================================= */
-add_action( 'customize_register', function( $wp_customize ) {
+    $wp_customize->add_panel( $panel_id, [ 'title' => $title, 'description' => $description, 'priority' => $priority ] );
 
-    $wp_customize->add_section('tmc_provapa_page', [
-        'title'       => __('Prova På — Sidan', 'tandstiftet'),
-        'description' => __('Alla texter på Prova På-sidan (barn & ungdom), uppifrån och ner. Töm ett fält för att dölja den delen (t.ex. en faktaruta eller en fråga). Fotot i ramen är sidans Utvald bild — byt den under Sidor → Prova På. Kom ihåg vårdnadshavares medgivande för bilder på barn.', 'tandstiftet'),
-        'panel'       => 'tmc_panel',
-        'priority'    => 5,
+    $order = 0;
+    foreach ( tmc_page_sections( $set ) as $group => $slug ) {
+        $section = $panel_id . '_' . $slug;
+        $wp_customize->add_section( $section, [
+            'title'    => $group,
+            'panel'    => $panel_id,
+            'priority' => ( ++$order ) * 10,
+        ]);
+
+        if ( $slug === 'signup' ) {
+            tmc_customizer_signup_controls( $wp_customize, $set, $section, $prefix );
+        }
+        if ( tmc_page_section_hideable( $slug ) ) {
+            $wp_customize->add_setting( $prefix . 'show_' . $slug, [ 'default' => true, 'sanitize_callback' => 'rest_sanitize_boolean' ] );
+            $wp_customize->add_control( $prefix . 'show_' . $slug, [
+                'section'  => $section,
+                'type'     => 'checkbox',
+                'label'    => __( 'Visa den här delen på sidan', 'tandstiftet' ),
+                'priority' => 1,
+            ]);
+        }
+        $in_group = array_filter( $fields, function ( $f ) use ( $group ) { return $f[0] === $group; } );
+        tmc_customizer_add_text_fields( $wp_customize, $section, $in_group, $prefix, 20 );
+    }
+}
+
+/* "Anmälan och säsong": open / closed / follows a season that repeats every year. */
+function tmc_customizer_signup_controls( $wp_customize, $set, $section, $prefix ) {
+    $wp_customize->add_setting( $prefix . 'signup_mode', [
+        'default'           => 'season',
+        'sanitize_callback' => function ( $v ) { return in_array( $v, [ 'season', 'open', 'closed' ], true ) ? $v : 'season'; },
+    ]);
+    $wp_customize->add_control( $prefix . 'signup_mode', [
+        'section'     => $section,
+        'type'        => 'radio',
+        'priority'    => 2,
+        'label'       => $set === 'sliding' ? __( 'Bokning', 'tandstiftet' ) : __( 'Anmälan ("hör av dig"-formuläret)', 'tandstiftet' ),
+        'description' => __( 'Stängt = formuläret och uppmaningarna att komma döljs och ert meddelande visas i stället. Resten av sidan ligger kvar.', 'tandstiftet' ),
+        'choices'     => [
+            'season' => __( 'Följer säsongen — stängs automatiskt utanför säsongen och öppnar igen av sig själv', 'tandstiftet' ),
+            'open'   => __( 'Alltid öppen', 'tandstiftet' ),
+            'closed' => __( 'Stängd tills vidare', 'tandstiftet' ),
+        ],
     ]);
 
-    tmc_customizer_add_text_fields( $wp_customize, 'tmc_provapa_page', tmc_provapa_fields(), 'tmc_pp_' );
+    $months = [ 1 => 'januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december' ];
+    $p = 3;
+    foreach ( [ 'start' => [ __( 'Säsongen börjar', 'tandstiftet' ), 4, 1 ], 'end' => [ __( 'Säsongen slutar', 'tandstiftet' ), 10, 31 ] ] as $edge => list( $label, $m, $d ) ) {
+        $wp_customize->add_setting( "{$prefix}season_{$edge}_day", [ 'default' => $d, 'sanitize_callback' => 'absint' ] );
+        $wp_customize->add_control( "{$prefix}season_{$edge}_day", [
+            'section' => $section, 'type' => 'number', 'priority' => $p++,
+            'label' => $label . ' — ' . __( 'dag', 'tandstiftet' ), 'input_attrs' => [ 'min' => 1, 'max' => 31 ],
+            'description' => $edge === 'start' ? __( 'Gäller varje år, t.ex. 1 april – 31 oktober. Används bara när "Följer säsongen" är valt.', 'tandstiftet' ) : '',
+        ]);
+        $wp_customize->add_setting( "{$prefix}season_{$edge}_month", [ 'default' => $m, 'sanitize_callback' => 'absint' ] );
+        $wp_customize->add_control( "{$prefix}season_{$edge}_month", [
+            'section' => $section, 'type' => 'select', 'priority' => $p++,
+            'label' => $label . ' — ' . __( 'månad', 'tandstiftet' ), 'choices' => $months,
+        ]);
+    }
 
-    $wp_customize->add_section('tmc_sliding_page', [
-        'title'       => __('Sliding — Sidan', 'tandstiftet'),
-        'description' => __('Alla texter på Sliding-sidan (vuxna), uppifrån och ner. Töm ett fält för att dölja den delen. Fält märkta "(när Flat track är avstängt)" används automatiskt när Flat track är avstängt under Sliding — Paus/Aktiv. Fotot i toppen är sidans Utvald bild. Schema och platser ställer ni in under Sliding — Speedway-/Flat track-schema.', 'tandstiftet'),
-        'panel'       => 'tmc_panel',
-        'priority'    => 6,
-    ]);
-    tmc_customizer_add_text_fields( $wp_customize, 'tmc_sliding_page', tmc_sliding_fields(), 'tmc_sl_' );
-});
+    if ( $set === 'provapa' ) {
+        // The existing message setting (kept, so text written before 2.1.0 is still used).
+        $wp_customize->add_setting( 'tmc_provapa_season_message', [
+            'default'           => __( 'Vi har just nu inga fler Prova På-tillfällen den här säsongen. Vi öppnar upp igen till nästa säsong — håll utkik här eller på våra sociala kanaler!', 'tandstiftet' ),
+            'sanitize_callback' => 'sanitize_textarea_field',
+        ]);
+        $wp_customize->add_control( 'tmc_provapa_season_message', [
+            'section' => $section, 'type' => 'textarea', 'priority' => 15,
+            'label'   => __( 'Meddelande när anmälan är stängd tills vidare', 'tandstiftet' ),
+        ]);
+    }
+}
 
 /* Registers one Customizer field per entry in a page's field list
    ( key => [ group, label, default, 'text'|'textarea'|'url' ] ). */
-function tmc_customizer_add_text_fields( $wp_customize, $section, array $fields, $prefix ) {
+function tmc_customizer_add_text_fields( $wp_customize, $section, array $fields, $prefix, $priority = 20 ) {
     $sanitize = [ 'text' => 'sanitize_text_field', 'textarea' => 'sanitize_textarea_field', 'url' => 'esc_url_raw' ];
     foreach ( $fields as $key => $field ) {
-        list( $group, $label, $default, $type ) = $field;
+        list( , $label, $default, $type ) = $field;
         $wp_customize->add_setting( $prefix . $key, [
             'default'           => $default,
             'sanitize_callback' => $sanitize[ $type ],
         ]);
         $wp_customize->add_control( $prefix . $key, [
-            'section' => $section,
-            'label'   => $group . ' — ' . $label,
-            'type'    => $type,
+            'section'  => $section,
+            'label'    => $label,
+            'type'     => $type,
+            'priority' => $priority++,
         ]);
     }
 }

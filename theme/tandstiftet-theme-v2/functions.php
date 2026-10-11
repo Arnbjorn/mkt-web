@@ -530,7 +530,7 @@ add_action( 'widgets_init', 'tmc_register_sidebars' );
  * Output the page/archive header banner.
  */
 /* =========================================================
-   Sliding — paus-flagga (styrs från Utseende > Anpassa > Sliding — Paus/Aktiv)
+   Sliding — paus-flagga (styrs från Utseende > Anpassa > Sida: Sliding > Anmälan och säsong)
    ========================================================= */
 function tmc_sliding_enabled() {
 	return (bool) get_theme_mod( 'tmc_sliding_enabled', true );
@@ -545,10 +545,10 @@ function tmc_flattrack_enabled() {
 }
 
 /* Prova På (barn & ungdom) — säsong öppen/stängd. Styrs från
-   Utseende > Anpassa > Prova På — Säsong. Stänger bara boknings-/
+   Utseende > Anpassa > Sida: Prova På > Anmälan och säsong. Stänger bara boknings-/
    kontaktdelen av sidan, inte hela sidan (till skillnad från Sliding-pausen). */
 function tmc_provapa_season_open() {
-	return (bool) get_theme_mod( 'tmc_provapa_season_open', true );
+	return tmc_signup_state( 'provapa' )['open'];   // Anpassa → Prova På → Anmälan och säsong
 }
 
 function tmc_provapa_season_message() {
@@ -557,7 +557,7 @@ function tmc_provapa_season_message() {
 }
 
 /* Prova På (barn & ungdom) — sidans texter.
-   Varje text på sidan kan ändras i Utseende > Anpassa > Prova På — Sidan.
+   Varje text på sidan kan ändras i Utseende > Anpassa > Sida: Prova På (en rubrik per del av sidan).
    Ett tomt fält döljer den delen av sidan (t.ex. en faktaruta eller en fråga).
    Format: nyckel => [ grupp, etikett i Anpassa, standardtext, 'text'|'textarea'|'url' ].
    Inställningen heter 'tmc_pp_' . nyckel. */
@@ -592,10 +592,11 @@ function tmc_provapa_fields() {
 		'adult_text' => [ 'Vuxna', 'Hänvisning till Sliding — text', __( 'Den här sidan är för barn och ungdom. Är du vuxen och vill prova på?', 'tandstiftet' ), 'text' ],
 		'adult_link' => [ 'Vuxna', 'Hänvisning till Sliding — länktext', __( 'Sliding — prova på för vuxna →', 'tandstiftet' ), 'text' ],
 
-		// Säsong stängd (själva meddelandet ligger under Prova På — Säsong)
-		'closed_title'      => [ 'Säsong stängd', 'Rubrik i rutan högst upp', __( 'Säsongen är slut för i år', 'tandstiftet' ), 'text' ],
-		'closed_times_text' => [ 'Säsong stängd', 'Text vid träningstiderna', __( 'Tiderna gäller under säsong. Just nu är Prova På pausat — se meddelandet högst upp på sidan.', 'tandstiftet' ), 'textarea' ],
-		'closed_book_title' => [ 'Säsong stängd', 'Rubrik där formuläret brukar vara', __( 'Vi ses nästa säsong', 'tandstiftet' ), 'text' ],
+		// Anmälan och säsong (meddelandet när anmälan är stängd tills vidare är tmc_provapa_season_message)
+		'offseason_msg'     => [ 'Anmälan och säsong', 'Meddelande utanför säsongen ({datum} = när ni öppnar igen)', __( 'Säsongen är slut för i år. Vi öppnar igen {datum} — håll utkik här eller på våra sociala kanaler!', 'tandstiftet' ), 'textarea' ],
+		'closed_title'      => [ 'Anmälan och säsong', 'Rubrik i rutan högst upp', __( 'Säsongen är slut för i år', 'tandstiftet' ), 'text' ],
+		'closed_times_text' => [ 'Anmälan och säsong', 'Text vid träningstiderna', __( 'Tiderna gäller under säsong. Just nu är Prova På pausat — se meddelandet högst upp på sidan.', 'tandstiftet' ), 'textarea' ],
+		'closed_book_title' => [ 'Anmälan och säsong', 'Rubrik där formuläret brukar vara', __( 'Vi ses nästa säsong', 'tandstiftet' ), 'text' ],
 
 		// Träningstider (beige läsyta)
 		'times_eyebrow' => [ 'Träningstider', 'Liten rad ovanför rubriken', __( 'Hur det går till', 'tandstiftet' ), 'text' ],
@@ -715,7 +716,7 @@ function tmc_provapa_lines( $text ) {
 }
 
 
-/* Sliding (vuxna) — sidans texter. Ändras i Utseende > Anpassa > Sliding — Sidan.
+/* Sliding (vuxna) — sidans texter. Ändras i Utseende > Anpassa > Sida: Sliding (en rubrik per del av sidan).
    Nycklar som slutar på _no_ft är varianter som används automatiskt när Flat track är
    avstängt (tmc_flattrack_enabled) — t.ex. 'hero_text' / 'hero_text_no_ft'.
    Inställningen heter 'tmc_sl_' . nyckel. */
@@ -829,10 +830,13 @@ function tmc_sliding_fields() {
 		'book_success_text'  => [ 'Bokning', 'Tack-text ({datum} byts mot valt datum)', __( 'Din plats {datum} är reserverad. Vi återkommer med bekräftelse inom kort. Kom ihåg att lösa licens hos Svemo samma morgon.', 'tandstiftet' ), 'textarea' ],
 		'book_direct'        => [ 'Bokning', 'Text före e-post/telefon', __( 'Eller kontakta oss direkt:', 'tandstiftet' ), 'text' ],
 
-		// Pausat (Anpassa > Sliding — Paus/Aktiv)
-		'paused_title' => [ 'Pausat', 'Rubrik när Sliding är pausat', __( 'Sliding är tillfälligt pausat', 'tandstiftet' ), 'text' ],
-		'paused_text'  => [ 'Pausat', 'Text när Sliding är pausat', __( 'Vi tar en kort paus med vuxenerbjudandet. Vill du prova på speedway eller flat track ändå — hör av dig direkt så hjälper vi dig. Har du barn som vill prova? Se Prova På för barn och ungdom.', 'tandstiftet' ), 'textarea' ],
-		'paused_btn'   => [ 'Pausat', 'Knapp till Prova På', __( 'Se Prova På — barn och ungdom', 'tandstiftet' ), 'text' ],
+		// Pausat (Anpassa > Sida: Sliding > Anmälan och säsong)
+		'offseason_msg'     => [ 'Anmälan och säsong', 'Meddelande utanför säsongen ({datum} = när ni öppnar igen)', __( 'Sliding-säsongen är slut för i år. Bokningen öppnar igen {datum}. Vill du fråga något under tiden — hör av dig!', 'tandstiftet' ), 'textarea' ],
+		'closed_msg'        => [ 'Anmälan och säsong', 'Meddelande när bokningen är stängd tills vidare', __( 'Bokningen är stängd just nu. Hör av dig direkt om du har frågor, så hjälper vi dig.', 'tandstiftet' ), 'textarea' ],
+		'closed_book_title' => [ 'Anmälan och säsong', 'Rubrik där kalendern brukar vara när bokningen är stängd', __( 'Bokningen är stängd just nu', 'tandstiftet' ), 'text' ],
+		'paused_title' => [ 'Anmälan och säsong', 'Rubrik när Sliding är pausat', __( 'Sliding är tillfälligt pausat', 'tandstiftet' ), 'text' ],
+		'paused_text'  => [ 'Anmälan och säsong', 'Text när Sliding är pausat', __( 'Vi tar en kort paus med vuxenerbjudandet. Vill du prova på speedway eller flat track ändå — hör av dig direkt så hjälper vi dig. Har du barn som vill prova? Se Prova På för barn och ungdom.', 'tandstiftet' ), 'textarea' ],
+		'paused_btn'   => [ 'Anmälan och säsong', 'Knapp till Prova På', __( 'Se Prova På — barn och ungdom', 'tandstiftet' ), 'text' ],
 	];
 }
 
@@ -857,6 +861,114 @@ function tmc_sliding_facts() {
 		: [ 'num' => __( 'Speedway', 'tandstiftet' ), 'label' => __( 'Disciplin', 'tandstiftet' ) ];
 	array_splice( $facts, min( 2, count( $facts ) ), 0, [ $disc ] );
 	return $facts;
+}
+
+
+/* =========================================================
+   Specialsidor (Prova På, Sliding …) — sektioner och anmälan/säsong
+   ========================================================= */
+
+/* The parts of each page, in page order: group label (as used in the field
+   lists) => slug. Every part becomes its own heading in the Customizer. */
+function tmc_page_sections( $set ) {
+	$all = [
+		'provapa' => [
+			'Anmälan och säsong' => 'signup', 'Hero' => 'hero', 'Faktaremsa' => 'facts', 'Vuxna' => 'adult',
+			'Träningstider' => 'times', 'Steg' => 'steps', 'Bra att veta' => 'faq', 'Formulär' => 'form',
+		],
+		'sliding' => [
+			'Anmälan och säsong' => 'signup', 'Hero' => 'hero', 'Faktaremsa' => 'facts', 'Barn' => 'kids',
+			'Pris' => 'price', 'Grupper' => 'groups', 'Discipliner' => 'disc', 'Samarbete' => 'partner',
+			'Steg' => 'steps', 'Bra att veta' => 'faq', 'Bokning' => 'form',
+		],
+	];
+	return $all[ $set ] ?? [];
+}
+
+/* Parts that can be switched off. The hero carries the page title, and the
+   form is opened/closed by "Anmälan och säsong" instead. */
+function tmc_page_section_hideable( $slug ) {
+	return ! in_array( $slug, [ 'signup', 'hero', 'form' ], true );
+}
+
+/* Is this part of the page switched on? (Anpassa → [sidan] → [delen] → "Visa …") */
+function tmc_page_section_visible( $set, $slug ) {
+	if ( ! tmc_page_section_hideable( $slug ) ) return true;
+	$sets = tmc_page_text_sets();
+	if ( ! isset( $sets[ $set ] ) ) return true;
+	return (bool) get_theme_mod( $sets[ $set ][1] . 'show_' . $slug, true );
+}
+
+/* "1 april 2027" from '2027-04-01'. */
+function tmc_swedish_date( $ymd ) {
+	$months = [ 1 => 'januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december' ];
+	$d = DateTime::createFromFormat( '!Y-m-d', (string) $ymd );
+	if ( ! $d ) return '';
+	return (int) $d->format( 'j' ) . ' ' . $months[ (int) $d->format( 'n' ) ] . ' ' . $d->format( 'Y' );
+}
+
+/* Is 'Y-m-d' inside a season that repeats every year? Start/end are 'MM-DD'.
+   Works across New Year too (e.g. 11-01 → 03-31). Both ends count as inside. */
+function tmc_season_contains( $date, $start_md, $end_md ) {
+	$md = substr( (string) $date, 5, 5 );
+	if ( $start_md <= $end_md ) return $md >= $start_md && $md <= $end_md;
+	return $md >= $start_md || $md <= $end_md;
+}
+
+/* The first season start strictly after 'Y-m-d' (when signup opens again). */
+function tmc_season_next_start( $date, $start_md ) {
+	$year = (int) substr( (string) $date, 0, 4 );
+	$candidate = sprintf( '%04d-%s', $year, $start_md );
+	return $candidate > $date ? $candidate : sprintf( '%04d-%s', $year + 1, $start_md );
+}
+
+/* 'MM-DD' from a month and day setting, kept valid (31 april → 30 april). */
+function tmc_season_md( $month, $day ) {
+	$month = min( 12, max( 1, (int) $month ) );
+	$max   = (int) ( new DateTime( sprintf( '2024-%02d-01', $month ) ) )->format( 't' );   // 2024: leap year, so 29 feb is allowed
+	return sprintf( '%02d-%02d', $month, min( $max, max( 1, (int) $day ) ) );
+}
+
+/* Signup settings for a page: mode 'season' (default), 'open' or 'closed', and the season. */
+function tmc_signup_settings( $set ) {
+	$sets   = tmc_page_text_sets();
+	$prefix = $sets[ $set ][1] ?? 'tmc_x_';
+	$mode   = get_theme_mod( $prefix . 'signup_mode', null );
+	// Before 2.1.0 Prova På only had an on/off checkbox — an unticked box still means closed.
+	if ( $mode === null && $set === 'provapa' && get_theme_mod( 'tmc_provapa_season_open', true ) === false ) $mode = 'closed';
+	if ( ! in_array( $mode, [ 'season', 'open', 'closed' ], true ) ) $mode = 'season';
+	return [
+		'mode'  => $mode,
+		'start' => tmc_season_md( get_theme_mod( $prefix . 'season_start_month', 4 ), get_theme_mod( $prefix . 'season_start_day', 1 ) ),
+		'end'   => tmc_season_md( get_theme_mod( $prefix . 'season_end_month', 10 ), get_theme_mod( $prefix . 'season_end_day', 31 ) ),
+	];
+}
+
+/* Can people sign up / book for this date? ('Y-m-d') */
+function tmc_signup_open_on( $set, $date ) {
+	$s = tmc_signup_settings( $set );
+	if ( $s['mode'] === 'open' )   return true;
+	if ( $s['mode'] === 'closed' ) return false;
+	return tmc_season_contains( $date, $s['start'], $s['end'] );
+}
+
+/* Is signup open today, and if not: why, when it opens again and what to tell visitors.
+   $today: optional 'Y-m-d' (used by the tests). */
+function tmc_signup_state( $set, $today = null ) {
+	$today = $today ?: ( new DateTime( 'today' ) )->format( 'Y-m-d' );
+	$s     = tmc_signup_settings( $set );
+	$open  = tmc_signup_open_on( $set, $today );
+	$state = [ 'open' => $open, 'mode' => $s['mode'], 'reopens' => null, 'message' => '' ];
+	if ( $open ) return $state;
+	if ( $s['mode'] === 'season' ) {
+		$state['reopens'] = tmc_season_next_start( $today, $s['start'] );
+		$state['message'] = str_replace( '{datum}', tmc_swedish_date( $state['reopens'] ), tmc_page_text( $set, 'offseason_msg' ) );
+	} else {
+		$state['message'] = $set === 'provapa'
+			? tmc_provapa_season_message()          // the existing "Säsongsmeddelande" setting
+			: tmc_page_text( $set, 'closed_msg' );
+	}
+	return $state;
 }
 
 /* Automatically strip any "Sliding" link from every nav menu while paused,
@@ -1352,7 +1464,7 @@ function tmc_sliding_get_calendar_data( $days = 90 ) {
 			$key = $d->format( 'Y-m-d' );
 			$cap = tmc_sliding_get_capacity( $key, $discipline );
 			$data[ $discipline ][ $key ] = [
-				'open'      => $cap > 0,
+				'open'      => $cap > 0 && tmc_signup_open_on( 'sliding', $key ),   // Anpassa → Anmälan och säsong
 				'remaining' => tmc_sliding_get_remaining( $key, $discipline ),
 				'within24h' => tmc_sliding_is_within_24h( $key ),
 				'time'      => tmc_sliding_weekday_time( $key, $discipline ),
@@ -1835,7 +1947,7 @@ function tmc_longpage_meta_box() {
 add_action( 'add_meta_boxes', 'tmc_longpage_meta_box' );
 
 /* (Prova På-sidans gamla "Utrustningsikoner"-ruta togs bort i 2.1.0 — utrustningen
-   beskrivs nu som text under Anpassa → Prova På — Sidan.) */
+   beskrivs nu som text under Anpassa → Sida: Prova På.) */
 
 function tmc_longpage_meta_cb( $post ) {
 	// Only show on pages using this template

@@ -43,7 +43,7 @@ CASES = [
     case("css: någon lägger till 0,8 rem-text",   "css", "antal fasta",      [(S, "/* ── Phones: 17px root", ".small { font-size: 0.8rem; }\n/* ── Phones: 17px root")]),
     case("css: basstorleken tillbaka till 100 %", "css", "basstorlek",        [(S, "font-size: 112.5%;", "font-size: 100%;")]),
     # browser ---------------------------------------------------------------------------
-    case("browser: rubriken tappar bredden",      "browser", "två rader",    [(S, "  max-width: 640px;                 /* two lines", "  max-width: none;                 /* two lines")]),
+    case("browser: rubriken tappar bredden",      "browser", "vänstra sidan",    [(S, "  max-width: 640px;                 /* two lines", "  max-width: none;                 /* two lines")]),
     case("browser: hamburgaren för liten",        "browser", "40×40",        [(S, "  width: 40px;\n  height: 40px;\n  padding: 0;\n  align-items: center;", "  width: 28px;\n  height: 28px;\n  padding: 0;\n  align-items: center;")]),
     case("browser: menyn kan inte stängas",       "browser", "stängs av samma knapp", [("assets/js/main.js", "const open = nav.classList.toggle('is-open');", "const open = nav.classList.add('is-open') || true;")]),
 ]
@@ -59,7 +59,7 @@ def run_case(c, work):
         if old not in s: return None, f"mutationen passar inte längre — hittar inte {old[:60]!r} i {rel} (uppdatera CASES)"
         f.write_text(s.replace(old, new, 1), encoding="utf-8")
     if c["extra"]: c["extra"](theme)
-    r = subprocess.run(CMD[c["kind"]], cwd=d, capture_output=True, text=True, env={**os.environ, "CI": "true"})
+    r = subprocess.run(CMD[c["kind"]], cwd=d, capture_output=True, text=True, encoding="utf-8", errors="replace", env={**os.environ, "CI": "true"})
     out = r.stdout + r.stderr
     return (r.returncode != 0 and c["expect"].lower() in out.lower()), out
 

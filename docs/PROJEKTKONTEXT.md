@@ -50,14 +50,14 @@ Användarens uttryckta önskan: *"En sida i taget, med din feedback mellan varje
 
 Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 
-- **Sliding — Paus/Aktiv** (`tmc_sliding_enabled`): av → `/sliding/` visar pausmeddelande (med Prova På-länk + direktkontakt); Sliding-länken försvinner ur **alla** menyer, korslänkar och startsidans punkter.
+- **Sliding — paus** (`tmc_sliding_enabled`, nu under *Sida: Sliding → Anmälan och säsong*): av → `/sliding/` visar pausmeddelande (med Prova På-länk + direktkontakt); Sliding-länken försvinner ur **alla** menyer, korslänkar och startsidans punkter.
 - **Flat track på/av** (`tmc_flattrack_enabled`, i samma sektion): av → inga Flat track-kort, ingen Sparks-ruta, inget Flat track-val i formuläret, inga Flat track-luckor i kalendern. Speedway påverkas inte.
 - **Bokningskalender (Sliding):** visar 90 dagar; **veckoschema per disciplin** (`tmc_sliding_hours_{mon…sun}_{speedway|flattrack}`; tomt = stängd dag, annars tid t.ex. `18:00`); **kapacitet per disciplin** (standard 8 = tränarens ansvarstak); **datum-överstyrningar** (CPT `tmc_sliding_availability`, fält för disciplin Båda/Speedway/Flat track, egen kapacitet eller stängt) vinner alltid över veckoschemat. Flikar Speedway/Flat track. **24 h-regel:** datum <24 h bort visas "Ring oss" och nekas även på servern. **"Fullt"** visas bara när kapaciteten är slut (dagar utan schema är bara grå). Serverkontroll av allt vid inskick (dubbelbokning, ogiltigt datum, för sent). Gruppstorlek räknas mot kapacitet.
 - **Bokningar** sparas som CPT `tmc_sliding_booking` (räknas mot kapacitet; avbokad = frigör platser) + mejl till `admin_email`. Adminlista med kolumner och **CSV-export** (semikolon, UTF-8 BOM för svensk Excel).
 - **Spamskydd (alla fyra formulär: Kontakt, Bli medlem, Prova På, Sliding):** honeypot, **tidsfälla (<3 s)**, validering (ålder 1–100, barn max 18, födelseår 1920–i år, länkar i namn/meddelande, max 3000 tecken) och **spärrlista** (e-post eller `@domän`, *Anpassa → Formulär — Blockeringslista*; tyst avvisning). Bots avvisas tyst; felmeddelande bara vid valideringsfel.
 - **Formulär:** fält fylls i igen vid fel (inkl. valt datum/disciplin i kalendern); formuläret **döljs efter lyckat inskick**.
 - **Notisbanderoll på startsidan** (*Anpassa → Startsida — Viktigt meddelande*): på/av, "vanlig" (guld) eller "viktig" (röd), rubrik, text, valfri knapp. Stängbar; återkommer automatiskt om texten ändras (hash).
-- **Prova På — Säsong** (`tmc_provapa_season_open` + meddelandetext): stänger *bara* formuläret och "kom bara"-uppmaningarna; resten av sidan ligger kvar.
+- **Anmälan och säsong** (sedan 2.1.0, per sida: följer säsong 1 apr–31 okt / alltid öppen / stängd; ersätter `tmc_provapa_season_open`): stänger *bara* formuläret och "kom bara"-uppmaningarna; resten av sidan ligger kvar.
 - **Header & meny** (`tmc_brand_short`, `tmc_brand_tagline`, `tmc_nav_cta_text/url`, `tmc_nav_show_events`), **Rivd bildkant** (`tmc_hero_torn_edge`).
 - **Import av inställningar** från v1 vid första aktivering (v2 är ett *separat* tema; v1 rörs inte → alltid möjligt att byta tillbaka).
 - **Klubbinfo** (`page-longform.php`): sektioner via egna fält `tmc_section_count` och `tmc_section_N_title|slug|content|image`.
@@ -71,6 +71,8 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 - Formulär "Hör av dig innan du kommer": namn, ålder, e-post, telefon, skostorlek, längd, träningstillfälle, provat förut, övrigt.
 - Säsongsstängning via Customizer när träningarna är slut.
 - **Hero: alternativ D är godkänt** — affischrubrik ("Prova på" guld, "speedway" vit med penseldrag), foto i **ram/polaroid** med klistermärke "0 kr under 12 år", gnistor i bakgrunden. Fotot i konceptet är en **lågupplöst platshållare** (562×750, tonåring). Behövs ett riktigt foto + vårdnadshavares medgivande. Bilden ska gå att byta (Utvald bild).
+
+**Inställningar för specialsidor (önskemål 2026-10-11):** enkel, tydlig och strukturerad layout i Anpassa — varje del av sidan ska kunna stängas av och få ändrad text, och anmälan ska kunna stängas eller följa säsong. Klubben kör **april–oktober** och har bara **vinteruppehåll** → säsong som återkommer varje år (standard 1 april–31 oktober). ✅ Byggt i 2.1.0 för Prova På och Sliding; nya specialsidor ska följa samma mönster.
 
 **Sliding (vuxna)**
 - **800 kr till klubben + 225 kr Svemo-licens.** Boka i förväg (ingen drop-in). Utrustning/instruktör ingår. Även kalas/möhippa/svensexa/företag. Disciplin: Speedway eller Flat track. ⚠ "1,5 h längd" och andra faktarutor i konceptet ska verifieras mot nuvarande text.
@@ -115,7 +117,7 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 - ❓ Textstorleksknapp — efter att sidorna setts live.
 
 ### Kodbacklog (i föreslagen ordning)
-1. 🟡 **Prova På** i temat enligt `koncept-provapa.html` + hero D (v2.1.0). Texter i *Anpassa → Prova På — Sidan*. Godkänd av användaren 2026-10-11 (inkl. fällbara frågor och "6+ år"). ✅ Publicerad via knappen och kontrollerad på test.tändstiftet.se/prova-pa/ 2026-10-11 (dator + mobil, riktiga typsnitt, ingen sidledsscroll). ⬜ byt platshållarfotot mot riktigt foto (Utvald bild) med vårdnadshavares medgivande.
+1. 🟡 **Prova På** i temat enligt `koncept-provapa.html` + hero D (v2.1.0). Texter i *Anpassa → Sida: Prova På*. Godkänd av användaren 2026-10-11 (inkl. fällbara frågor och "6+ år"). ✅ Publicerad via knappen och kontrollerad på test.tändstiftet.se/prova-pa/ 2026-10-11 (dator + mobil, riktiga typsnitt, ingen sidledsscroll). ⬜ byt platshållarfotot mot riktigt foto (Utvald bild) med vårdnadshavares medgivande.
 2. **Sliding** (kalender, flikar, disciplinkort, redigerbar Sparks-ruta, större dag-etiketter).
 3. **Förare & Lag** (Ungdomslaget först).
 4. **Tävlingar:** lista + enskild match + nya datafält (motståndare, hemma/borta, resultat, laguppställning).

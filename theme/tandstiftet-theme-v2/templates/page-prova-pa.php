@@ -5,7 +5,7 @@
  *
  * v2-layout enligt design/concepts/koncept-provapa.html med hero "D"
  * (affischrubrik + foto i ram med klistermärke). Alla texter ändras i
- * Utseende → Anpassa → Prova På — Sidan (tmc_provapa_fields() i functions.php).
+ * Utseende → Anpassa → Sida: Prova På (tmc_provapa_fields() i functions.php).
  * Fotot i ramen är sidans Utvald bild.
  *
  * @package tandstiftet
@@ -13,7 +13,9 @@
 get_header();
 
 $page_id      = get_the_ID();
-$season_open  = tmc_provapa_season_open();
+$signup       = tmc_signup_state( 'provapa' );   // Anpassa → Sida: Prova På → Anmälan och säsong
+$season_open  = $signup['open'];
+$show         = function ( $part ) { return tmc_page_section_visible( 'provapa', $part ); };
 $sliding_page = get_page_by_path( 'sliding' );
 $sliding_url  = $sliding_page ? get_permalink( $sliding_page->ID ) : home_url( '/sliding/' );
 $t            = 'tmc_provapa_text';
@@ -90,12 +92,12 @@ $slots        = tmc_provapa_slots();
 		<?php if ( $t( 'closed_title' ) ) : ?>
 			<p class="provapa-closed__title"><?php echo esc_html( $t( 'closed_title' ) ); ?></p>
 		<?php endif; ?>
-		<p class="provapa-closed__text"><?php echo nl2br( esc_html( tmc_provapa_season_message() ) ); ?></p>
+		<p class="provapa-closed__text"><?php echo nl2br( esc_html( $signup['message'] ) ); ?></p>
 	</div>
 </div>
 <?php endif; ?>
 
-<?php $facts = tmc_provapa_items( 'fact_%d_', [ 'num', 'label' ], 6 ); if ( $facts ) : ?>
+<?php $facts = $show( 'facts' ) ? tmc_provapa_items( 'fact_%d_', [ 'num', 'label' ], 6 ) : []; if ( $facts ) : ?>
 <!-- ═══ FAKTAREMSA ═══ -->
 <section class="provapa-facts" aria-label="<?php esc_attr_e( 'Snabbfakta', 'tandstiftet' ); ?>">
 	<div class="container provapa-facts__inner">
@@ -109,7 +111,7 @@ $slots        = tmc_provapa_slots();
 </section>
 <?php endif; ?>
 
-<?php if ( tmc_sliding_enabled() && $t( 'adult_link' ) ) : ?>
+<?php if ( $show( 'adult' ) && tmc_sliding_enabled() && $t( 'adult_link' ) ) : ?>
 <!-- ═══ VUXEN-HÄNVISNING ═══ -->
 <div class="provapa-adult">
 	<div class="container provapa-adult__inner">
@@ -119,6 +121,7 @@ $slots        = tmc_provapa_slots();
 </div>
 <?php endif; ?>
 
+<?php if ( $show( 'times' ) ) : ?>
 <!-- ═══ KOM TILL EN VANLIG TRÄNING (beige) ═══ -->
 <section class="section section--beige provapa-read" id="traningstider">
 	<div class="container provapa-read__grid">
@@ -161,8 +164,9 @@ $slots        = tmc_provapa_slots();
 		<?php endif; ?>
 	</div>
 </section>
+<?php endif; // times ?>
 
-<?php $steps = tmc_provapa_items( 'step_%d_', [ 'title', 'text' ], 4 ); if ( $steps ) : ?>
+<?php $steps = $show( 'steps' ) ? tmc_provapa_items( 'step_%d_', [ 'title', 'text' ], 4 ) : []; if ( $steps ) : ?>
 <!-- ═══ FYRA ENKLA STEG (mörk) ═══ -->
 <section class="section provapa-steps" id="vad-hander">
 	<div class="container">
@@ -182,7 +186,7 @@ $slots        = tmc_provapa_slots();
 </section>
 <?php endif; ?>
 
-<?php $faqs = tmc_provapa_items( 'faq_%d_', [ 'q', 'a' ], 6 ); if ( $faqs ) : ?>
+<?php $faqs = $show( 'faq' ) ? tmc_provapa_items( 'faq_%d_', [ 'q', 'a' ], 6 ) : []; if ( $faqs ) : ?>
 <!-- ═══ BRA ATT VETA (beige, fällbara frågor) ═══ -->
 <section class="section section--beige provapa-faq" id="bra-att-veta">
 	<div class="container provapa-faq__inner">
@@ -219,7 +223,7 @@ $slots        = tmc_provapa_slots();
 			<?php else : ?>
 				<?php if ( $t( 'closed_title' ) ) : ?><p class="label"><?php echo esc_html( $t( 'closed_title' ) ); ?></p><?php endif; ?>
 				<?php if ( $t( 'closed_book_title' ) ) : ?><h2 class="provapa-title"><?php echo esc_html( $t( 'closed_book_title' ) ); ?></h2><?php endif; ?>
-				<p class="provapa-read__lead"><?php echo nl2br( esc_html( tmc_provapa_season_message() ) ); ?></p>
+				<p class="provapa-read__lead"><?php echo nl2br( esc_html( $signup['message'] ) ); ?></p>
 			<?php endif; ?>
 		</div>
 

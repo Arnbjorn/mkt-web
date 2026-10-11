@@ -99,6 +99,10 @@ with sync_playwright() as p:
         (ok if 1.8 <= lines <= 2.2 else bad)(f"rubriken ligger på två rader på dator (mätte {lines:.1f} rader)")
     else:
         warn("hoppar över radantalet (kräver Bebas Neue)")
+    # The real point of the width cap: the headline stays on the dark left side, clear of the photo.
+    # (Two lines alone proved nothing — "Motorklubben Tändstiftet" wraps even without the cap.)
+    right = pg.evaluate("document.querySelector('.hero__title').getBoundingClientRect().right")
+    (ok if right <= 1280 * 0.6 else bad)(f"rubriken håller sig på den mörka vänstra sidan (högerkant {round(right)} px, högst {round(1280 * 0.6)})")
     clip = pg.evaluate("getComputedStyle(document.querySelector('.hero__bg')).clipPath")
     (ok if clip.startswith("polygon") else bad)("rivd bildkant är aktiv på dator")
     pg.close()
@@ -204,6 +208,26 @@ with sync_playwright() as p:
         pg = open_page("sliding-paused", 1280)
         st = pg.evaluate("({form: !!document.querySelector('#pp-sliding-form'), cal: !!document.querySelector('#pp-calendar'), paused: !!document.querySelector('.sliding-paused')})")
         (ok if st == {"form": False, "cal": False, "paused": True} else bad)(f"Sliding pausat: pausmeddelande, ingen kalender och inget formulär ({st})")
+        pg.close()
+
+    # 9. Signup closed by the season, and parts switched off ---------------------------------
+    print("\nAnmälan och säsong, dolda delar")
+    if harness.HAVE_PHP:
+        months = ["januari","februari","mars","april","maj","juni","juli","augusti","september","oktober","november","december"]
+        r = harness.off_season_reopens(); when = f"{r.day} {months[r.month - 1]} {r.year}"
+        pg = open_page("provapa-offseason", 1280)
+        st = pg.evaluate("({form: !!document.querySelector('form.provapa-form'), text: document.body.innerText})")
+        (ok if not st["form"] and when in st["text"] else bad)(f"Prova På utanför säsongen: inget formulär, och sidan säger när det öppnar ({when})")
+        pg.close()
+        pg = open_page("sliding-offseason", 1280)
+        st = pg.evaluate("""({form: !!document.querySelector('#pp-sliding-form'), cal: !!document.querySelector('#pp-calendar'),
+            boka: !!document.querySelector('.hero__actions a[href="#boka"]'), text: document.body.innerText})""")
+        (ok if not st["form"] and not st["cal"] and not st["boka"] and when in st["text"] else bad)(
+            f"Sliding utanför säsongen: ingen kalender, inget formulär, ingen Boka-knapp, och sidan säger när bokningen öppnar ({when})")
+        pg.close()
+        pg = open_page("sliding-hidden", 1280)
+        st = pg.evaluate("({price: !!document.querySelector('.sliding-price'), groups: !!document.querySelector('.sliding-groups'), intro: !!document.querySelector('.sliding-intro'), faq: !!document.querySelector('.provapa-faq'), disc: !!document.querySelector('.sliding-disc'), form: !!document.querySelector('#pp-sliding-form')})")
+        (ok if st == {"price": False, "groups": False, "intro": False, "faq": False, "disc": True, "form": True} else bad)(f"dolda delar försvinner, resten finns kvar ({st})")
         pg.close()
 
     # 8b. A normal page (page.php) --------------------------------------------------------

@@ -93,6 +93,9 @@ tmc_load( [
 	'tmc_provapa_fields', 'tmc_provapa_text', 'tmc_provapa_slots', 'tmc_provapa_items', 'tmc_provapa_lines',
 	'tmc_sliding_fields', 'tmc_sliding_text', 'tmc_sliding_items', 'tmc_sliding_facts', 'tmc_sliding_schedule_summary',
 	'tmc_hero_title_html', 'tmc_antispam_fields', 'tmc_page_header', 'tmc_breadcrumbs',
+	'tmc_page_sections', 'tmc_page_section_hideable', 'tmc_page_section_visible',
+	'tmc_swedish_date', 'tmc_season_contains', 'tmc_season_next_start', 'tmc_season_md',
+	'tmc_signup_settings', 'tmc_signup_open_on', 'tmc_signup_state',
 ] );
 // Theme mods arrive as strings from the command line; '0' must mean "off" like WordPress' stored false.
 foreach ( $GLOBALS['__mods'] as $k => $v ) { if ( $v === '0' ) $GLOBALS['__mods'][ $k ] = false; }

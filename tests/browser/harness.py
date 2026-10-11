@@ -9,7 +9,7 @@ behaviour, and that comes from the CSS/JS. If you change the PHP markup of the
 header, footer or front page in a way that adds/renames elements, update the
 templates below to match.
 """
-import re, pathlib, shutil, subprocess, html as _html
+import re, pathlib, shutil, subprocess, datetime, html as _html
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SLUG = re.search(r'^THEME_SLUG="([^"]+)"', (ROOT / "scripts/config.sh").read_text(), re.M).group(1)
@@ -91,8 +91,23 @@ def php_page(template, photo, *mods, title="sida", current="Start"):
         raise RuntimeError(f"PHP-fel när {template} återgavs:\n{out[:2000]}")
     return wrap(header(4, current) + f'<main id="main">{out}</main>' + footer(), title)
 
+# Signup follows a season by default (1 April – 31 October), so a test run in
+# November would suddenly see closed forms. The pages are therefore pinned to
+# "always open" unless a test asks for something else.
+OPEN = ("tmc_pp_signup_mode=open", "tmc_sl_signup_mode=open")
+
+def off_season(prefix):
+    """Season settings that put today outside the season: it starts in 10 days."""
+    a = datetime.date.today() + datetime.timedelta(days=10)
+    b = datetime.date.today() + datetime.timedelta(days=20)
+    return (f"{prefix}signup_mode=season", f"{prefix}season_start_month={a.month}", f"{prefix}season_start_day={a.day}",
+            f"{prefix}season_end_month={b.month}", f"{prefix}season_end_day={b.day}")
+
+def off_season_reopens():
+    return datetime.date.today() + datetime.timedelta(days=10)
+
 def provapa_page(photo=True, *mods):
-    return php_page("templates/page-prova-pa.php", url(IMG / "provapa-kid-photo.jpg") if photo else "", *mods,
+    return php_page("templates/page-prova-pa.php", url(IMG / "provapa-kid-photo.jpg") if photo else "", *OPEN, *mods,
                     title="Prova På", current="Prova På")
 
 PAGES = {
@@ -108,9 +123,12 @@ if HAVE_PHP:
     PAGES.update({
         "provapa":         lambda: provapa_page(True),
         "provapa-nophoto": lambda: provapa_page(False),
-        "provapa-closed":  lambda: provapa_page(True, "tmc_provapa_season_open=0", "tmc_sliding_enabled=0"),
-        "sliding":         lambda: php_page("templates/page-sliding.php", url(IMG / "action-1.jpg"), title="Sliding", current="Sliding"),
-        "sliding-noft":    lambda: php_page("templates/page-sliding.php", "", "tmc_flattrack_enabled=0", title="Sliding utan flat track", current="Sliding"),
+        "provapa-closed":  lambda: provapa_page(True, "tmc_pp_signup_mode=closed", "tmc_sliding_enabled=0"),
+        "provapa-offseason": lambda: provapa_page(True, *off_season("tmc_pp_")),
+        "sliding":         lambda: php_page("templates/page-sliding.php", url(IMG / "action-1.jpg"), *OPEN, title="Sliding", current="Sliding"),
+        "sliding-noft":    lambda: php_page("templates/page-sliding.php", "", *OPEN, "tmc_flattrack_enabled=0", title="Sliding utan flat track", current="Sliding"),
+        "sliding-offseason": lambda: php_page("templates/page-sliding.php", "", *off_season("tmc_sl_"), title="Sliding utanför säsongen", current="Sliding"),
+        "sliding-hidden":  lambda: php_page("templates/page-sliding.php", "", *OPEN, "tmc_sl_show_price=0", "tmc_sl_show_groups=0", "tmc_sl_show_faq=0", title="Sliding med dolda delar", current="Sliding"),
         "sliding-paused":  lambda: php_page("templates/page-sliding.php", "", "tmc_sliding_enabled=0", title="Sliding pausad", current="Sliding"),
         "page":            lambda: php_page("page.php", "", title="Vanlig sida", current=""),
         "page-photo":      lambda: php_page("page.php", url(IMG / "action-1.jpg"), title="Vanlig sida med bild", current=""),

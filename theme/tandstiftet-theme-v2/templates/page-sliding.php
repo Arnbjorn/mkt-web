@@ -4,7 +4,7 @@
  * Description: Sliding — Prova På för vuxna, mot en avgift. Flat track eller speedway beroende på lämplighet/tillgänglighet/önskemål.
  *
  * v2-layout enligt design/concepts/koncept-sliding.html. Alla texter ändras i
- * Utseende → Anpassa → Sliding — Sidan (tmc_sliding_fields() i functions.php);
+ * Utseende → Anpassa → Sida: Sliding (tmc_sliding_fields() i functions.php);
  * fotot i toppen är sidans Utvald bild. Delar komponenter (faktaremsa, steg,
  * frågor, formulär) med Prova På — därför klasserna "provapa-".
  *
@@ -17,6 +17,8 @@ $pp_page = get_page_by_path( 'prova-pa' );
 $pp_url  = $pp_page ? get_permalink( $pp_page->ID ) : home_url( '/prova-pa/' );
 $t       = 'tmc_sliding_text';
 $ft_on   = tmc_flattrack_enabled();
+$signup  = tmc_signup_state( 'sliding' );   // Anpassa → Sida: Sliding → Anmälan och säsong
+$show    = function ( $part ) { return tmc_page_section_visible( 'sliding', $part ); };
 $contact_email = get_theme_mod( 'tmc_contact_email' );
 $contact_phone = get_theme_mod( 'tmc_contact_phone' );
 
@@ -53,12 +55,13 @@ $torn  = $photo && get_theme_mod( 'tmc_hero_torn_edge', true );
 		<?php if ( $t( 'hero_title' ) ) : ?><h1 class="hero__title"><?php echo tmc_hero_title_html( $t( 'hero_title' ) ); // escaped inside ?></h1><?php endif; ?>
 		<?php if ( $t( 'hero_text' ) ) : ?><p class="hero__subtitle"><?php echo esc_html( $t( 'hero_text' ) ); ?></p><?php endif; ?>
 		<div class="hero__actions">
-			<?php if ( $t( 'hero_btn_1' ) ) : ?><a href="#boka" class="btn btn--primary"><?php echo esc_html( $t( 'hero_btn_1' ) ); ?></a><?php endif; ?>
+			<?php if ( $signup['open'] && $t( 'hero_btn_1' ) ) : ?><a href="#boka" class="btn btn--primary"><?php echo esc_html( $t( 'hero_btn_1' ) ); ?></a><?php endif; ?>
 			<?php if ( $t( 'hero_btn_2' ) ) : ?><a href="<?php echo $ft_on ? '#disciplin' : '#vad-hander'; ?>" class="btn btn--outline provapa-btn--light"><?php echo esc_html( $t( 'hero_btn_2' ) ); ?></a><?php endif; ?>
 		</div>
 	</div>
 </section>
 
+<?php if ( $show( 'facts' ) ) : ?>
 <!-- ═══ FAKTAREMSA ═══ -->
 <section class="provapa-facts" aria-label="<?php esc_attr_e( 'Snabbfakta', 'tandstiftet' ); ?>">
 	<div class="container provapa-facts__inner">
@@ -70,8 +73,9 @@ $torn  = $photo && get_theme_mod( 'tmc_hero_torn_edge', true );
 		<?php endforeach; ?>
 	</div>
 </section>
+<?php endif; // facts ?>
 
-<?php if ( $t( 'kids_link' ) ) : ?>
+<?php if ( $show( 'kids' ) && $t( 'kids_link' ) ) : ?>
 <!-- ═══ BARN-HÄNVISNING ═══ -->
 <div class="provapa-adult">
 	<div class="container provapa-adult__inner">
@@ -81,9 +85,11 @@ $torn  = $photo && get_theme_mod( 'tmc_hero_torn_edge', true );
 </div>
 <?php endif; ?>
 
+<?php if ( $show( 'price' ) || $show( 'groups' ) ) : ?>
 <!-- ═══ PRIS + GRUPPER (beige) ═══ -->
 <section class="section section--beige sliding-intro" id="pris">
 	<div class="container">
+		<?php if ( $show( 'price' ) ) : ?>
 		<div class="sliding-price">
 			<div class="sliding-price__head">
 				<?php if ( $t( 'price_eyebrow' ) ) : ?><p class="label"><?php echo esc_html( $t( 'price_eyebrow' ) ); ?></p><?php endif; ?>
@@ -108,7 +114,9 @@ $torn  = $photo && get_theme_mod( 'tmc_hero_torn_edge', true );
 			<?php endif; ?>
 		</div>
 
-		<?php $groups = tmc_sliding_items( 'group_%d_', [ 'title', 'text' ], 3 ); ?>
+		<?php endif; // price ?>
+
+		<?php $groups = $show( 'groups' ) ? tmc_sliding_items( 'group_%d_', [ 'title', 'text' ], 3 ) : []; ?>
 		<?php if ( $groups ) : ?>
 		<div class="sliding-groups" id="grupper-kalas">
 			<?php if ( $t( 'groups_eyebrow' ) ) : ?><p class="label"><?php echo esc_html( $t( 'groups_eyebrow' ) ); ?></p><?php endif; ?>
@@ -127,9 +135,13 @@ $torn  = $photo && get_theme_mod( 'tmc_hero_torn_edge', true );
 	</div>
 </section>
 
+<?php endif; // price/groups ?>
+
+<?php if ( $show( 'disc' ) || ( $ft_on && $show( 'partner' ) ) ) : ?>
 <!-- ═══ DISCIPLINER ═══ -->
 <section class="section sliding-disc" id="disciplin">
 	<div class="container">
+		<?php if ( $show( 'disc' ) ) : ?>
 		<div class="sliding-disc__head">
 			<?php if ( $t( 'disc_eyebrow' ) ) : ?><p class="provapa-eyebrow"><?php echo esc_html( $t( 'disc_eyebrow' ) ); ?></p><?php endif; ?>
 			<?php if ( $t( 'disc_title' ) ) : ?><h2 class="provapa-title"><?php echo esc_html( $t( 'disc_title' ) ); ?></h2><?php endif; ?>
@@ -150,7 +162,9 @@ $torn  = $photo && get_theme_mod( 'tmc_hero_torn_edge', true );
 			<?php endif; ?>
 		</div>
 
-		<?php if ( $ft_on && $t( 'partner_title' ) ) : ?>
+		<?php endif; // disc ?>
+
+		<?php if ( $ft_on && $show( 'partner' ) && $t( 'partner_title' ) ) : ?>
 		<!-- Samarbetsruta (redigerbar; töm rubriken i Anpassa för att dölja) -->
 		<div class="sliding-partner">
 			<div class="sliding-partner__body">
@@ -172,8 +186,9 @@ $torn  = $photo && get_theme_mod( 'tmc_hero_torn_edge', true );
 		<?php endif; ?>
 	</div>
 </section>
+<?php endif; // disc/partner ?>
 
-<?php $steps = tmc_sliding_items( 'step_%d_', [ 'title', 'text' ], 4 ); if ( $steps ) : ?>
+<?php $steps = $show( 'steps' ) ? tmc_sliding_items( 'step_%d_', [ 'title', 'text' ], 4 ) : []; if ( $steps ) : ?>
 <!-- ═══ SÅ GÅR DAGEN TILL (mörk) ═══ -->
 <section class="section provapa-steps sliding-steps" id="vad-hander">
 	<div class="container">
@@ -193,7 +208,7 @@ $torn  = $photo && get_theme_mod( 'tmc_hero_torn_edge', true );
 </section>
 <?php endif; ?>
 
-<?php $faqs = tmc_sliding_items( 'faq_%d_', [ 'q', 'a' ], 6 ); if ( $faqs ) : ?>
+<?php $faqs = $show( 'faq' ) ? tmc_sliding_items( 'faq_%d_', [ 'q', 'a' ], 6 ) : []; if ( $faqs ) : ?>
 <!-- ═══ BRA ATT VETA (beige) ═══ -->
 <section class="section section--beige provapa-faq" id="bra-att-veta">
 	<div class="container provapa-faq__inner">
@@ -217,6 +232,10 @@ $torn  = $photo && get_theme_mod( 'tmc_hero_torn_edge', true );
 <section class="section provapa-book sliding-book" id="boka">
 	<div class="container provapa-book__grid sliding-book__grid">
 		<div class="provapa-book__text">
+			<?php if ( ! $signup['open'] && $_SERVER['REQUEST_METHOD'] !== 'POST' ) : ?>
+				<?php if ( $t( 'closed_book_title' ) ) : ?><h2 class="provapa-title"><?php echo esc_html( $t( 'closed_book_title' ) ); ?></h2><?php endif; ?>
+				<p class="provapa-read__lead"><?php echo nl2br( esc_html( $signup['message'] ) ); ?></p>
+			<?php else : ?>
 			<?php if ( $t( 'book_eyebrow' ) ) : ?><p class="label"><?php echo esc_html( $t( 'book_eyebrow' ) ); ?></p><?php endif; ?>
 			<?php if ( $t( 'book_title' ) ) : ?><h2 class="provapa-title"><?php echo esc_html( $t( 'book_title' ) ); ?></h2><?php endif; ?>
 			<?php if ( $t( 'book_text' ) ) : ?><p class="provapa-read__lead"><?php echo esc_html( $t( 'book_text' ) ); ?></p><?php endif; ?>
@@ -226,6 +245,7 @@ $torn  = $photo && get_theme_mod( 'tmc_hero_torn_edge', true );
 					<ul><?php foreach ( $needs as $need ) : ?><li><?php echo esc_html( $need ); ?></li><?php endforeach; ?></ul>
 				</div>
 			<?php endif; ?>
+			<?php endif; // signup open ?>
 		</div>
 		<div class="provapa-book__form">
 			<?php
@@ -262,6 +282,9 @@ $torn  = $photo && get_theme_mod( 'tmc_hero_torn_edge', true );
 					$spam_error = true;
 				} elseif ( ! $is_valid_date ) {
 					$date_invalid_error = true;
+				} elseif ( ! tmc_signup_open_on( 'sliding', $date ) ) {
+					// Booking closed, or the date is outside the season (Anpassa → Anmälan och säsong).
+					$date_full_error = true;
 				} elseif ( tmc_sliding_is_within_24h( $date ) ) {
 					// Too last-minute for online booking — the trainer needs more lead time.
 					$within_24h_error = true;
@@ -324,6 +347,8 @@ $torn  = $photo && get_theme_mod( 'tmc_hero_torn_edge', true );
 					<h3><?php echo esc_html( $t( 'book_success_title' ) ); ?></h3>
 					<p><?php echo esc_html( str_replace( '{datum}', $date, $t( 'book_success_text' ) ) ); ?></p>
 				</div>
+			<?php elseif ( ! $signup['open'] && $_SERVER['REQUEST_METHOD'] !== 'POST' ) : ?>
+				<?php /* Booking closed / off-season: the message stands in the left column; only the contact details below. */ ?>
 			<?php elseif ( $mail_error ) : ?>
 				<div class="pp-form-error" role="alert">
 					<h3><?php esc_html_e( 'Något gick fel', 'tandstiftet' ); ?></h3>
