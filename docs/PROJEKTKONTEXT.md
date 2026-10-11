@@ -87,6 +87,8 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 - Lista: "senaste resultat"-block, hemma/borta-markering, schema, knapp **"Matchinfo →"**, text *"Biljett säljs på plats"*. Enskild match: lag, datum/tid/plats, "Om matchen", faktaruta (pris, barn gratis ⚠ platshållare), laguppställning med länk till Förare & Lag.
 - ⬜ **Datamodellen räcker inte** för konceptet: `tmc_event` har datum, tid, plats, adress, pris, Facebook-länk — men **inte** motståndare, hemma/borta, resultat eller laguppställning. Nya fält/taxonomi behövs när sidan byggs. Motståndarnamn och resultat (Vikingarna, Kaparna, 48–42 …) i konceptet är påhittade.
 
+**Disciplinerna (Speedway, Flat track, Veteraner)** — beslut 2026-10-11: korten tas **bort från startsidan** (kryssruta *Startsida — Visa/dölj sektioner → Discipliner*) och läggs som länkar i footerns kolumn **Trackracing** (meny i *Utseende → Menyer*). Varje disciplin får en **enkel egen sida** (slug `speedway`, `flat-track`, `veteraner`). Skäl: Veteraner är bara 2 personer och flat track ligger på is (stödet finns kvar). ⬜ **Delprojekt senare:** gå igenom och utveckla innehållet på de tre sidorna. ⚠ Standardtexterna i temat ("500cc utan broms", "40+ år") är inte verifierade. Obs: footermenyn döljer inte Flat track-länken automatiskt när `tmc_flattrack_enabled` är av.
+
 **Startsida** ✅🟡 — hero, statistikrad, nästa tävling (utan biljettknapp), sektioner, Prova På-ruta, kommande tävlingar, **nyheter på beige**, förare, värderingar, **sponsorer på beige** (en saknad öppnande `<section>` rättades).
 
 **Footer** — tre/fyra kolumner (brand, menyer, kontakt) + Svemo/Bingolotto-länkar; menyerna sätts i *Utseende → Menyer*.
@@ -115,7 +117,7 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 2. **Sliding** (kalender, flikar, disciplinkort, redigerbar Sparks-ruta, större dag-etiketter).
 3. **Förare & Lag** (Ungdomslaget först).
 4. **Tävlingar:** lista + enskild match + nya datafält (motståndare, hemma/borta, resultat, laguppställning).
-5. Klubbinfo, Styrelse, Kontakt, 404, inlägg, galleri — kontroll att de ser bra ut i v2.
+5. Klubbinfo, Styrelse, Kontakt, 404, inlägg, galleri — kontroll att de ser bra ut i v2. **`page.php` (vanlig sida) har fortfarande v1-utseende** med bloggsidopanel (Sök, Senaste inläggen) — påverkar bl.a. disciplinsidorna; kontrollerat på testsajten 2026-10-11.
 6. **Hero-fallback:** `front-page.php` pekar på `assets/images/hero-bg.jpg` som inte finns i temat om ingen hero-bild är vald → bakgrunden blir tom. Lägg en fallback eller dölj.
 7. Barlow (brödtextfonten) har inte kunnat testas med riktig font i testmiljön — kontrollera radbrytningar live.
 
