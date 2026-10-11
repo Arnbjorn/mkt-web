@@ -25,7 +25,11 @@ die() { bad "$*"; exit 1; }
 for v in SFTP_HOST SFTP_USER THEMES_DIR; do [ -n "${!v:-}" ] || die "$v saknas (lägg in den som GitHub Secret)"; done
 [ -n "${SFTP_PASSWORD:-}${SFTP_KEY:-}" ] || die "SFTP_PASSWORD eller SFTP_KEY saknas (lägg in en av dem som GitHub Secret)"
 THEMES_DIR="${THEMES_DIR%/}"
-case "$THEMES_DIR" in */wp-content/themes) ;; *) die "THEMES_DIR måste sluta på /wp-content/themes (är: $THEMES_DIR)";; esac
+case "$THEMES_DIR" in
+  */wp-content/themes) ;;
+  */wp-content/themes/*) die "THEMES_DIR ska sluta på /wp-content/themes — ta bort det som står efter (t.ex. /$THEME_SLUG). Det är mappen som INNEHÅLLER teman som ska anges.";;
+  *) die "THEMES_DIR måste sluta på /wp-content/themes";;
+esac
 command -v lftp >/dev/null || die "lftp saknas"
 PORT="${SFTP_PORT:-22}"
 

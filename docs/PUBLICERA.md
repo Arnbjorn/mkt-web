@@ -103,7 +103,7 @@ Samma sak med *Vad?* `publicera`. Titta sedan på betasajten.
 |---|---|
 | `… saknas (lägg in den som GitHub Secret)` | ett Secret saknas eller är felstavat — och ligger det i rätt miljö (`beta`/`live`)? |
 | `kom inte in i …` | fel användare, lösenord, server eller sökväg |
-| `THEMES_DIR måste sluta på /wp-content/themes` | sökvägen pekar fel — skyddar mot att något annat skrivs över |
+| `THEMES_DIR ska/måste sluta på /wp-content/themes` | sökvägen pekar fel — skyddar mot att något annat skrivs över. Vanligt misstag: att ta med `/tandstiftet-theme-v2` på slutet. Ange mappen som *innehåller* temana, t.ex. `/customers/…/webroots/…/wp-content/themes` |
 | `sajten svarar inte som den ska … backade` | nya versionen gav fel på sajten; förra versionen är tillbaka. Den trasiga ligger i `….new` |
 | `Till live publiceras bara från grenen master` | slå ihop ändringarna med master först |
 
