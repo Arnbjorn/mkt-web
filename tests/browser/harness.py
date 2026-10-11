@@ -151,6 +151,9 @@ if HAVE_PHP:
         "sliding-offseason": lambda: php_page("templates/page-sliding.php", "", *off_season("tmc_sl_"), title="Sliding utanför säsongen", current="Sliding"),
         "sliding-hidden":  lambda: php_page("templates/page-sliding.php", "", *OPEN, "tmc_sl_show_price=0", "tmc_sl_show_groups=0", "tmc_sl_show_faq=0", title="Sliding med dolda delar", current="Sliding"),
         "sliding-paused":  lambda: php_page("templates/page-sliding.php", "", "tmc_sliding_enabled=0", title="Sliding pausad", current="Sliding"),
+        "combined":        lambda: php_page("templates/page-prova-pa-combined.php", "", *OPEN, "tmc_provapa_combined=1", title="Prova på — barn och vuxna", current="Prova På"),
+        "combined-photo":  lambda: php_page("templates/page-prova-pa-combined.php", url(IMG / "provapa-kid-photo.jpg"), *OPEN, "tmc_provapa_combined=1", title="Prova på — med foto", current="Prova På"),
+        "combined-adult-paused": lambda: php_page("templates/page-prova-pa-combined.php", "", *OPEN, "tmc_provapa_combined=1", "tmc_sliding_enabled=0", title="Prova på — vuxen pausad", current="Prova På"),
         "page":            lambda: php_page("page.php", "", title="Vanlig sida", current=""),
         "page-photo":      lambda: php_page("page.php", url(IMG / "action-1.jpg"), title="Vanlig sida med bild", current=""),
     })

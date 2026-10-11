@@ -185,8 +185,8 @@ $hero_title_html = tmc_hero_title_html( get_theme_mod( 'tmc_hero_title', '' ) ?:
 				<ul class="prova-pa-section__bullets">
 					<li><?php esc_html_e('Barn & ungdomar kör speedway gratis (licens tillkommer 12+)','tandstiftet'); ?></li>
 					<?php if ( tmc_sliding_enabled() ) : ?>
-					<li><?php esc_html_e('Vuxna kör Sliding — flat track eller speedway, 800 kr','tandstiftet'); ?></li>
-					<li><?php esc_html_e('Sliding bokas även för kalas, möhippa & företagsevent','tandstiftet'); ?></li>
+					<li><?php echo tmc_flattrack_enabled() ? esc_html__('Vuxna kör speedway eller flat track, 800 kr','tandstiftet') : esc_html__('Vuxna kör speedway, 800 kr','tandstiftet'); ?></li>
+					<li><?php esc_html_e('Vuxna kan också boka för kalas, möhippa och företagsevent','tandstiftet'); ?></li>
 					<?php endif; ?>
 					<li><?php esc_html_e('Hjälm & skyddsutrustning ingår alltid','tandstiftet'); ?></li>
 					<li><?php esc_html_e('Svemo-godkänd verksamhet','tandstiftet'); ?></li>
@@ -194,8 +194,9 @@ $hero_title_html = tmc_hero_title_html( get_theme_mod( 'tmc_hero_title', '' ) ?:
 				<div style="display:flex;gap:var(--space-md);flex-wrap:wrap;margin-top:var(--space-xl)">
 					<?php $pp_page = get_page_by_path('prova-pa'); $sliding_page = get_page_by_path('sliding'); ?>
 					<a href="<?php echo esc_url($pp_page ? get_permalink($pp_page->ID) : '#'); ?>" class="btn btn--primary"><?php esc_html_e('Prova På — Barn & Ungdom (gratis)','tandstiftet'); ?></a>
-					<?php if ( tmc_sliding_enabled() ) : ?>
-					<a href="<?php echo esc_url($sliding_page ? get_permalink($sliding_page->ID) : '#'); ?>" class="btn btn--outline"><?php esc_html_e('Sliding — Prova På för vuxna','tandstiftet'); ?></a>
+					<?php if ( tmc_sliding_enabled() ) :
+						$adult_url = tmc_provapa_combined() ? ( $pp_page ? get_permalink( $pp_page->ID ) . '#vuxen' : '#' ) : ( $sliding_page ? get_permalink( $sliding_page->ID ) : '#' ); ?>
+					<a href="<?php echo esc_url( $adult_url ); ?>" class="btn btn--outline"><?php esc_html_e('Prova på för vuxna','tandstiftet'); ?></a>
 					<?php endif; ?>
 				</div>
 			</div>

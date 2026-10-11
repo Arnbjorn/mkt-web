@@ -75,6 +75,8 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 
 **Inställningar för specialsidor (önskemål 2026-10-11):** enkel, tydlig och strukturerad layout i Anpassa — varje del av sidan ska kunna stängas av och få ändrad text, och anmälan ska kunna stängas eller följa säsong. Klubben kör **april–oktober** och har bara **vinteruppehåll** → säsong som återkommer varje år (standard 1 april–31 oktober). ✅ Byggt i 2.1.0 för Prova På och Sliding; nya specialsidor ska följa samma mönster.
 
+**Prova På för barn och vuxna på samma sida (önskemål 2026-10-11):** användaren vill testa skiss A (`design/preview-provapa-kombo/skiss-A.html`) men kunna gå tillbaka enkelt → byggt som **testläge** (kryssruta, av som standard). Foto valfritt, klistermärket är standard utan foto. Ordet "Sliding" behövs inte för prova på just nu. ❓ Efter test: behålla gemensam sida eller två separata? (Om gemensam blir permanent: överväg 301-redirect för `/sliding/` och att rensa bort det separata upplägget.)
+
 **Sliding (vuxna)**
 - **800 kr till klubben + 225 kr Svemo-licens.** Boka i förväg (ingen drop-in). Utrustning/instruktör ingår. Även kalas/möhippa/svensexa/företag. Disciplin: Speedway eller Flat track. ⚠ "1,5 h längd" och andra faktarutor i konceptet ska verifieras mot nuvarande text.
 - Kalender enligt avsnitt 4. Veckodagar/tider styr styrelsen själva ("1–3 gånger i veckan").

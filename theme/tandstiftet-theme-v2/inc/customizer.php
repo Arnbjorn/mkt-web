@@ -561,6 +561,16 @@ function tmc_customizer_page_panel( $wp_customize, $set, $panel_id, $title, $des
         if ( $slug === 'signup' ) {
             tmc_customizer_signup_controls( $wp_customize, $set, $section, $prefix );
         }
+        if ( $set === 'provapa' && $slug === 'cmb' ) {
+            $wp_customize->add_setting( 'tmc_provapa_combined', [ 'default' => false, 'sanitize_callback' => 'rest_sanitize_boolean' ] );
+            $wp_customize->add_control( 'tmc_provapa_combined', [
+                'section'     => $section,
+                'type'        => 'checkbox',
+                'priority'    => 1,
+                'label'       => __( 'Visa barn och vuxna på samma sida (test)', 'tandstiftet' ),
+                'description' => __( 'På: Prova På-sidan visar både barn och vuxna, "Sliding" försvinner ur menyerna och den gamla Sliding-adressen leder hit. Av (standard): två separata sidor precis som tidigare. Alla texter och inställningar finns kvar när ni byter — inget behöver göras om. Delarna "Gemensam — …" nedan används bara när rutan är ibockad.', 'tandstiftet' ),
+            ]);
+        }
         if ( tmc_page_section_hideable( $slug ) ) {
             $wp_customize->add_setting( $prefix . 'show_' . $slug, [ 'default' => true, 'sanitize_callback' => 'rest_sanitize_boolean' ] );
             $wp_customize->add_control( $prefix . 'show_' . $slug, [

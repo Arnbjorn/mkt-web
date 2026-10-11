@@ -132,7 +132,7 @@ with sync_playwright() as p:
     print("\nMinsta renderade textstorlek")
     MIN_PX = 13.0
     checks = [("home", 1280), ("home", 390), ("home-season-over", 390), ("menu4", 1280), ("menu4", 390)]
-    if harness.HAVE_PHP: checks += [("provapa", 1280), ("provapa", 390), ("provapa-closed", 390), ("page", 1280), ("page", 390), ("sliding", 1280), ("sliding", 390), ("sliding-paused", 390)]
+    if harness.HAVE_PHP: checks += [("provapa", 1280), ("provapa", 390), ("provapa-closed", 390), ("page", 1280), ("page", 390), ("sliding", 1280), ("sliding", 390), ("sliding-paused", 390), ("combined", 1280), ("combined", 390)]
     for name, w in checks:
         pg = open_page(name, w)
         res = pg.evaluate("""() => {
@@ -197,7 +197,7 @@ with sync_playwright() as p:
         (ok if cal["tagPx"] >= 14 else bad)(f"dag-etiketterna är läsbara på mobil ({cal['tagPx']:.1f} px, minst 14)")
         dialogs = []
         pg.on("dialog", lambda d: (dialogs.append(d.message), d.dismiss()))
-        pg.fill("#pp_name", "Test"); pg.fill("#pp_email", "test@example.com")
+        pg.fill("#sl_name", "Test"); pg.fill("#sl_email", "test@example.com")
         pg.click("#pp_submit_btn"); pg.wait_for_timeout(200)
         shown = pg.evaluate("!document.getElementById('pp-date-missing').hidden")
         (ok if shown and not dialogs else bad)("skicka utan datum → tydligt meddelande på sidan (ingen popup)")
@@ -246,6 +246,35 @@ with sync_playwright() as p:
         pg = open_page("sliding-hidden", 1280)
         st = pg.evaluate("({price: !!document.querySelector('.sliding-price'), groups: !!document.querySelector('.sliding-groups'), intro: !!document.querySelector('.sliding-intro'), faq: !!document.querySelector('.provapa-faq'), disc: !!document.querySelector('.sliding-disc'), form: !!document.querySelector('#pp-sliding-form')})")
         (ok if st == {"price": False, "groups": False, "intro": False, "faq": False, "disc": True, "form": True} else bad)(f"dolda delar försvinner, resten finns kvar ({st})")
+        pg.close()
+
+    # 10. Prova På for children and adults on one page (test mode) ---------------------------
+    print("\nGemensam Prova På-sida (testläge)")
+    if harness.HAVE_PHP:
+        pg = open_page("combined", 1280)
+        st = pg.evaluate("""(()=>{const main=document.querySelector('main');
+            const forms=[...main.querySelectorAll('form')].map(f=>[f.querySelector('[name=pp_form]')?.value, f.getAttribute('action')]);
+            const targets=[...main.querySelectorAll('.cmb-choose a')].map(a=>a.getAttribute('href'));
+            return {forms, targets, targetsExist: targets.every(h=>!!document.querySelector(h)),
+                    ids: [...main.querySelectorAll('[id]')].map(e=>e.id), sliding: /sliding/i.test(main.innerText)}})()""")
+        (ok if sorted(f[0] for f in st["forms"]) == ["provapa", "sliding"] else bad)(f"två formulär som inte blandas ihop (pp_form: {[f[0] for f in st['forms']]})")
+        (ok if sorted(f[1] for f in st["forms"]) == ["#barn-boka", "#vuxen-boka"] else bad)(f"varje formulär skickar tillbaka till sin egen del ({[f[1] for f in st['forms']]})")
+        (ok if st["targets"] == ["#barn", "#vuxen"] and st["targetsExist"] else bad)(f"valkorten leder till barndelen och vuxendelen ({st['targets']})")
+        dupes = sorted({i for i in st["ids"] if st["ids"].count(i) > 1})
+        (ok if not dupes else bad)("inga dubbla id:n på sidan" + (f" — dubbletter: {dupes}" if dupes else ""))
+        (ok if not st["sliding"] else bad)("ordet \"Sliding\" förekommer inte på sidan")
+        (ok if pg.evaluate("!!document.querySelector('.provapa-hero__visual--no-photo .provapa-sticker')") else bad)("utan foto visas klistermärket")
+        pg.close()
+        pg = open_page("combined-photo", 1280)
+        (ok if pg.evaluate("!!document.querySelector('.provapa-polaroid img') && !document.querySelector('.provapa-hero__visual--no-photo')") else bad)("med foto visas fotot i ramen i stället")
+        pg.close()
+        pg = open_page("combined", 390)
+        st = pg.evaluate("(()=>{const t=document.querySelector('.cmb-compare__table');const r=t.getBoundingClientRect();return {right:r.right, display:getComputedStyle(t.querySelector('tr')).display}})()")
+        (ok if st["right"] <= 390 and st["display"] == "block" else bad)(f"jämförelsen blir kort på mobil och ryms ({st})")
+        pg.close()
+        pg = open_page("combined-adult-paused", 1280)
+        st = pg.evaluate("({kidsForm: !!document.querySelector('form [name=pp_form][value=provapa]'), adultForm: !!document.querySelector('form [name=pp_form][value=sliding]'), adultPart: !!document.querySelector('#vuxen')})")
+        (ok if st == {"kidsForm": True, "adultForm": False, "adultPart": True} else bad)(f"vuxen pausat: barnformuläret finns kvar, vuxendelen visar bara pausmeddelandet ({st})")
         pg.close()
 
     # 8b. A normal page (page.php) --------------------------------------------------------

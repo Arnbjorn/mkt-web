@@ -64,6 +64,7 @@ function the_content() {
 }
 
 /* For the Sliding page */
+function get_theme_file_path( $f = '' ) { return TMC_THEME . '/' . $f; }
 function get_the_post_thumbnail_url( $id = null, $size = '' ) { return $GLOBALS['__photo']; }
 function wp_json_encode( $v ) { return json_encode( $v ); }
 // A believable calendar: open Wednesdays and Saturdays; tomorrow is "within 24 h",

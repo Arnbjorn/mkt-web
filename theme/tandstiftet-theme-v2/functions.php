@@ -592,7 +592,7 @@ function tmc_provapa_fields() {
 
 		// Hänvisning till Sliding (visas bara när Sliding är aktivt)
 		'adult_text' => [ 'Vuxna', 'Hänvisning till Sliding — text', __( 'Den här sidan är för barn och ungdom. Är du vuxen och vill prova på?', 'tandstiftet' ), 'text' ],
-		'adult_link' => [ 'Vuxna', 'Hänvisning till Sliding — länktext', __( 'Sliding — prova på för vuxna →', 'tandstiftet' ), 'text' ],
+		'adult_link' => [ 'Vuxna', 'Hänvisning till Sliding — länktext', __( 'Prova på för vuxna →', 'tandstiftet' ), 'text' ],
 
 		// Anmälan och säsong (meddelandet när anmälan är stängd tills vidare är tmc_provapa_season_message)
 		'offseason_msg'     => [ 'Anmälan och säsong', 'Meddelande utanför säsongen ({datum} = när ni öppnar igen)', __( 'Säsongen är slut för i år. Vi öppnar igen {datum} — håll utkik här eller på våra sociala kanaler!', 'tandstiftet' ), 'textarea' ],
@@ -655,6 +655,64 @@ function tmc_provapa_fields() {
 		'book_success_title' => [ 'Formulär', 'Tack-rubrik efter skickat', __( 'Tack, vi hör av oss!', 'tandstiftet' ), 'text' ],
 		'book_success_text'  => [ 'Formulär', 'Tack-text efter skickat', __( 'Vi bekräftar att träningen blir av eller hör av oss om något ändras. Kom ihåg att lösa licens hos Svemo om barnet är 12 år eller äldre.', 'tandstiftet' ), 'textarea' ],
 		'book_direct'        => [ 'Formulär', 'Text före e-post/telefon', __( 'Eller kontakta oss direkt:', 'tandstiftet' ), 'text' ],
+
+		// ── Gemensam sida: barn OCH vuxna på samma sida (testläge, av som standard) ──
+		'cmb_eyebrow'      => [ 'Gemensam sida', 'Liten rad ovanför rubriken (rubriken = Hero — Rubrik rad 1 och 2)', __( 'Barn, ungdom och vuxna · ingen erfarenhet krävs', 'tandstiftet' ), 'text' ],
+		'cmb_sub'          => [ 'Gemensam sida', 'Text under rubriken', __( 'Vi lånar ut all utrustning och har instruktörer på plats. Välj vem det gäller:', 'tandstiftet' ), 'textarea' ],
+		'cmb_sticker_big'  => [ 'Gemensam sida', 'Klistermärke — stor text (visas när sidan saknar foto)', __( '0 kr', 'tandstiftet' ), 'text' ],
+		'cmb_sticker_small'=> [ 'Gemensam sida', 'Klistermärke — liten text', __( 'för barn under 12 år', 'tandstiftet' ), 'text' ],
+		'cmb_kids_who'     => [ 'Gemensam sida', 'Valkort barn — rubrik', __( 'Barn & ungdom', 'tandstiftet' ), 'text' ],
+		'cmb_kids_what'    => [ 'Gemensam sida', 'Valkort barn — pris/ålder', __( 'Gratis · från 6 år', 'tandstiftet' ), 'text' ],
+		'cmb_kids_more'    => [ 'Gemensam sida', 'Valkort barn — text', __( 'Kom på vanlig träning ons 17 / lör 10', 'tandstiftet' ), 'text' ],
+		'cmb_kids_go'      => [ 'Gemensam sida', 'Valkort barn — länktext', __( 'Till barn & ungdom ↓', 'tandstiftet' ), 'text' ],
+		'cmb_adult_who'    => [ 'Gemensam sida', 'Valkort vuxen — rubrik', __( 'Vuxen', 'tandstiftet' ), 'text' ],
+		'cmb_adult_what'   => [ 'Gemensam sida', 'Valkort vuxen — pris', __( '800 kr · bokas i förväg', 'tandstiftet' ), 'text' ],
+		'cmb_adult_more'   => [ 'Gemensam sida', 'Valkort vuxen — text', __( 'Själv, med kompisar eller kalas', 'tandstiftet' ), 'text' ],
+		'cmb_adult_go'     => [ 'Gemensam sida', 'Valkort vuxen — länktext', __( 'Till vuxen ↓', 'tandstiftet' ), 'text' ],
+		'cmb_adult_paused' => [ 'Gemensam sida', 'Valkort vuxen — text när prova på för vuxna är pausat', __( 'Pausat just nu', 'tandstiftet' ), 'text' ],
+
+		'cmp_label'      => [ 'Gemensam — Jämförelse', 'Liten rad ovanför rubriken', __( 'Skillnaden på en gång', 'tandstiftet' ), 'text' ],
+		'cmp_title'      => [ 'Gemensam — Jämförelse', 'Rubrik', __( 'Barn eller vuxen?', 'tandstiftet' ), 'text' ],
+		'cmp_head_kids'  => [ 'Gemensam — Jämförelse', 'Kolumnrubrik barn', __( 'Barn & ungdom', 'tandstiftet' ), 'text' ],
+		'cmp_head_adult' => [ 'Gemensam — Jämförelse', 'Kolumnrubrik vuxen', __( 'Vuxen', 'tandstiftet' ), 'text' ],
+		'cmp_1_label' => [ 'Gemensam — Jämförelse', 'Rad 1 — vad (tom = raden döljs)', __( 'Kostnad', 'tandstiftet' ), 'text' ],
+		'cmp_1_kids'  => [ 'Gemensam — Jämförelse', 'Rad 1 — barn (första raden blir stor)', __( "0 kr\n+ 225 kr Svemo-licens från 12 år", 'tandstiftet' ), 'textarea' ],
+		'cmp_1_adult' => [ 'Gemensam — Jämförelse', 'Rad 1 — vuxen (första raden blir stor)', __( "800 kr\n+ 225 kr Svemo-licens", 'tandstiftet' ), 'textarea' ],
+		'cmp_2_label' => [ 'Gemensam — Jämförelse', 'Rad 2 — vad', __( 'Anmälan', 'tandstiftet' ), 'text' ],
+		'cmp_2_kids'  => [ 'Gemensam — Jämförelse', 'Rad 2 — barn', __( 'Ingen krävs — men hör gärna av er innan', 'tandstiftet' ), 'textarea' ],
+		'cmp_2_adult' => [ 'Gemensam — Jämförelse', 'Rad 2 — vuxen', __( 'Alltid bokat i förväg', 'tandstiftet' ), 'textarea' ],
+		'cmp_3_label' => [ 'Gemensam — Jämförelse', 'Rad 3 — vad', __( 'När', 'tandstiftet' ), 'text' ],
+		'cmp_3_kids'  => [ 'Gemensam — Jämförelse', 'Rad 3 — barn', __( 'Ordinarie barnträning: onsdagar 17:00, lördagar 10:00', 'tandstiftet' ), 'textarea' ],
+		'cmp_3_adult' => [ 'Gemensam — Jämförelse', 'Rad 3 — vuxen', __( 'Lediga dagar i bokningskalendern', 'tandstiftet' ), 'textarea' ],
+		'cmp_4_label' => [ 'Gemensam — Jämförelse', 'Rad 4 — vad', __( 'Vem följer med', 'tandstiftet' ), 'text' ],
+		'cmp_4_kids'  => [ 'Gemensam — Jämförelse', 'Rad 4 — barn', __( 'En vårdnadshavare', 'tandstiftet' ), 'textarea' ],
+		'cmp_4_adult' => [ 'Gemensam — Jämförelse', 'Rad 4 — vuxen', __( 'Själv, med kompisar, kalas eller företag', 'tandstiftet' ), 'textarea' ],
+		'cmp_5_label' => [ 'Gemensam — Jämförelse', 'Rad 5 — vad (tom = raden döljs)', '', 'text' ],
+		'cmp_5_kids'  => [ 'Gemensam — Jämförelse', 'Rad 5 — barn', '', 'textarea' ],
+		'cmp_5_adult' => [ 'Gemensam — Jämförelse', 'Rad 5 — vuxen', '', 'textarea' ],
+
+		'cmb_steps_eyebrow' => [ 'Gemensam — Så går det till', 'Liten rad ovanför rubriken', __( 'Gäller alla', 'tandstiftet' ), 'text' ],
+		'cmb_steps_title'   => [ 'Gemensam — Så går det till', 'Rubrik', __( 'Så går det till', 'tandstiftet' ), 'text' ],
+		'cmb_step_1_title'  => [ 'Gemensam — Så går det till', 'Steg 1 — rubrik', __( 'Ankomst', 'tandstiftet' ), 'text' ],
+		'cmb_step_1_text'   => [ 'Gemensam — Så går det till', 'Steg 1 — text', __( 'Kom i god tid. Barn kommer tillsammans med en vårdnadshavare.', 'tandstiftet' ), 'textarea' ],
+		'cmb_step_2_title'  => [ 'Gemensam — Så går det till', 'Steg 2 — rubrik', __( 'Utrustning', 'tandstiftet' ), 'text' ],
+		'cmb_step_2_text'   => [ 'Gemensam — Så går det till', 'Steg 2 — text', __( 'Vi provar ut hjälm, stövlar, overall och skydd i rätt storlek.', 'tandstiftet' ), 'textarea' ],
+		'cmb_step_3_title'  => [ 'Gemensam — Så går det till', 'Steg 3 — rubrik', __( 'Ut på banan', 'tandstiftet' ), 'text' ],
+		'cmb_step_3_text'   => [ 'Gemensam — Så går det till', 'Steg 3 — text', __( 'Säkerhetsgenomgång, sedan körning i din egen takt med instruktör.', 'tandstiftet' ), 'textarea' ],
+		'cmb_step_4_title'  => [ 'Gemensam — Så går det till', 'Steg 4 — rubrik', __( 'Eftersnack', 'tandstiftet' ), 'text' ],
+		'cmb_step_4_text'   => [ 'Gemensam — Så går det till', 'Steg 4 — text', __( 'Vi pratar om hur det gick och hur man fortsätter.', 'tandstiftet' ), 'textarea' ],
+
+		'cmb_kids_badge' => [ 'Gemensam — Barndelen', 'Etikett', __( 'Barn & ungdom', 'tandstiftet' ), 'text' ],
+		'cmb_kids_title' => [ 'Gemensam — Barndelen', 'Rubrik (tider och formulär hämtas från Träningstider och Formulär)', __( 'Kom till en vanlig träning', 'tandstiftet' ), 'text' ],
+
+		'cmb_adult_badge' => [ 'Gemensam — Vuxendelen', 'Etikett', __( 'Vuxen', 'tandstiftet' ), 'text' ],
+		'cmb_adult_title' => [ 'Gemensam — Vuxendelen', 'Rubrik (pris, grupper och bokning hämtas från Sida: Sliding)', __( 'Prova på som vuxen', 'tandstiftet' ), 'text' ],
+		'cmb_adult_text'  => [ 'Gemensam — Vuxendelen', 'Text', __( 'Ingen drop-in — välj en ledig dag i kalendern längre ner. Kom själv, med kompisar eller som ett kalas, en möhippa eller ett företagsevent.', 'tandstiftet' ), 'textarea' ],
+
+		'cmb_faq_eyebrow'   => [ 'Gemensam — Bra att veta', 'Liten rad ovanför rubriken', __( 'Frågor och svar', 'tandstiftet' ), 'text' ],
+		'cmb_faq_title'     => [ 'Gemensam — Bra att veta', 'Rubrik (frågorna hämtas från Prova På och Sliding)', __( 'Bra att veta', 'tandstiftet' ), 'text' ],
+		'cmb_faq_kids_tag'  => [ 'Gemensam — Bra att veta', 'Märkning av barnfrågorna', __( 'Barn', 'tandstiftet' ), 'text' ],
+		'cmb_faq_adult_tag' => [ 'Gemensam — Bra att veta', 'Märkning av vuxenfrågorna', __( 'Vuxen', 'tandstiftet' ), 'text' ],
 	];
 }
 
@@ -745,7 +803,7 @@ function tmc_sliding_fields() {
 		'fact_4_label' => [ 'Faktaremsa', 'Fakta 4 — text', __( 'Erfarenhet krävs', 'tandstiftet' ), 'text' ],
 
 		// Hänvisning till Prova På
-		'kids_text' => [ 'Barn', 'Hänvisning till Prova På — text', __( 'Sliding är vår Prova På för vuxna. Har du barn som vill prova på?', 'tandstiftet' ), 'text' ],
+		'kids_text' => [ 'Barn', 'Hänvisning till Prova På — text', __( 'Det här är prova på för vuxna. Har du barn som vill prova på?', 'tandstiftet' ), 'text' ],
 		'kids_link' => [ 'Barn', 'Hänvisning till Prova På — länktext', __( 'Prova På för barn och ungdom — gratis →', 'tandstiftet' ), 'text' ],
 
 		// Pris
@@ -755,20 +813,20 @@ function tmc_sliding_fields() {
 		'price_club_text'    => [ 'Pris', 'Ruta 1 — text', __( 'till klubben — utrustning, instruktör och bana ingår', 'tandstiftet' ), 'text' ],
 		'price_license'      => [ 'Pris', 'Ruta 2 — belopp', __( '225 kr', 'tandstiftet' ), 'text' ],
 		'price_license_text' => [ 'Pris', 'Ruta 2 — text', __( 'Svemo prova på-licens — betalas separat, direkt till Svemo', 'tandstiftet' ), 'text' ],
-		'price_note'         => [ 'Pris', 'Text under rutorna', __( 'Licensen är inte en klubbavgift och syns inte i vår bokningsbekräftelse. Lös den samma morgon, inte i förväg, ifall vi måste ställa in. Sliding-priset inkluderar medlemskap i MKT resten av kalenderåret.', 'tandstiftet' ), 'textarea' ],
+		'price_note'         => [ 'Pris', 'Text under rutorna', __( 'Licensen är inte en klubbavgift och syns inte i vår bokningsbekräftelse. Lös den samma morgon, inte i förväg, ifall vi måste ställa in. Priset inkluderar medlemskap i MKT resten av kalenderåret.', 'tandstiftet' ), 'textarea' ],
 		'license_link'       => [ 'Pris', 'Länktext till Svemo', __( 'Köp licensen hos Svemo →', 'tandstiftet' ), 'text' ],
 		'license_url'        => [ 'Pris', 'Länkadress till Svemo', 'https://www.provapasvemo.se', 'url' ],
 
 		// Grupper
 		'groups_eyebrow' => [ 'Grupper', 'Liten rad ovanför rubriken', __( 'Alltid bokat i förväg', 'tandstiftet' ), 'text' ],
 		'groups_title'   => [ 'Grupper', 'Rubrik', __( 'Själv, med kompisar eller ett helt kalas', 'tandstiftet' ), 'text' ],
-		'groups_text'    => [ 'Grupper', 'Text', __( 'Sliding är ingen drop-in-aktivitet — du bokar alltid en tid i förväg, oavsett om du kommer själv eller är flera. Grupper, kalas och event får samma upplägg och samma pris per person, men som ett eget tillfälle för ert sällskap.', 'tandstiftet' ), 'textarea' ],
+		'groups_text'    => [ 'Grupper', 'Text', __( 'Det är ingen drop-in — du bokar alltid en tid i förväg, oavsett om du kommer själv eller är flera. Grupper, kalas och event får samma upplägg och samma pris per person, men som ett eget tillfälle för ert sällskap.', 'tandstiftet' ), 'textarea' ],
 		'group_1_title'  => [ 'Grupper', 'Kort 1 — rubrik', __( 'På egen hand', 'tandstiftet' ), 'text' ],
 		'group_1_text'   => [ 'Grupper', 'Kort 1 — text', __( 'Boka en plats för dig själv — vi slår ofta ihop enskilda bokningar till samma pass.', 'tandstiftet' ), 'textarea' ],
 		'group_2_title'  => [ 'Grupper', 'Kort 2 — rubrik', __( 'Sällskap och vänner', 'tandstiftet' ), 'text' ],
 		'group_2_text'   => [ 'Grupper', 'Kort 2 — text', __( 'Kom några stycken tillsammans — ange hur många ni är när ni bokar, så planerar vi passet efter er grupp.', 'tandstiftet' ), 'textarea' ],
 		'group_3_title'  => [ 'Grupper', 'Kort 3 — rubrik', __( 'Kalas, möhippa och företag', 'tandstiftet' ), 'text' ],
-		'group_3_text'   => [ 'Grupper', 'Kort 3 — text', __( 'Firma, möhippa, svensexa eller födelsedag — boka Sliding som ett eget event för hela sällskapet. Hör av dig i god tid.', 'tandstiftet' ), 'textarea' ],
+		'group_3_text'   => [ 'Grupper', 'Kort 3 — text', __( 'Firma, möhippa, svensexa eller födelsedag — boka ett eget tillfälle för hela sällskapet. Hör av dig i god tid.', 'tandstiftet' ), 'textarea' ],
 
 		// Discipliner
 		'disc_eyebrow'       => [ 'Discipliner', 'Liten rad ovanför rubriken', __( 'Flat track eller speedway?', 'tandstiftet' ), 'text' ],
@@ -776,7 +834,7 @@ function tmc_sliding_fields() {
 		'disc_title'         => [ 'Discipliner', 'Rubrik', __( 'Vi hjälper dig hitta rätt', 'tandstiftet' ), 'text' ],
 		'disc_title_no_ft'   => [ 'Discipliner', 'Rubrik (när Flat track är avstängt)', __( 'Speedway', 'tandstiftet' ), 'text' ],
 		'disc_text'          => [ 'Discipliner', 'Text', __( 'Vilket som passar beror på din erfarenhet, vad som finns tillgängligt just den dagen och vad du själv önskar. Instruktören hjälper dig avgöra om du är osäker.', 'tandstiftet' ), 'textarea' ],
-		'disc_text_no_ft'    => [ 'Discipliner', 'Text (när Flat track är avstängt)', __( 'Sliding kör vi just nu på speedway — en oval bana utan broms. Ingen erfarenhet krävs, instruktören hjälper dig komma igång i din egen takt.', 'tandstiftet' ), 'textarea' ],
+		'disc_text_no_ft'    => [ 'Discipliner', 'Text (när Flat track är avstängt)', __( 'Prova på för vuxna kör vi just nu på speedway — en oval bana utan broms. Ingen erfarenhet krävs, instruktören hjälper dig komma igång i din egen takt.', 'tandstiftet' ), 'textarea' ],
 		'ft_title'           => [ 'Discipliner', 'Flat track — rubrik', __( 'Flat track', 'tandstiftet' ), 'text' ],
 		'ft_text'            => [ 'Discipliner', 'Flat track — text', __( 'Dirt track med bromsar — ofta det naturliga förstavalet för helt nya förare. Mer tillgängligt och förlåtande att lära sig på.', 'tandstiftet' ), 'textarea' ],
 		'sw_title'           => [ 'Discipliner', 'Speedway — rubrik', __( 'Speedway', 'tandstiftet' ), 'text' ],
@@ -826,7 +884,7 @@ function tmc_sliding_fields() {
 		// Bokning
 		'book_eyebrow'       => [ 'Bokning', 'Liten rad ovanför rubriken', __( 'Redo?', 'tandstiftet' ), 'text' ],
 		'book_title'         => [ 'Bokning', 'Rubrik', __( 'Boka din plats', 'tandstiftet' ), 'text' ],
-		'book_text'          => [ 'Bokning', 'Text', __( 'Sliding bokas alltid i förväg — vi tar inte drop-in. Välj ett ledigt datum i kalendern, fyll i formuläret och skicka.', 'tandstiftet' ), 'textarea' ],
+		'book_text'          => [ 'Bokning', 'Text', __( 'Prova på för vuxna bokas alltid i förväg — vi tar inte drop-in. Välj ett ledigt datum i kalendern, fyll i formuläret och skicka.', 'tandstiftet' ), 'textarea' ],
 		'book_needs_title'   => [ 'Bokning', 'Ruta — rubrik', __( 'Vi behöver veta', 'tandstiftet' ), 'text' ],
 		'book_needs'         => [ 'Bokning', 'Ruta — punkter (en per rad)', __( "Namn, ålder och kontaktuppgifter\nAntal personer (om ni är flera eller ett kalas)\nSkostorlek och ungefärlig längd\nÖnskad disciplin (flat track eller speedway)", 'tandstiftet' ), 'textarea' ],
 		'book_needs_no_ft'   => [ 'Bokning', 'Ruta — punkter (när Flat track är avstängt)', __( "Namn, ålder och kontaktuppgifter\nAntal personer (om ni är flera eller ett kalas)\nSkostorlek och ungefärlig längd", 'tandstiftet' ), 'textarea' ],
@@ -835,10 +893,10 @@ function tmc_sliding_fields() {
 		'book_direct'        => [ 'Bokning', 'Text före e-post/telefon', __( 'Eller kontakta oss direkt:', 'tandstiftet' ), 'text' ],
 
 		// Pausat (Anpassa > Sida: Sliding > Anmälan och säsong)
-		'offseason_msg'     => [ 'Anmälan och säsong', 'Meddelande utanför säsongen ({datum} = när ni öppnar igen)', __( 'Sliding-säsongen är slut för i år. Bokningen öppnar igen {datum}. Vill du fråga något under tiden — hör av dig!', 'tandstiftet' ), 'textarea' ],
+		'offseason_msg'     => [ 'Anmälan och säsong', 'Meddelande utanför säsongen ({datum} = när ni öppnar igen)', __( 'Säsongen är slut för i år. Bokningen öppnar igen {datum}. Vill du fråga något under tiden — hör av dig!', 'tandstiftet' ), 'textarea' ],
 		'closed_msg'        => [ 'Anmälan och säsong', 'Meddelande när bokningen är stängd tills vidare', __( 'Bokningen är stängd just nu. Hör av dig direkt om du har frågor, så hjälper vi dig.', 'tandstiftet' ), 'textarea' ],
 		'closed_book_title' => [ 'Anmälan och säsong', 'Rubrik där kalendern brukar vara när bokningen är stängd', __( 'Bokningen är stängd just nu', 'tandstiftet' ), 'text' ],
-		'paused_title' => [ 'Anmälan och säsong', 'Rubrik när Sliding är pausat', __( 'Sliding är tillfälligt pausat', 'tandstiftet' ), 'text' ],
+		'paused_title' => [ 'Anmälan och säsong', 'Rubrik när Sliding är pausat', __( 'Prova på för vuxna är tillfälligt pausat', 'tandstiftet' ), 'text' ],
 		'paused_text'  => [ 'Anmälan och säsong', 'Text när Sliding är pausat', __( 'Vi tar en kort paus med vuxenerbjudandet. Vill du prova på speedway eller flat track ändå — hör av dig direkt så hjälper vi dig. Har du barn som vill prova? Se Prova På för barn och ungdom.', 'tandstiftet' ), 'textarea' ],
 		'paused_btn'   => [ 'Anmälan och säsong', 'Knapp till Prova På', __( 'Se Prova På — barn och ungdom', 'tandstiftet' ), 'text' ],
 	];
@@ -879,6 +937,8 @@ function tmc_page_sections( $set ) {
 		'provapa' => [
 			'Anmälan och säsong' => 'signup', 'Hero' => 'hero', 'Faktaremsa' => 'facts', 'Vuxna' => 'adult',
 			'Träningstider' => 'times', 'Steg' => 'steps', 'Bra att veta' => 'faq', 'Formulär' => 'form',
+			'Gemensam sida' => 'cmb', 'Gemensam — Jämförelse' => 'cmb_compare', 'Gemensam — Så går det till' => 'cmb_steps',
+			'Gemensam — Barndelen' => 'cmb_kids', 'Gemensam — Vuxendelen' => 'cmb_adult', 'Gemensam — Bra att veta' => 'cmb_faq',
 		],
 		'sliding' => [
 			'Anmälan och säsong' => 'signup', 'Hero' => 'hero', 'Faktaremsa' => 'facts', 'Barn' => 'kids',
@@ -892,7 +952,7 @@ function tmc_page_sections( $set ) {
 /* Parts that can be switched off. The hero carries the page title, and the
    form is opened/closed by "Anmälan och säsong" instead. */
 function tmc_page_section_hideable( $slug ) {
-	return ! in_array( $slug, [ 'signup', 'hero', 'form' ], true );
+	return ! in_array( $slug, [ 'signup', 'hero', 'form', 'cmb' ], true );
 }
 
 /* Is this part of the page switched on? (Anpassa → [sidan] → [delen] → "Visa …") */
@@ -1065,10 +1125,43 @@ function tmc_get_season_events( $year, $count = 8 ) {
 	] );
 }
 
+/* Prova På for children AND adults on one page — a test mode that is off by default
+   (Anpassa → Sida: Prova På → Gemensam sida). Switching it off restores the two
+   separate pages exactly as before: nothing else changes. */
+function tmc_provapa_combined() {
+	return (bool) get_theme_mod( 'tmc_provapa_combined', false );
+}
+
+/* Does Sliding have its own page in menus and links? Not while paused, and not
+   while it lives on the combined Prova På page. */
+function tmc_sliding_own_page() {
+	return tmc_sliding_enabled() && ! tmc_provapa_combined();
+}
+
+/* Combined mode: the Prova På page uses the combined template, and the old Sliding
+   address sends visitors (and search engines) to the adult part of it. */
+function tmc_combined_template( $template ) {
+	if ( ! tmc_provapa_combined() || ! is_page() ) return $template;
+	if ( get_page_template_slug() !== 'templates/page-prova-pa.php' ) return $template;
+	$combined = locate_template( 'templates/page-prova-pa-combined.php' );
+	return $combined ?: $template;
+}
+add_filter( 'template_include', 'tmc_combined_template' );
+
+function tmc_combined_redirect_sliding() {
+	if ( ! tmc_provapa_combined() || ! is_page() ) return;
+	if ( get_page_template_slug() !== 'templates/page-sliding.php' ) return;
+	$pp = get_page_by_path( 'prova-pa' );
+	if ( ! $pp ) return;
+	wp_safe_redirect( get_permalink( $pp->ID ) . '#vuxen', 302 );   // 302: temporary — the test mode can be switched off
+	exit;
+}
+add_action( 'template_redirect', 'tmc_combined_redirect_sliding' );
+
 /* Automatically strip any "Sliding" link from every nav menu while paused,
    so no manual menu editing is needed to hide/restore it. */
 function tmc_maybe_hide_sliding_menu_items( $items, $args ) {
-	if ( tmc_sliding_enabled() ) {
+	if ( tmc_sliding_own_page() ) {   // paused, or shown on the combined Prova På page
 		return $items;
 	}
 	return array_filter( $items, function( $item ) {

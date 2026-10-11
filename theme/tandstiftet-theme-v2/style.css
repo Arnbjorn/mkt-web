@@ -5041,6 +5041,7 @@ h3.footer-nav-col__title,
 /* ── Paused ── */
 .sliding-paused__inner { max-width: calc(var(--container-narrow) + 2 * var(--space-lg)); }
 .sliding-paused__actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem; }
+.cmb-part .btn,
 .sliding-paused .btn { max-width: 100%; letter-spacing: 0.06em; overflow-wrap: anywhere; line-height: 1.2; }   /* a long e-mail address must not push the page wider */
 .sliding-paused .btn--outline { border-color: var(--color-ink); color: var(--color-ink); }
 .sliding-paused .btn--outline:hover { background: var(--color-ink); color: var(--color-beige); }
@@ -5116,3 +5117,102 @@ h3.footer-nav-col__title,
 .home-season-next strong { font-family: var(--font-condensed); font-size: 1.2rem; letter-spacing: 0.03em; text-transform: uppercase; color: var(--color-gold-light); }
 .home-season-next span { font-size: 1rem; color: var(--color-grey-light); }
 @media (max-width: 760px) { .home-season-next { grid-template-columns: 1fr; } }
+
+
+/* =========================================================
+   v2 — PROVA PÅ: GEMENSAM SIDA (templates/page-prova-pa-combined.php, testläge)
+   Gold = children, orange = adults — all the way down the page.
+   ========================================================= */
+.cmb-choose { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 40rem; }
+.cmb-choose__card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.2rem 1.3rem 1.1rem;
+  border: 2px solid var(--color-gold);
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.cmb-choose__card:hover { background: rgba(212, 160, 23, 0.12); }
+.cmb-choose__who { font-family: var(--font-display); font-size: 1.9rem; line-height: 1; text-transform: uppercase; color: var(--color-cream); }
+.cmb-choose__what { font-family: var(--font-condensed); font-weight: 700; font-size: 1.1rem; letter-spacing: 0.03em; text-transform: uppercase; color: var(--color-gold-light); }
+.cmb-choose__more { font-size: 1rem; line-height: 1.45; color: var(--color-grey-light); }
+.cmb-choose__go { margin-top: 0.4rem; font-family: var(--font-condensed); font-weight: 700; font-size: 1rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-gold); }
+.cmb-choose__card--adult { border-color: var(--color-orange); }
+.cmb-choose__card--adult:hover { background: rgba(224, 132, 44, 0.12); }
+.cmb-choose__card--adult .cmb-choose__what,
+.cmb-choose__card--adult .cmb-choose__go { color: var(--color-orange); }
+@media (max-width: 600px) { .cmb-choose { grid-template-columns: 1fr; } }
+
+/* Comparison: a table on wide screens, one card per row on phones */
+.cmb-compare__table { width: 100%; border-collapse: collapse; font-size: 1.05rem; }
+.cmb-compare__table th,
+.cmb-compare__table td { text-align: left; vertical-align: top; padding: 0.95rem 1rem; border-bottom: 1px solid rgba(36, 31, 24, 0.12); color: var(--color-ink); line-height: 1.5; }
+.cmb-compare__table thead th { font-family: var(--font-condensed); font-weight: 700; font-size: 1.15rem; letter-spacing: 0.04em; text-transform: uppercase; border-bottom: 3px solid var(--color-gold); }
+.cmb-compare__table thead th.cmb-compare__adult { border-bottom-color: var(--color-orange); }
+.cmb-compare__table tbody th { width: 11rem; font-family: var(--font-condensed); font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: var(--color-rust); }
+.cmb-compare__table strong { font-family: var(--font-display); font-weight: 400; font-size: 1.6rem; line-height: 1.1; color: var(--color-rust); }
+@media (max-width: 700px) {
+  .cmb-compare__table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); }
+  .cmb-compare__table,
+  .cmb-compare__table tbody,
+  .cmb-compare__table tr,
+  .cmb-compare__table th,
+  .cmb-compare__table td { display: block; width: auto; }
+  .cmb-compare__table tr { background: var(--color-beige-deep); margin-bottom: 0.9rem; padding: 0.4rem 0; }
+  .cmb-compare__table tbody th { border-bottom: 0; padding-bottom: 0.2rem; }
+  .cmb-compare__table td { border-bottom: 0; padding-block: 0.45rem; border-left: 3px solid var(--color-gold); margin-left: 1rem; }
+  .cmb-compare__table td.cmb-compare__adult-cell { border-left-color: var(--color-orange); }
+  .cmb-compare__table td::before {
+    content: attr(data-who);
+    display: block;
+    font-family: var(--font-condensed);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+}
+
+/* The two halves: a coloured line and a badge, so you always know which half you are in */
+.cmb-part--kids { border-top: 4px solid var(--color-gold); }
+.cmb-part--adult { background: var(--color-coal); border-top: 4px solid var(--color-orange); }
+.cmb-part__head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; margin-bottom: 1.4rem; }
+.cmb-part__head .provapa-title { margin: 0; }
+.cmb-part__badge {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.8rem;
+  background: var(--color-gold);
+  color: var(--color-black);
+}
+.cmb-part__badge--adult { background: var(--color-orange); }
+.cmb-part__lead { font-size: 1.05rem; line-height: 1.7; max-width: 62ch; margin-bottom: 1.5rem; color: var(--color-grey-light); }
+.cmb-part__note { font-size: 1rem; line-height: 1.6; max-width: 70ch; color: var(--color-grey-light); }
+.cmb-part--adult .sliding-price__box { background: var(--color-asphalt); }
+.cmb-part--adult .sliding-price__amount { color: var(--color-gold-light); }
+.cmb-part--adult .sliding-price__what { color: var(--color-cream); }
+.cmb-part__groups { margin-top: 1.8rem; }
+.cmb-part--adult .sliding-card { background: var(--color-asphalt); }
+.cmb-part--adult .sliding-card__title { color: var(--color-cream); }
+.cmb-part--adult .sliding-card__text { color: var(--color-grey-light); }
+
+/* FAQ tags */
+.cmb-tag {
+  display: inline-block;
+  margin-right: 0.55rem;
+  padding: 0.1rem 0.45rem;
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  background: var(--color-gold);
+  color: var(--color-black);
+}
+.cmb-tag--adult { background: var(--color-orange); }
