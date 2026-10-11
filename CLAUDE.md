@@ -56,10 +56,11 @@ Krav lokalt: `bash`, `php` 8.x, `zip`; valfritt `node`; för webbläsartester `p
 5. **Ingen text som styrelsen kan vilja ändra får vara hårdkodad i en mall.** Lägg ett Customizer-fält (med standardvärde som är den nuvarande texten).
 6. **Förutsätt inte att innehåll finns** (bilder, menyer, inlägg). Innehållet bor i WordPress databas, inte i repot. Bygg snälla tomlägen.
 7. **Inget PHP-tillägg utöver standard** — använd inte `mb_*`. (`strtolower` hanterar inte Å/Ä/Ö sedan PHP 8.2; normalisera manuellt som i `tmc_maybe_hide_events_menu_item`.)
-8. **Publicering** sker med knappen *Actions → Publicera tema* (`docs/PUBLICERA.md`). Inloggningen ligger som GitHub Secrets i miljöerna `beta`/`live` — be aldrig om den och skriv aldrig in den själv. Live bara från `master`.
-9. **Inga hemligheter, lösenord, `wp-config.php` eller databasdumpar i repot.** Repot ska vara **privat** (det finns foto på en ung person i `design/concepts/images/`).
-10. **Ändringslogg:** varje märkbar ändring → `CHANGELOG.md`. Release = höj version, tagga `vX.Y.Z` (GitHub Actions bygger zip).
-11. **Rör inte det gamla temat** (v1 ligger kvar på sajten som reträtt).
+8. **Livesajten får inte röras** förrän testsajten är klar och användaren uttryckligen säger till — ingen publicering, inga ändringar, inget "live"-val i knappen (borttaget med flit). All utveckling visas på test.tändstiftet.se.
+9. **Publicering** sker med knappen *Actions → Publicera tema* (`docs/PUBLICERA.md`). Inloggningen ligger som GitHub Secrets i miljöerna `beta`/`live` — be aldrig om den och skriv aldrig in den själv. Live bara från `master`.
+10. **Inga hemligheter, lösenord, `wp-config.php` eller databasdumpar i repot.** Repot ska vara **privat** (det finns foto på en ung person i `design/concepts/images/`).
+11. **Ändringslogg:** varje märkbar ändring → `CHANGELOG.md`. Release = höj version, tagga `vX.Y.Z` (GitHub Actions bygger zip).
+12. **Rör inte det gamla temat** (v1 ligger kvar på sajten som reträtt).
 
 ## Teknisk karta (temat)
 

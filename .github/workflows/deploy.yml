@@ -2,15 +2,19 @@ name: Publicera tema
 
 # Startas med en knapp: GitHub → Actions → "Publicera tema" → Run workflow.
 # Kör först ALLA tester (samma som CI); är något rött publiceras ingenting.
-# Inloggningen till webbhotellet ligger som Secrets i miljöerna "beta" och "live"
-# (Settings → Environments) — aldrig i repot. Se docs/PUBLICERA.md.
+# Inloggningen till webbhotellet ligger som Secrets i miljön "beta" (Settings → Environments)
+# — aldrig i repot. Se docs/PUBLICERA.md.
+#
+# MEDVETET BARA TESTSAJTEN: livesajten kör det gamla temat och ska inte röras förrän
+# testsajten är klar och styrelsen har sagt ja. "live" läggs till som val först då
+# (lägg tillbaka "live" i options nedan — skyddet "bara från master" finns redan kvar).
 on:
   workflow_dispatch:
     inputs:
       target:
-        description: "Vart? (beta = betasajten, live = riktiga sajten)"
+        description: "Vart? (beta = testsajten test.tändstiftet.se — live är avstängt tills vidare)"
         type: choice
-        options: [beta, live]
+        options: [beta]
         default: beta
       mode:
         description: "Vad? (testa-anslutning ändrar ingenting)"

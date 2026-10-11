@@ -1,8 +1,13 @@
 # Publicera temat till sajten med en knapp
 
+> **Just nu går knappen bara till testsajten (test.tändstiftet.se).** Livesajten kör det gamla temat och ska inte
+> röras förrän arbetet på testsajten är klart och godkänt. Valet *live* är därför borttaget ur knappen.
+> När det är dags: lägg tillbaka `live` i `.github/workflows/deploy.yml` (`options: [beta, live]`), skapa miljön
+> `live` med egna Secrets och **Required reviewers**, och publicera från `master`.
+
 GitHub kan bygga temat och lägga upp det på one.com åt er — ingen zip-fil att ladda upp för hand.
 
-**Så går det till:** GitHub → fliken **Actions** → **Publicera tema** → **Run workflow** → välj *beta* eller *live* → **Run workflow**.
+**Så går det till:** GitHub → fliken **Actions** → **Publicera tema** → **Run workflow** → *beta* (testsajten) → **Run workflow**.
 
 1. Alla tester körs först. Är något rött publiceras **ingenting**.
 2. Temat laddas upp till en tillfällig mapp (`tandstiftet-theme-v2.new`) — sajten använder den gamla versionen under tiden.
@@ -37,12 +42,11 @@ Testsajten och riktiga sajten har olika mappar.
 > **"beta" i knappen = testsajten**, som just nu är **test.tändstiftet.se** (beta.tändstiftet.se fungerar inte för tillfället).
 > Vilken sajt det blir bestäms helt av Secrets i miljön `beta` — byter ni testsajt senare ändrar ni bara `THEMES_DIR` och `SITE_URL` där.
 
-### 2. Skapa två miljöer i GitHub
+### 2. Skapa miljön i GitHub
 
-GitHub → repot → **Settings** → **Environments** → **New environment**:
+GitHub → repot → **Settings** → **Environments** → **New environment** → `beta`.
 
-- `beta`
-- `live` — bocka gärna i **Required reviewers** och välj dig själv. Då måste någon godkänna varje publicering till riktiga sajten.
+(Miljön `live` skapas först när livesajten ska bytas — se rutan överst.)
 
 ### 3. Lägg in Secrets i varje miljö
 
