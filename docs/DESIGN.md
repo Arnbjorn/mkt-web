@@ -30,7 +30,7 @@ Kontrasten för nyckelparen vaktas av `tests/css/run.py`.
 - **Rubriker:** Bebas Neue (versaler). **Etiketter/knappar:** Barlow Condensed 600–700. **Brödtext:** Barlow.
 - **Bastextstorlek 18 px** på dator/surfplatta (`html { font-size: 112.5% }`) och **17 px** på mobil (≤480 px). Allt är i `rem` och skalar med.
   Procent (inte px) gör att besökare som höjt webbläsarens egen textstorlek får det respekterat.
-- Målet är ingen text under ca 14 px. **Två kända undantag** (testet tillåter exakt två och får bara minska; kalenderetiketterna rättades i 2.1.0): kalenderns dag-etiketter
+- Målet är ingen text under ca 14 px. **Två kända undantag** (testet tillåter exakt två och får bara minska; kalenderetiketterna rättades i 2.1.0):
   texten i hero-märket `.hero__badge-text` (≈12 px) och headerknappen på mobil `.site-header__cta` (≈13 px).
   Tunn text (vikt 300) undviks — den är svår att läsa för många.
 - Brett bokstavsavstånd (>0,2em) undviks på små etiketter.
