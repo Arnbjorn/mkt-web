@@ -109,6 +109,8 @@ if HAVE_PHP:
         "provapa":         lambda: provapa_page(True),
         "provapa-nophoto": lambda: provapa_page(False),
         "provapa-closed":  lambda: provapa_page(True, "tmc_provapa_season_open=0", "tmc_sliding_enabled=0"),
+        "page":            lambda: php_page("page.php", "", title="Vanlig sida", current=""),
+        "page-photo":      lambda: php_page("page.php", url(IMG / "action-1.jpg"), title="Vanlig sida med bild", current=""),
     })
 
 def build_all():

@@ -115,7 +115,7 @@ with sync_playwright() as p:
     print("\nMinsta renderade textstorlek")
     MIN_PX = 13.0
     checks = [("home", 1280), ("home", 390), ("menu4", 1280), ("menu4", 390)]
-    if harness.HAVE_PHP: checks += [("provapa", 1280), ("provapa", 390), ("provapa-closed", 390)]
+    if harness.HAVE_PHP: checks += [("provapa", 1280), ("provapa", 390), ("provapa-closed", 390), ("page", 1280), ("page", 390)]
     for name, w in checks:
         pg = open_page(name, w)
         res = pg.evaluate("""() => {
@@ -165,6 +165,21 @@ with sync_playwright() as p:
                                 btn2: !!document.querySelector('.provapa-hero__actions a[href="#boka"]'), adult: !!document.querySelector('.provapa-adult')})""")
         (ok if state == {"form": False, "closed": True, "btn2": False, "adult": False} else bad)(
             f"säsong stängd: meddelande visas, formulär och 'hör av dig'-knapp döljs; Sliding pausad: ingen vuxenhänvisning ({state})")
+        pg.close()
+
+    # 8. A normal page (page.php) --------------------------------------------------------
+    print("\nVanlig sida (riktiga page.php)")
+    if harness.HAVE_PHP:
+        pg = open_page("page", 1280)
+        st = pg.evaluate("""(()=>{const c=document.querySelector('.page-read__content'), m=document.querySelector('main.page-read');
+            return {sidebar: !!document.querySelector('.sidebar'), width: Math.round(c.getBoundingClientRect().width),
+                    bg: getComputedStyle(m).backgroundColor, text: getComputedStyle(c.querySelector('p')).color}})()""")
+        (ok if not st["sidebar"] else bad)("ingen bloggsidopanel")
+        (ok if st["width"] <= 820 else bad)(f"texten ligger i en smal, lättläst spalt ({st['width']} px, högst 820)")
+        (ok if st["bg"] == "rgb(242, 236, 225)" and st["text"] != "rgb(216, 207, 188)" else bad)(f"beige läsyta med mörk text (bakgrund {st['bg']}, text {st['text']})")
+        pg.close()
+        pg = open_page("page-photo", 390)
+        (ok if pg.evaluate("!!document.querySelector('.page-read__image img')") else bad)("utvald bild visas överst när sidan har en")
         pg.close()
 
     browser.close()

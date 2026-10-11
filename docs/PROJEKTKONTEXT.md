@@ -117,7 +117,7 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 2. **Sliding** (kalender, flikar, disciplinkort, redigerbar Sparks-ruta, större dag-etiketter).
 3. **Förare & Lag** (Ungdomslaget först).
 4. **Tävlingar:** lista + enskild match + nya datafält (motståndare, hemma/borta, resultat, laguppställning).
-5. Klubbinfo, Styrelse, Kontakt, 404, inlägg, galleri — kontroll att de ser bra ut i v2. **`page.php` (vanlig sida) har fortfarande v1-utseende** med bloggsidopanel (Sök, Senaste inläggen) — påverkar bl.a. disciplinsidorna; kontrollerat på testsajten 2026-10-11.
+5. Klubbinfo, Styrelse, Kontakt, 404, inlägg, galleri — kontroll att de ser bra ut i v2. ✅ `page.php` (vanlig sida) gjord i v2 2026-10-11 (beige läsyta, ingen sidopanel) — ⬜ kan behöva ses över igen när disciplinsidornas innehåll gås igenom.
 6. **Hero-fallback:** `front-page.php` pekar på `assets/images/hero-bg.jpg` som inte finns i temat om ingen hero-bild är vald → bakgrunden blir tom. Lägg en fallback eller dölj.
 7. Barlow (brödtextfonten) har inte kunnat testas med riktig font i testmiljön — kontrollera radbrytningar live.
 

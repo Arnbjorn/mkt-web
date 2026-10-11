@@ -63,6 +63,7 @@ Menyn kompakteras automatiskt om den inte ryms på en rad (`main.js`, `fitHeader
 |---|---|
 | `v2 FOUNDATION` | header, navigation, mobilmeny, footer, fokus/markering, återställda breddtak |
 | `v2 — STARTSIDA` | hero, statistikrad, nästa-tävling-remsa, `.section--beige`, sponsorremsa |
+| `v2 — VANLIG SIDA` | `page-read`: Standardmallen — beige läsyta, smal spalt, typografi för editorinnehåll (rubriker, listor, citat, knappblock) |
 | `v2 — PROVA PÅ` | `provapa-*`: hero D (polaroid, klistermärke, penseldrag), faktaremsa, tidskort, steg, fällbara frågor, formulär på beige. Eget prefix — de äldre `pp-*` delas med Sliding |
 | Övriga block ovanför | v1:s komponenter (kort, formulär, Prova På, Sliding, kalender …) — omfärgade via variablerna |
 

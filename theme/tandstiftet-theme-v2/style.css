@@ -4769,3 +4769,73 @@ h3.footer-nav-col__title,
 @media (max-width: 520px) {
   .provapa-book .pp-form-row { grid-template-columns: 1fr; }
 }
+
+
+/* =========================================================
+   v2 — VANLIG SIDA (page.php, "Standardmall")
+   Beige reading surface, one narrow column, no sidebar.
+   Used e.g. for the discipline pages (Speedway, Flat track, Veteraner).
+   ========================================================= */
+.page-read { padding-block: clamp(2.5rem, 6vw, 4.5rem); }
+.page-read__inner { max-width: calc(var(--container-narrow) + 2 * var(--space-lg)); }
+.page-read__image { margin: 0 0 2rem; }
+.page-read__image img { display: block; width: 100%; height: auto; max-height: 480px; object-fit: cover; }
+
+.page-read .info-content { max-width: none; color: var(--color-ink-soft); }
+.page-read .info-content > *:first-child { margin-top: 0; }
+.page-read .info-content p,
+.page-read .info-content li { font-size: 1.1rem; line-height: 1.75; color: var(--color-ink-soft); }
+.page-read .info-content h2,
+.page-read .info-content h3,
+.page-read .info-content h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+.page-read .info-content h2 { font-size: clamp(1.9rem, 4vw, 2.5rem); margin: 2.2rem 0 0.8rem; }
+.page-read .info-content h3 { font-size: 1.6rem; margin: 1.8rem 0 0.6rem; }
+.page-read .info-content h4 { font-size: 1.3rem; margin: 1.5rem 0 0.5rem; }
+.page-read .info-content strong { color: var(--color-ink); }
+.page-read .info-content a { color: var(--color-rust); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.page-read .info-content a:hover { color: var(--color-ink); }
+.page-read .info-content ul { list-style: none; padding-left: 0; }
+.page-read .info-content ul li { position: relative; padding-left: 1.4rem; }
+.page-read .info-content ul li::before { content: '◆'; position: absolute; left: 0; top: 0.15em; font-size: 0.85rem; color: var(--color-gold-dim); }
+.page-read .info-content ol { list-style: decimal; padding-left: 1.4rem; }   /* an old v1 rule gave every list bullets */
+.page-read .info-content ol li::marker { font-family: var(--font-condensed); font-weight: 700; color: var(--color-rust); }
+.page-read .info-content blockquote {
+  margin: 1.8rem 0;
+  padding: 1.1rem 1.4rem;
+  background: var(--color-beige-deep);
+  border-left: 3px solid var(--color-gold);
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: 1.1rem;
+  color: var(--color-ink);
+}
+.page-read .info-content blockquote p { color: var(--color-ink); margin-bottom: 0.5em; }
+.page-read .info-content img { height: auto; }
+.page-read .info-content figure { margin: 1.8rem 0; }
+.page-read .info-content figcaption { font-size: 0.95rem; color: var(--color-ink-soft); margin-top: 0.4rem; }
+.page-read .info-content hr { border: 0; border-top: 1px solid rgba(36, 31, 24, 0.15); margin: 2rem 0; }
+.page-read .info-content table { display: block; overflow-x: auto; }
+.page-read .info-content th { background: var(--color-beige-deep); color: var(--color-ink); border-bottom: 2px solid var(--color-gold); letter-spacing: 0.06em; }
+.page-read .info-content td { border-bottom: 1px solid rgba(36, 31, 24, 0.12); color: var(--color-ink-soft); }
+/* WordPress' own button block → the theme's gold button */
+.page-read .info-content a.wp-block-button__link,
+.page-read .wp-block-button__link {
+  background: var(--color-gold);
+  color: var(--color-black);
+  border-radius: 0;
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.9em 1.6em;
+}
+.page-read .info-content a.wp-block-button__link:hover,
+.page-read .wp-block-button__link:hover { background: var(--color-gold-light); color: var(--color-black); }

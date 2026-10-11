@@ -40,11 +40,34 @@ function get_the_post_thumbnail( $id, $size, $attr = [] ) {
 }
 $GLOBALS['__photo'] = $photo;
 
+/* For page.php: one page in "the loop", with content that uses the usual editor blocks */
+$GLOBALS['__loop'] = 1;
+function have_posts() { return $GLOBALS['__loop'] > 0; }
+function the_post() { $GLOBALS['__loop']--; }
+function get_the_title( $id = null ) { return 'Speedway'; }
+function get_bloginfo( $k = '' ) { return 'Motorklubben Tändstiftet – Malmö'; }
+function esc_html__( $s, $d = null ) { return esc_html( $s ); }
+function esc_attr__( $s, $d = null ) { return esc_attr( $s ); }
+function wp_link_pages() {}
+function the_post_thumbnail( $size = '' ) { echo get_the_post_thumbnail( 0, $size, [] ); }
+foreach ( [ 'is_home', 'is_category', 'is_tag', 'is_post_type_archive', 'is_tax', 'is_date', 'is_author', 'is_search', 'is_404' ] as $fn ) {
+	eval( "function $fn() { return false; }" );
+}
+function is_singular( $type = '' ) { return $type === '' || $type === 'page'; }
+function the_content() {
+	echo '<p>Speedway körs på en oval grusbana med 500cc-motorcyklar <strong>utan bromsar</strong>. Det är den klassiska trackracing-grenen, och den <a href="#">vi tävlar i Division 1</a>.</p>'
+		. '<h2>Så börjar man</h2><p>De flesta börjar på Prova På och fortsätter sedan på ordinarie träning.</p>'
+		. '<ul><li>Träning onsdagar och lördagar</li><li>Utrustning finns att låna</li><li>Licens via Svemo</li></ul>'
+		. '<h3>Bra att veta</h3><ol><li>Hör av er innan</li><li>Kom i god tid</li></ol>'
+		. '<blockquote><p>"Det bästa jag gjort på länge."</p></blockquote>'
+		. '<div class="wp-block-buttons"><div class="wp-block-button"><a class="wp-block-button__link" href="#">Prova på →</a></div></div>';
+}
+
 /* The theme's real helpers */
 tmc_load( [
 	'tmc_sliding_enabled', 'tmc_provapa_season_open', 'tmc_provapa_season_message',
 	'tmc_provapa_fields', 'tmc_provapa_text', 'tmc_provapa_slots', 'tmc_provapa_items', 'tmc_provapa_lines',
-	'tmc_antispam_fields',
+	'tmc_antispam_fields', 'tmc_page_header', 'tmc_breadcrumbs',
 ] );
 // Theme mods arrive as strings from the command line; '0' must mean "off" like WordPress' stored false.
 foreach ( $GLOBALS['__mods'] as $k => $v ) { if ( $v === '0' ) $GLOBALS['__mods'][ $k ] = false; }
