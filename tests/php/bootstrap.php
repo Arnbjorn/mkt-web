@@ -35,6 +35,7 @@ function wp_get_themes()                      { return $GLOBALS['__themes']; }
 function esc_html( $s )                       { return htmlspecialchars( (string) $s, ENT_QUOTES, 'UTF-8' ); }
 function wp_strip_all_tags( $s )              { return strip_tags( (string) $s ); }
 function sanitize_email( $s )                 { return trim( (string) $s ); }
+function __( $s, $domain = null )             { return $s; }
 
 /* ── Pull real functions out of a theme file ─────────────────── */
 function tmc_load( array $names, $file = 'functions.php' ) {

@@ -38,6 +38,9 @@ jobs:
       REQUIRE_FONTS: "1"
     steps:
       - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2   # Prova På-sidan återges med den riktiga PHP-mallen
+        with:
+          php-version: "8.3"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

@@ -22,3 +22,6 @@ Thumbs.db
 wp-config.php
 .env
 *.sql
+
+# lokala skärmdumpar för granskning
+design/preview-*/

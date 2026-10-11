@@ -558,6 +558,35 @@ add_action( 'customize_register', function( $wp_customize ) {
 
 
 /* =========================================================
+   Prova På — Sidan (alla texter på Prova På-sidan)
+   Fälten kommer från tmc_provapa_fields() i functions.php.
+   ========================================================= */
+add_action( 'customize_register', function( $wp_customize ) {
+
+    $wp_customize->add_section('tmc_provapa_page', [
+        'title'       => __('Prova På — Sidan', 'tandstiftet'),
+        'description' => __('Alla texter på Prova På-sidan (barn & ungdom), uppifrån och ner. Töm ett fält för att dölja den delen (t.ex. en faktaruta eller en fråga). Fotot i ramen är sidans Utvald bild — byt den under Sidor → Prova På. Kom ihåg vårdnadshavares medgivande för bilder på barn.', 'tandstiftet'),
+        'panel'       => 'tmc_panel',
+        'priority'    => 5,
+    ]);
+
+    $sanitize = [ 'text' => 'sanitize_text_field', 'textarea' => 'sanitize_textarea_field', 'url' => 'esc_url_raw' ];
+    foreach ( tmc_provapa_fields() as $key => $field ) {
+        list( $group, $label, $default, $type ) = $field;
+        $wp_customize->add_setting( 'tmc_pp_' . $key, [
+            'default'           => $default,
+            'sanitize_callback' => $sanitize[ $type ],
+        ]);
+        $wp_customize->add_control( 'tmc_pp_' . $key, [
+            'section' => 'tmc_provapa_page',
+            'label'   => $group . ' — ' . $label,
+            'type'    => $type === 'textarea' ? 'textarea' : ( $type === 'url' ? 'url' : 'text' ),
+        ]);
+    }
+});
+
+
+/* =========================================================
    v2 — Header & meny
    ========================================================= */
 add_action( 'customize_register', function( $wp_customize ) {

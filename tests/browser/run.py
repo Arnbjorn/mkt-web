@@ -39,7 +39,7 @@ with sync_playwright() as p:
     else: warn("Bebas Neue saknas — rubriktesterna körs med ett bredare reservtypsnitt (försiktigare, men mindre exakt)")
 
     # 1. no sideways scrolling, anywhere -------------------------------------------
-    print("\nIngen sidledsscroll (7 sidor × %d bredder)" % len(WIDTHS))
+    print("\nIngen sidledsscroll (%d sidor × %d bredder)" % (len(paths), len(WIDTHS)))
     bad_cells = []
     for name in paths:
         for w in WIDTHS:
@@ -114,7 +114,9 @@ with sync_playwright() as p:
     # 6. the smallest text actually rendered --------------------------------------------
     print("\nMinsta renderade textstorlek")
     MIN_PX = 13.0
-    for name, w in (("home", 1280), ("home", 390), ("menu4", 1280), ("menu4", 390)):
+    checks = [("home", 1280), ("home", 390), ("menu4", 1280), ("menu4", 390)]
+    if harness.HAVE_PHP: checks += [("provapa", 1280), ("provapa", 390), ("provapa-closed", 390)]
+    for name, w in checks:
         pg = open_page(name, w)
         res = pg.evaluate("""() => {
           let min = 999, who = '';
@@ -127,6 +129,42 @@ with sync_playwright() as p:
             const fs = parseFloat(cs.fontSize); if (fs < min) { min = fs; who = el.className || el.tagName; }
           } return [min, who]; }""")
         (ok if res[0] >= MIN_PX else bad)(f"{name} @ {w}px: minsta text {res[0]:.1f}px ({res[1]}) — minst {MIN_PX:g}px")
+        pg.close()
+
+    # 7. Prova På (the real PHP template) ------------------------------------------------
+    print("\nProva På-sidan (riktiga PHP-mallen)")
+    if not harness.HAVE_PHP:
+        if os.environ.get("CI") == "true": bad("php saknas — Prova På-sidan kan inte återges")
+        else: warn("php saknas — hoppar över Prova På-testerna")
+    else:
+        rect = "(s=>{const r=document.querySelector(s);if(!r)return null;const b=r.getBoundingClientRect();return [b.left,b.right,b.top,b.bottom,b.width,b.height]})"
+        pg = open_page("provapa", 1280)
+        btns = pg.evaluate("[...document.querySelectorAll('.provapa-hero__actions .btn')].map(b=>Math.round(b.getBoundingClientRect().top))")
+        (ok if len(btns) == 2 and btns[0] == btns[1] else bad)(f"heroknapparna ligger bredvid varandra på dator (överkanter {btns})")
+        stroke = pg.evaluate(rect + "('.provapa-hero__stroke')")
+        word = pg.evaluate(rect + "('.provapa-hero__line:not(.provapa-hero__line--gold)')")
+        (ok if stroke and stroke[4] > 100 and stroke[2] > word[2] and stroke[3] > word[3] - 5 else bad)("penseldraget ligger under andra rubrikraden")
+        pg.click(".provapa-faq__item summary"); pg.wait_for_timeout(100)
+        (ok if pg.evaluate("document.querySelector('.provapa-faq__item').open") else bad)("en fråga under 'Bra att veta' fälls ut vid klick")
+        n_opts = pg.evaluate("document.querySelectorAll('#pp_slot option').length")
+        (ok if n_opts == 3 else bad)(f"formuläret erbjuder träningstiderna + 'Vet ej' ({n_opts} val)")
+        pg.close()
+        off = []
+        for w in WIDTHS:
+            pg = open_page("provapa", w)
+            s = pg.evaluate(rect + "('.provapa-sticker')")
+            if s[0] < 0 or s[1] > w: off.append(f"{w}px ({round(s[0])}–{round(s[1])})")
+            pg.close()
+        (ok if not off else bad)("klistermärket syns helt på alla bredder" if not off else "klistermärket klipps: " + "; ".join(off))
+        pg = open_page("provapa-nophoto", 390)
+        (ok if pg.evaluate("!document.querySelector('.provapa-polaroid') && !!document.querySelector('.provapa-hero__visual--no-photo .provapa-sticker')") else bad)(
+            "utan Utvald bild: ingen tom fotoram, bara klistermärket")
+        pg.close()
+        pg = open_page("provapa-closed", 1280)
+        state = pg.evaluate("""({form: !!document.querySelector('form.provapa-form'), closed: !!document.querySelector('.provapa-closed'),
+                                btn2: !!document.querySelector('.provapa-hero__actions a[href="#boka"]'), adult: !!document.querySelector('.provapa-adult')})""")
+        (ok if state == {"form": False, "closed": True, "btn2": False, "adult": False} else bad)(
+            f"säsong stängd: meddelande visas, formulär och 'hör av dig'-knapp döljs; Sliding pausad: ingen vuxenhänvisning ({state})")
         pg.close()
 
     browser.close()

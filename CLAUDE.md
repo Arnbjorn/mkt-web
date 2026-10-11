@@ -50,7 +50,7 @@ Krav lokalt: `bash`, `php` 8.x, `zip`; valfritt `node`; för webbläsartester `p
 
 1. **Ändra aldrig `THEME_SLUG`** (`tandstiftet-theme-v2`). WordPress knyter alla Customizer-inställningar till temats mappnamn. Temat importerar inställningar från v1 vid första aktivering (`tmc_import_previous_theme_mods`).
 2. **Ny logik = testbar funktion i `functions.php` + test i `tests/php/`.** Testerna plockar ut funktioner *med namn* ur `functions.php` (PHP:s tokenizer) och kör dem mot stand-ins för WordPress. Håll funktionerna fria från global state där det går; ta tid/slump som valfritt argument (se `tmc_sliding_is_within_24h( $date, $now = null )`).
-3. **Ändrar du markup i header, footer eller startsida** → uppdatera `tests/browser/harness.py` (den återger PHP:ns HTML; testerna körs mot den).
+3. **Ändrar du markup i header, footer eller startsida** → uppdatera `tests/browser/harness.py` (den återger PHP:ns HTML; testerna körs mot den). Prova På återges i stället med den **riktiga** mallen via `tests/browser/render_page.php` (kräver php) — gör likadant för nya sidmallar när det går.
 4. **CSS:** lägg nya regler i v2-blocken **sist** i `style.css` (senare regel vinner). Rör de äldre v1-blocken bara när det behövs. **Inga hårdkodade färger** — använd variablerna i `:root`. Kontrast och minsta textstorlek vaktas av `tests/css/run.py`; höj aldrig `SMALL_TEXT_BASELINE` för att få grönt.
 5. **Ingen text som styrelsen kan vilja ändra får vara hårdkodad i en mall.** Lägg ett Customizer-fält (med standardvärde som är den nuvarande texten).
 6. **Förutsätt inte att innehåll finns** (bilder, menyer, inlägg). Innehållet bor i WordPress databas, inte i repot. Bygg snälla tomlägen.
@@ -64,9 +64,9 @@ Krav lokalt: `bash`, `php` 8.x, `zip`; valfritt `node`; för webbläsartester `p
 - **Sidmallar** (`templates/`): `page-prova-pa.php` (barn & ungdom), `page-sliding.php` (vuxna, bokningskalender), `page-forare-och-lag.php`, `page-info.php`, `page-longform.php` (Klubbinfo, ankar-sektioner via `tmc_section_N_*` egna fält), `page-kontakt.php` (Kontakta oss + Bli medlem), `page-styrelse.php`. Plus `front-page.php`, `archive-tmc_event.php`, `single-tmc_event.php`, `single.php`, `page.php`.
 - **Post types:** `tmc_event` (tävlingar, slug `evenemang`), `tmc_rider` (förare; taxonomi `tmc_division`: `division-1`, `vuxen`, `ungdom`), `tmc_sponsor`, `tmc_gallery`, `tmc_board` (styrelse), `tmc_sliding_booking` (bokningar), `tmc_sliding_availability` ("Sliding — Datum": undantag per datum/disciplin).
 - **Menyplatser:** `primary`, `footer-om`, `footer-trackracing`, `footer-besok`, `footer-praktiskt` (+ `footer`, `mobile`).
-- **Customizer** (`inc/customizer.php`, panel `tmc_panel`): Hero · Statistikrad · Lagtexter · Sidfot & Sidhuvud · Sociala medier & Kontakt · Discipliner · Prova På/Sliding (startsida) · Visa/dölj sektioner · **Sliding — Paus/Aktiv** · **Sliding — Speedway-schema** · **Sliding — Flat track-schema** · **Formulär — Blockeringslista** · **Startsida — Viktigt meddelande** · **Prova På — Säsong** · **Header & meny** · Vi tar hand om varandra. Alla nycklar börjar på `tmc_`.
+- **Customizer** (`inc/customizer.php`, panel `tmc_panel`): Hero · Statistikrad · Lagtexter · Sidfot & Sidhuvud · Sociala medier & Kontakt · Discipliner · Prova På/Sliding (startsida) · Visa/dölj sektioner · **Sliding — Paus/Aktiv** · **Sliding — Speedway-schema** · **Sliding — Flat track-schema** · **Formulär — Blockeringslista** · **Startsida — Viktigt meddelande** · **Prova På — Säsong** · **Prova På — Sidan** (alla sidans texter, `tmc_pp_*` från `tmc_provapa_fields()`) · **Header & meny** · Vi tar hand om varandra. Alla nycklar börjar på `tmc_`.
 - **Av/på-växlar:** `tmc_sliding_enabled`, `tmc_flattrack_enabled`, `tmc_provapa_season_open`, `tmc_notice_enabled`, `tmc_nav_show_events`, `tmc_hero_torn_edge`, `tmc_show_*` (startsidans sektioner).
-- **Hjälpfunktioner** i `functions.php`: `tmc_sliding_*` (kapacitet, veckoschema per disciplin `tmc_sliding_hours_{mon..sun}_{speedway|flattrack}`, 24 h-regel, kalenderdata), `tmc_antispam_*` (honeypot, tidsfälla, validering, spärrlista), `tmc_render_notice_banner`, `tmc_hero_title_html`, `tmc_import_previous_theme_mods`, `tmc_maybe_hide_*_menu_item`.
+- **Hjälpfunktioner** i `functions.php`: `tmc_sliding_*` (kapacitet, veckoschema per disciplin `tmc_sliding_hours_{mon..sun}_{speedway|flattrack}`, 24 h-regel, kalenderdata), `tmc_antispam_*` (honeypot, tidsfälla, validering, spärrlista), `tmc_provapa_*` (sidans texter, tider, numrerade delar), `tmc_render_notice_banner`, `tmc_hero_title_html`, `tmc_import_previous_theme_mods`, `tmc_maybe_hide_*_menu_item`.
 - **JS:** `assets/js/main.js` — mobilmeny (dropdown), `fitHeader` (kompakt header om menyn inte ryms), hero-bildspel, scroll-animation, filter.
 - **`style.css`:** v1-block först, sedan `v2 FOUNDATION`, `Restore the width caps`, `v2 — STARTSIDA`, `Phones: 17px root`. Se `docs/DESIGN.md` för färger, typografi, brytpunkter, komponenter.
 
@@ -88,7 +88,8 @@ Hamburgermeny ≤1099 px. Beige läsyta för längre text. Konceptsidorna i `des
 ## Status och nästa steg
 
 - **v2.0.0 = grund + startsida**, byggd och testad lokalt men **inte ännu bekräftad live** av användaren.
-- **Kvar att klä om i v2-stilen (en i taget, i den här ordningen):** 1) **Prova På** (hero "D" är godkänd — se `design/concepts/provapa-hero-alternativ.html` och `koncept-provapa.html`), 2) **Sliding**, 3) **Förare & Lag**, 4) **Tävlingar** (lista + enskild match), 5) övrigt (Klubbinfo, Styrelse, Kontakt, 404, inlägg).
+- **v2.1.0 = Prova På** i v2-stilen (hero D), testad lokalt — väntar på användarens feedback och test live.
+- **Kvar att klä om i v2-stilen (en i taget, i den här ordningen):** 1) ~~Prova På~~ (gjord i 2.1.0, väntar på feedback), 2) **Sliding**, 3) **Förare & Lag**, 4) **Tävlingar** (lista + enskild match), 5) övrigt (Klubbinfo, Styrelse, Kontakt, 404, inlägg).
 - Hela att-göra-listan, öppna frågor och platshållardata: **`docs/PROJEKTKONTEXT.md` → "Att göra"**.
 
 ## Fallgropar (har bitit förut)

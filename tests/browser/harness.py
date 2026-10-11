@@ -1,13 +1,15 @@
 """
 Builds static test pages that reproduce the HTML header.php / footer.php /
 front-page.php output, wired to the theme's REAL style.css and main.js.
+Page templates that are easy to render outside WordPress (Prova På) are run
+through PHP for real — see render_page.php.
 
 WordPress itself isn't needed: what matters for these tests is layout and
 behaviour, and that comes from the CSS/JS. If you change the PHP markup of the
 header, footer or front page in a way that adds/renames elements, update the
 templates below to match.
 """
-import re, pathlib, html as _html
+import re, pathlib, shutil, subprocess, html as _html
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SLUG = re.search(r'^THEME_SLUG="([^"]+)"', (ROOT / "scripts/config.sh").read_text(), re.M).group(1)
@@ -25,12 +27,12 @@ def menu(items, current="Start", css="menu"):
     li = "".join(f'<li class="menu-item{" current-menu-item" if t == current else ""}"><a href="{u}">{e(t)}</a></li>' for t, u in items)
     return f'<ul class="{css}">{li}</ul>'
 
-def header(n_items=4):
+def header(n_items=4, current="Start"):
     items = BASE_ITEMS + EXTRA_ITEMS[: max(0, n_items - 4)]
     return f'''<header class="site-header" role="banner"><div class="site-header__inner">
 <a href="/" class="site-branding" aria-label="Motorklubben Tändstiftet"><img class="site-branding__logo" src="{url(IMG / "mkt-logo.png")}" alt="">
 <span class="site-branding__text"><span class="site-branding__name">Tändstiftet</span><span class="site-branding__tagline">Malmö · Sedan 1924</span></span></a>
-<nav class="primary-nav" id="primary-nav" aria-label="Primär navigation">{menu(items)}</nav>
+<nav class="primary-nav" id="primary-nav" aria-label="Primär navigation">{menu(items, current)}</nav>
 <a href="/prova-pa/" class="site-header__cta">Prova på →</a>
 <button class="nav-toggle" id="nav-toggle" aria-label="Öppna meny" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
 </div></header>'''
@@ -78,6 +80,21 @@ def home_page(torn=True, slides=False):
 {footer()}'''
     return wrap(body, "startsida")
 
+# ── Pages rendered from the REAL PHP template (tests/browser/render_page.php) ──
+# These need php. Without it they are skipped (run.py says so) — the CI has php.
+HAVE_PHP = shutil.which("php") is not None
+
+def php_page(template, photo, *mods, title="sida", current="Start"):
+    out = subprocess.run(["php", str(pathlib.Path(__file__).with_name("render_page.php")), template, photo, *mods],
+                         capture_output=True, text=True, encoding="utf-8", check=True).stdout
+    if "Fatal error" in out or "Warning:" in out or "Deprecated:" in out:
+        raise RuntimeError(f"PHP-fel när {template} återgavs:\n{out[:2000]}")
+    return wrap(header(4, current) + f'<main id="main">{out}</main>' + footer(), title)
+
+def provapa_page(photo=True, *mods):
+    return php_page("templates/page-prova-pa.php", url(IMG / "provapa-kid-photo.jpg") if photo else "", *mods,
+                    title="Prova På", current="Prova På")
+
 PAGES = {
     "menu4":      lambda: plain_page(4),
     "menu5":      lambda: plain_page(5),
@@ -87,6 +104,12 @@ PAGES = {
     "home-full":  lambda: home_page(torn=False),
     "home-slides":lambda: home_page(torn=True, slides=True),
 }
+if HAVE_PHP:
+    PAGES.update({
+        "provapa":         lambda: provapa_page(True),
+        "provapa-nophoto": lambda: provapa_page(False),
+        "provapa-closed":  lambda: provapa_page(True, "tmc_provapa_season_open=0", "tmc_sliding_enabled=0"),
+    })
 
 def build_all():
     OUT.mkdir(exist_ok=True)

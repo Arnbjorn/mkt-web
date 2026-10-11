@@ -556,6 +556,144 @@ function tmc_provapa_season_message() {
 	return get_theme_mod( 'tmc_provapa_season_message', $default );
 }
 
+/* Prova På (barn & ungdom) — sidans texter.
+   Varje text på sidan kan ändras i Utseende > Anpassa > Prova På — Sidan.
+   Ett tomt fält döljer den delen av sidan (t.ex. en faktaruta eller en fråga).
+   Format: nyckel => [ grupp, etikett i Anpassa, standardtext, 'text'|'textarea'|'url' ].
+   Inställningen heter 'tmc_pp_' . nyckel. */
+function tmc_provapa_fields() {
+	return [
+		// Hero
+		'hero_eyebrow'       => [ 'Hero', 'Liten rad ovanför rubriken', __( 'Barn & ungdom · från 6 år', 'tandstiftet' ), 'text' ],
+		'hero_title_1'       => [ 'Hero', 'Rubrik rad 1 (guld)', __( 'Prova på', 'tandstiftet' ), 'text' ],
+		'hero_title_2'       => [ 'Hero', 'Rubrik rad 2 (vit, med penseldrag)', __( 'speedway', 'tandstiftet' ), 'text' ],
+		'hero_text'          => [ 'Hero', 'Text under rubriken', __( 'Kom till en vanlig träning, låna all utrustning och känn efter om det är din grej. Ingen erfarenhet krävs.', 'tandstiftet' ), 'textarea' ],
+		'hero_btn_1'         => [ 'Hero', 'Knapp 1 (till träningstiderna)', __( 'Se träningstider →', 'tandstiftet' ), 'text' ],
+		'hero_btn_2'         => [ 'Hero', 'Knapp 2 (till formuläret)', __( 'Hör av dig innan', 'tandstiftet' ), 'text' ],
+		'hero_sticker_big'   => [ 'Hero', 'Klistermärke — stor text', __( '0 kr', 'tandstiftet' ), 'text' ],
+		'hero_sticker_small' => [ 'Hero', 'Klistermärke — liten text', __( 'under 12 år', 'tandstiftet' ), 'text' ],
+		'hero_photo_caption' => [ 'Hero', 'Text under fotot (fotot = sidans Utvald bild)', '', 'text' ],
+
+		// Faktaremsa
+		'fact_1_num'   => [ 'Faktaremsa', 'Fakta 1 — siffra', __( '0 kr', 'tandstiftet' ), 'text' ],
+		'fact_1_label' => [ 'Faktaremsa', 'Fakta 1 — text', __( 'Kostnad', 'tandstiftet' ), 'text' ],
+		'fact_2_num'   => [ 'Faktaremsa', 'Fakta 2 — siffra', __( 'Ons 17', 'tandstiftet' ), 'text' ],
+		'fact_2_label' => [ 'Faktaremsa', 'Fakta 2 — text', __( 'Onsdagar', 'tandstiftet' ), 'text' ],
+		'fact_3_num'   => [ 'Faktaremsa', 'Fakta 3 — siffra', __( 'Lör 10', 'tandstiftet' ), 'text' ],
+		'fact_3_label' => [ 'Faktaremsa', 'Fakta 3 — text', __( 'Lördagar', 'tandstiftet' ), 'text' ],
+		'fact_4_num'   => [ 'Faktaremsa', 'Fakta 4 — siffra', __( '6+ år', 'tandstiftet' ), 'text' ],
+		'fact_4_label' => [ 'Faktaremsa', 'Fakta 4 — text', __( 'Ålder', 'tandstiftet' ), 'text' ],
+		'fact_5_num'   => [ 'Faktaremsa', 'Fakta 5 — siffra', __( '225 kr', 'tandstiftet' ), 'text' ],
+		'fact_5_label' => [ 'Faktaremsa', 'Fakta 5 — text', __( 'Licens från 12 år (Svemo)', 'tandstiftet' ), 'text' ],
+		'fact_6_num'   => [ 'Faktaremsa', 'Fakta 6 — siffra', __( '0', 'tandstiftet' ), 'text' ],
+		'fact_6_label' => [ 'Faktaremsa', 'Fakta 6 — text', __( 'Erfarenhet krävs', 'tandstiftet' ), 'text' ],
+
+		// Hänvisning till Sliding (visas bara när Sliding är aktivt)
+		'adult_text' => [ 'Vuxna', 'Hänvisning till Sliding — text', __( 'Den här sidan är för barn och ungdom. Är du vuxen och vill prova på?', 'tandstiftet' ), 'text' ],
+		'adult_link' => [ 'Vuxna', 'Hänvisning till Sliding — länktext', __( 'Sliding — prova på för vuxna →', 'tandstiftet' ), 'text' ],
+
+		// Säsong stängd (själva meddelandet ligger under Prova På — Säsong)
+		'closed_title'      => [ 'Säsong stängd', 'Rubrik i rutan högst upp', __( 'Säsongen är slut för i år', 'tandstiftet' ), 'text' ],
+		'closed_times_text' => [ 'Säsong stängd', 'Text vid träningstiderna', __( 'Tiderna gäller under säsong. Just nu är Prova På pausat — se meddelandet högst upp på sidan.', 'tandstiftet' ), 'textarea' ],
+		'closed_book_title' => [ 'Säsong stängd', 'Rubrik där formuläret brukar vara', __( 'Vi ses nästa säsong', 'tandstiftet' ), 'text' ],
+
+		// Träningstider (beige läsyta)
+		'times_eyebrow' => [ 'Träningstider', 'Liten rad ovanför rubriken', __( 'Hur det går till', 'tandstiftet' ), 'text' ],
+		'times_title'   => [ 'Träningstider', 'Rubrik', __( 'Kom till en vanlig träning', 'tandstiftet' ), 'text' ],
+		'times_text'    => [ 'Träningstider', 'Text', __( 'Prova På sker på vår ordinarie barnträning — inget separat tillfälle. Ingen anmälan krävs, men hör gärna av er innan. Annars är det risk att vi inte har förberett motorcyklar eller inte är redo att ta emot er just den gången.', 'tandstiftet' ), 'textarea' ],
+		'slot_1_day'    => [ 'Träningstider', 'Tid 1 — dag', __( 'Onsdagar', 'tandstiftet' ), 'text' ],
+		'slot_1_time'   => [ 'Träningstider', 'Tid 1 — klockslag', '17:00', 'text' ],
+		'slot_2_day'    => [ 'Träningstider', 'Tid 2 — dag', __( 'Lördagar', 'tandstiftet' ), 'text' ],
+		'slot_2_time'   => [ 'Träningstider', 'Tid 2 — klockslag', '10:00', 'text' ],
+		'slot_3_day'    => [ 'Träningstider', 'Tid 3 — dag (tomt = ingen tredje tid)', '', 'text' ],
+		'slot_3_time'   => [ 'Träningstider', 'Tid 3 — klockslag', '', 'text' ],
+		'slot_note'     => [ 'Träningstider', 'Text under tiderna', __( 'Kom vid starttid — då byter vi om, värmer upp motorcyklarna och vattnar banan.', 'tandstiftet' ), 'textarea' ],
+		'gear_title'    => [ 'Träningstider', 'Ruta 1 — rubrik', __( 'Bra att veta:', 'tandstiftet' ), 'text' ],
+		'gear_text'     => [ 'Träningstider', 'Ruta 1 — text', __( 'Vi lånar ut hjälm, stövlar, overall och alla skydd på plats. Kom i kläder som får bli smutsiga.', 'tandstiftet' ), 'textarea' ],
+		'license_title' => [ 'Träningstider', 'Ruta 2 (licens) — rubrik', __( 'Licens från 12 år:', 'tandstiftet' ), 'text' ],
+		'license_text'  => [ 'Träningstider', 'Ruta 2 (licens) — text', __( 'Svemo kräver en prova på-licens (225 kr) för den som är 12 år eller äldre. Under 12 år kostar det ingenting. Licensen betalas till Svemo, inte till klubben — lös den samma morgon, inte i förväg, ifall vi måste ställa in.', 'tandstiftet' ), 'textarea' ],
+		'license_link'  => [ 'Träningstider', 'Ruta 2 (licens) — länktext', __( 'Köp licensen hos Svemo →', 'tandstiftet' ), 'text' ],
+		'license_url'   => [ 'Träningstider', 'Ruta 2 (licens) — länkadress', 'https://www.provapasvemo.se', 'url' ],
+
+		// Fyra steg (mörk)
+		'steps_eyebrow' => [ 'Steg', 'Liten rad ovanför rubriken', __( 'Vad händer på plats', 'tandstiftet' ), 'text' ],
+		'steps_title'   => [ 'Steg', 'Rubrik', __( 'Fyra enkla steg', 'tandstiftet' ), 'text' ],
+		'step_1_title'  => [ 'Steg', 'Steg 1 — rubrik', __( 'Ankomst', 'tandstiftet' ), 'text' ],
+		'step_1_text'   => [ 'Steg', 'Steg 1 — text', __( 'Kom vid starttid tillsammans med en vårdnadshavare. Vi tar emot er.', 'tandstiftet' ), 'textarea' ],
+		'step_2_title'  => [ 'Steg', 'Steg 2 — rubrik', __( 'Utrustning', 'tandstiftet' ), 'text' ],
+		'step_2_text'   => [ 'Steg', 'Steg 2 — text', __( 'Vi provar ut hjälm, stövlar, overall och skydd i rätt storlek.', 'tandstiftet' ), 'textarea' ],
+		'step_3_title'  => [ 'Steg', 'Steg 3 — rubrik', __( 'Träning', 'tandstiftet' ), 'text' ],
+		'step_3_text'   => [ 'Steg', 'Steg 3 — text', __( 'Var med på den vanliga träningen i din egen takt, med våra instruktörer.', 'tandstiftet' ), 'textarea' ],
+		'step_4_title'  => [ 'Steg', 'Steg 4 — rubrik', __( 'Eftersnack', 'tandstiftet' ), 'text' ],
+		'step_4_text'   => [ 'Steg', 'Steg 4 — text', __( 'Vi pratar om hur det gick och svarar på frågor — också om hur man fortsätter.', 'tandstiftet' ), 'textarea' ],
+
+		// Bra att veta (frågor som går att fälla ut)
+		'faq_eyebrow' => [ 'Bra att veta', 'Liten rad ovanför rubriken', __( 'Frågor och svar', 'tandstiftet' ), 'text' ],
+		'faq_title'   => [ 'Bra att veta', 'Rubrik', __( 'Bra att veta', 'tandstiftet' ), 'text' ],
+		'faq_1_q'     => [ 'Bra att veta', 'Fråga 1', __( 'Vad lånar vi ut?', 'tandstiftet' ), 'text' ],
+		'faq_1_a'     => [ 'Bra att veta', 'Svar 1', __( "Allt som behövs: Svemo-godkänd hjälm, crosskläder, rygg-, nack- och armbågsskydd, stövlar, handskar och en speedwaymaskin anpassad för barn och ungdom (50–80 cc beroende på ålder och storlek).\nHar ni egna handskar eller annan utrustning får ni gärna använda den.", 'tandstiftet' ), 'textarea' ],
+		'faq_2_q'     => [ 'Bra att veta', 'Fråga 2', __( 'Vad ska vi ta med?', 'tandstiftet' ), 'text' ],
+		'faq_2_a'     => [ 'Bra att veta', 'Svar 2', __( 'Långa underbyxor och undertröja, strumpor som täcker ankeln, kläder ni inte är rädda om — och vatten.', 'tandstiftet' ), 'textarea' ],
+		'faq_3_q'     => [ 'Bra att veta', 'Fråga 3', __( 'Hur är det med säkerheten?', 'tandstiftet' ), 'text' ],
+		'faq_3_a'     => [ 'Bra att veta', 'Svar 3', __( "Alla får den information om säkerhet som behövs för en trygg körning: banregler, grundteknik och vad man gör vid underhåll av banan (då stannar all körning).\nOm någon inte kan följa instruktionerna eller utsätter andra för onödig risk kan vi behöva avbryta passet — för allas säkerhet på banan.", 'tandstiftet' ), 'textarea' ],
+		'faq_4_q'     => [ 'Bra att veta', 'Fråga 4', __( 'Räcker inte en gång för att veta?', 'tandstiftet' ), 'text' ],
+		'faq_4_a'     => [ 'Bra att veta', 'Svar 4', __( 'Första tillfället är alltid gratis. Vill ni prova fler gånger innan ni bestämmer er — hör av er, så ordnar vi det tillsammans från fall till fall.', 'tandstiftet' ), 'textarea' ],
+		'faq_5_q'     => [ 'Bra att veta', 'Fråga 5', __( 'Hur fortsätter man efteråt?', 'tandstiftet' ), 'text' ],
+		'faq_5_a'     => [ 'Bra att veta', 'Svar 5', __( "Bli medlem (500 kr/år) och lös träningslicens via Svemo, så kan man träna regelbundet med klubben.\nTrackracing-skolan: 7 träffar för 860 kr, för den som vill lära sig grunderna steg för steg.\nSikta högre? Med tävlingslicens kan man ta steget in i seriespelet.", 'tandstiftet' ), 'textarea' ],
+		'faq_6_q'     => [ 'Bra att veta', 'Fråga 6 (tomt = dold)', '', 'text' ],
+		'faq_6_a'     => [ 'Bra att veta', 'Svar 6', '', 'textarea' ],
+
+		// Formuläret (beige)
+		'book_eyebrow'       => [ 'Formulär', 'Liten rad ovanför rubriken', __( 'Redo?', 'tandstiftet' ), 'text' ],
+		'book_title'         => [ 'Formulär', 'Rubrik', __( 'Hör av dig innan du kommer', 'tandstiftet' ), 'text' ],
+		'book_text'          => [ 'Formulär', 'Text', __( 'Det räcker att dyka upp — men hör gärna av er innan, så hinner vi förbereda en motorcykel och är redo att ta emot er.', 'tandstiftet' ), 'textarea' ],
+		'book_needs_title'   => [ 'Formulär', 'Ruta — rubrik', __( 'Bra att skriva med', 'tandstiftet' ), 'text' ],
+		'book_needs'         => [ 'Formulär', 'Ruta — punkter (en per rad)', __( "Namn och ålder\nSkostorlek (för stövlar)\nUngefärlig längd (för overall)\nVilket träningstillfälle ni tänker komma till", 'tandstiftet' ), 'textarea' ],
+		'book_success_title' => [ 'Formulär', 'Tack-rubrik efter skickat', __( 'Tack, vi hör av oss!', 'tandstiftet' ), 'text' ],
+		'book_success_text'  => [ 'Formulär', 'Tack-text efter skickat', __( 'Vi bekräftar att träningen blir av eller hör av oss om något ändras. Kom ihåg att lösa licens hos Svemo om barnet är 12 år eller äldre.', 'tandstiftet' ), 'textarea' ],
+		'book_direct'        => [ 'Formulär', 'Text före e-post/telefon', __( 'Eller kontakta oss direkt:', 'tandstiftet' ), 'text' ],
+	];
+}
+
+/* One text from the Prova På page. A field the board has emptied stays empty
+   (that is how a part is hidden); an unknown key gives ''. */
+function tmc_provapa_text( $key ) {
+	$fields = tmc_provapa_fields();
+	if ( ! isset( $fields[ $key ] ) ) return '';
+	return trim( (string) get_theme_mod( 'tmc_pp_' . $key, $fields[ $key ][2] ) );
+}
+
+/* Training times shown as cards and offered in the form: [ [ 'day' => , 'time' => ], … ].
+   A slot without a day is skipped. */
+function tmc_provapa_slots() {
+	$slots = [];
+	for ( $i = 1; $i <= 3; $i++ ) {
+		$day = tmc_provapa_text( "slot_{$i}_day" );
+		if ( $day === '' ) continue;
+		$slots[] = [ 'day' => $day, 'time' => tmc_provapa_text( "slot_{$i}_time" ) ];
+	}
+	return $slots;
+}
+
+/* Numbered items (facts, steps, questions) that the board has not emptied.
+   $pattern uses %d for the number, e.g. tmc_provapa_items( 'fact_%d_', [ 'num', 'label' ], 6 ).
+   An item is kept only when its FIRST part has text. */
+function tmc_provapa_items( $pattern, array $parts, $max ) {
+	$items = [];
+	for ( $i = 1; $i <= $max; $i++ ) {
+		$item = [];
+		foreach ( $parts as $part ) $item[ $part ] = tmc_provapa_text( sprintf( $pattern, $i ) . $part );
+		if ( $item[ $parts[0] ] === '' ) continue;
+		$items[] = $item;
+	}
+	return $items;
+}
+
+/* A textarea split into its non-empty lines (for bullet lists and paragraphs). */
+function tmc_provapa_lines( $text ) {
+	return array_values( array_filter( array_map( 'trim', preg_split( '/\R/', (string) $text ) ), 'strlen' ) );
+}
+
 /* Automatically strip any "Sliding" link from every nav menu while paused,
    so no manual menu editing is needed to hide/restore it. */
 function tmc_maybe_hide_sliding_menu_items( $items, $args ) {
@@ -1531,105 +1669,8 @@ function tmc_longpage_meta_box() {
 }
 add_action( 'add_meta_boxes', 'tmc_longpage_meta_box' );
 
-/* ── Prova På (Barn & Ungdom) — Utrustningsikoner ── */
-function tmc_provapa_meta_box() {
-	add_meta_box(
-		'tmc_provapa_gear',
-		__( 'Prova På — Utrustningsikoner', 'tandstiftet' ),
-		'tmc_provapa_gear_cb',
-		'page',
-		'normal',
-		'high'
-	);
-}
-add_action( 'add_meta_boxes', 'tmc_provapa_meta_box' );
-
-function tmc_provapa_gear_cb( $post ) {
-	$template = get_post_meta( $post->ID, '_wp_page_template', true );
-	if ( $template !== 'templates/page-prova-pa.php' ) {
-		echo '<p style="color:#aaa">' . esc_html__( 'Välj mallen "Prova På (Barn & Ungdom)" under Sidattribut för att aktivera ikonsfälten. (Sliding-sidan använder en förenklad punktlista utan bildfält.)', 'tandstiftet' ) . '</p>';
-		return;
-	}
-	wp_nonce_field( 'tmc_provapa_gear', 'tmc_provapa_gear_nonce' );
-
-	$defaults = [
-		1 => 'Hjälm',
-		2 => 'Cross-jacka & byxor',
-		3 => 'Ryggskydd',
-		4 => 'Nackskydd',
-		5 => 'Armbågsskydd',
-		6 => 'Stövlar',
-		7 => 'Handskar',
-		8 => 'Motorcykel',
-	];
-
-	$count = (int) get_post_meta( $post->ID, 'tmc_gear_count', true ) ?: 8;
-	?>
-	<table class="form-table">
-		<tr>
-			<th><label><?php esc_html_e( 'Antal utrustningskort', 'tandstiftet' ); ?></label></th>
-			<td><input type="number" name="tmc_gear_count" value="<?php echo esc_attr( $count ); ?>" min="1" max="12" style="width:80px"></td>
-		</tr>
-	</table>
-	<hr>
-	<?php for ( $i = 1; $i <= $count; $i++ ) :
-		$icon = get_post_meta( $post->ID, "tmc_gear_{$i}_icon", true );
-		$name = get_post_meta( $post->ID, "tmc_gear_{$i}_name", true );
-		$desc = get_post_meta( $post->ID, "tmc_gear_{$i}_desc", true );
-	?>
-	<div style="margin-bottom:16px;padding:12px;background:#f9f9f9;border:1px solid #ddd">
-		<strong><?php echo esc_html( $defaults[$i] ?? "Kort $i" ); ?></strong>
-		<table class="form-table" style="margin-top:8px">
-			<tr>
-				<th style="width:120px"><label><?php esc_html_e( 'Ikon URL', 'tandstiftet' ); ?></label></th>
-				<td>
-					<input type="url" name="tmc_gear_<?php echo $i; ?>_icon" value="<?php echo esc_attr( $icon ); ?>" style="width:100%;max-width:500px" placeholder="https://...">
-					<?php if ( $icon ) : ?>
-						<br><img src="<?php echo esc_url( $icon ); ?>" style="width:60px;height:60px;object-fit:contain;margin-top:4px;background:#132033;padding:4px">
-					<?php endif; ?>
-					<button type="button" class="button" onclick="
-						var frame = wp.media({ title: 'Välj ikon', button: { text: 'Välj' }, multiple: false });
-						frame.on('select', function() {
-							var att = frame.state().get('selection').first().toJSON();
-							document.querySelector('[name=tmc_gear_<?php echo $i; ?>_icon]').value = att.url;
-						});
-						frame.open();
-					" style="margin-left:8px"><?php esc_html_e( 'Välj bild', 'tandstiftet' ); ?></button>
-				</td>
-			</tr>
-			<tr>
-				<th><label><?php esc_html_e( 'Namn (valfritt)', 'tandstiftet' ); ?></label></th>
-				<td><input type="text" name="tmc_gear_<?php echo $i; ?>_name" value="<?php echo esc_attr( $name ); ?>" style="width:300px" placeholder="<?php echo esc_attr( $defaults[$i] ?? '' ); ?>"></td>
-			</tr>
-			<tr>
-				<th><label><?php esc_html_e( 'Beskrivning (valfritt)', 'tandstiftet' ); ?></label></th>
-				<td><textarea name="tmc_gear_<?php echo $i; ?>_desc" style="width:100%;max-width:500px;height:60px"><?php echo esc_textarea( $desc ); ?></textarea></td>
-			</tr>
-		</table>
-	</div>
-	<?php endfor;
-}
-
-function tmc_provapa_gear_save( $post_id ) {
-	if ( ! isset( $_POST['tmc_provapa_gear_nonce'] ) ) return;
-	if ( ! wp_verify_nonce( $_POST['tmc_provapa_gear_nonce'], 'tmc_provapa_gear' ) ) return;
-	if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) return;
-	if ( ! current_user_can( 'edit_post', $post_id ) ) return;
-
-	if ( isset( $_POST['tmc_gear_count'] ) ) {
-		update_post_meta( $post_id, 'tmc_gear_count', absint( $_POST['tmc_gear_count'] ) );
-	}
-	$count = absint( $_POST['tmc_gear_count'] ?? 8 );
-	for ( $i = 1; $i <= $count; $i++ ) {
-		foreach ( ['icon', 'name', 'desc'] as $field ) {
-			$key = "tmc_gear_{$i}_{$field}";
-			if ( isset( $_POST[$key] ) ) {
-				update_post_meta( $post_id, $key, sanitize_textarea_field( $_POST[$key] ) );
-			}
-		}
-	}
-}
-add_action( 'save_post', 'tmc_provapa_gear_save' );
+/* (Prova På-sidans gamla "Utrustningsikoner"-ruta togs bort i 2.1.0 — utrustningen
+   beskrivs nu som text under Anpassa → Prova På — Sidan.) */
 
 function tmc_longpage_meta_cb( $post ) {
 	// Only show on pages using this template

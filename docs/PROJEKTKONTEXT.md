@@ -65,7 +65,7 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 ## 5. Innehålls- och affärsregler (per sida)
 
 **Prova På (barn & ungdom)**
-- Gratis; ordinarie barnträning **onsdag 17:00 och lördag 10:00**. ⚠ Åldersgräns "6+" kommer från konceptet — verifiera mot sidans nuvarande text.
+- Gratis; ordinarie barnträning **onsdag 17:00 och lördag 10:00**. Åldersgräns "6+" bekräftad av användaren.
 - *"Ingen anmälan krävs men det är risk att vi inte har förberett motorcyklar eller är redo att ta emot dem"* → man bör höra av sig (det är den formuleringen som ska gälla, inte "väder/banans skick").
 - **Från 12 år: Svemo prova på-licens, 225 kr**, betalas separat till Svemo. Under 12: ingen avgift.
 - Formulär "Hör av dig innan du kommer": namn, ålder, e-post, telefon, skostorlek, längd, träningstillfälle, provat förut, övrigt.
@@ -109,7 +109,7 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 - ❓ Textstorleksknapp — efter att sidorna setts live.
 
 ### Kodbacklog (i föreslagen ordning)
-1. **Prova På** i temat enligt `koncept-provapa.html` + hero D. Behåll formulär, spamskydd, säsongsstängning, Customizer-texter.
+1. 🟡 **Prova På** i temat enligt `koncept-provapa.html` + hero D (v2.1.0). Texter i *Anpassa → Prova På — Sidan*. Godkänd av användaren 2026-10-11 (inkl. fällbara frågor och "6+ år"). ⬜ Verifiera live; byt platshållarfotot mot riktigt foto (Utvald bild) med vårdnadshavares medgivande.
 2. **Sliding** (kalender, flikar, disciplinkort, redigerbar Sparks-ruta, större dag-etiketter).
 3. **Förare & Lag** (Ungdomslaget först).
 4. **Tävlingar:** lista + enskild match + nya datafält (motståndare, hemma/borta, resultat, laguppställning).

@@ -3,7 +3,7 @@ Theme Name:  Tändstiftet MC v2
 Theme URI:   https://www.xn--tndstiftet-q5a.se/
 Author:      Tändstiftet Motor Club
 Description: v2 — warm black / gold / rust race-poster look. Classic vintage race poster theme for Tändstiftet Speedway & Motor Club. Features custom rider profiles, team pages, events calendar, sponsor showcase, and photo gallery — built for flattrack and speedway racing.
-Version:     2.0.0
+Version:     2.1.0
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 8.0
@@ -4235,3 +4235,537 @@ h3.footer-nav-col__title,
 .sponsors-section .section-title::after { background: var(--color-gold); }
 .sponsor-item { opacity: 0.9; }
 .sponsor-item:hover { border-color: var(--color-gold); }
+
+
+/* =========================================================
+   v2 — PROVA PÅ (templates/page-prova-pa.php)
+   Concept: design/concepts/koncept-provapa.html, hero "D"
+   (poster headline + photo in a frame with a sticker).
+   Own "provapa-" prefix: the older "pp-" classes are shared with Sliding.
+   ========================================================= */
+:root { --color-beige-line: #cabfa4; }   /* input borders on beige */
+
+.screen-reader-text {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Shared bits */
+.provapa-eyebrow {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  margin-bottom: 0.6rem;
+}
+.provapa-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 4.4vw, 3rem);
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--color-cream);
+  margin-bottom: 1.1rem;
+}
+.section--beige .provapa-title { color: var(--color-ink); }
+.provapa-read .label,
+.provapa-faq .label,
+.provapa-book .label { display: block; margin-bottom: 0.5rem; font-size: 0.95rem; letter-spacing: 0.14em; }
+.provapa-read__lead { font-size: 1.05rem; line-height: 1.7; color: var(--color-ink-soft); margin-bottom: 1.3rem; }
+.provapa-btn--light { color: var(--color-cream); border-color: rgba(242, 236, 225, 0.5); }
+.provapa-btn--light:hover { background: transparent; color: var(--color-gold); border-color: var(--color-gold); }
+
+/* ── Hero ── */
+.provapa-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 60% at 78% 20%, rgba(212, 160, 23, 0.14), transparent 60%),
+    radial-gradient(ellipse 80% 70% at 10% 100%, rgba(107, 66, 38, 0.4), transparent 65%),
+    var(--color-dark);
+}
+.provapa-hero__speckle {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(224, 132, 44, 0.5) 1.2px, transparent 1.8px),
+    radial-gradient(rgba(242, 236, 225, 0.24) 1px, transparent 1.6px),
+    radial-gradient(rgba(212, 160, 23, 0.42) 1.5px, transparent 2.2px);
+  background-size: 43px 47px, 71px 59px, 97px 89px;
+  background-position: 0 0, 17px 23px, 41px 7px;
+  -webkit-mask-image: linear-gradient(100deg, transparent 30%, #000 75%);
+  mask-image: linear-gradient(100deg, transparent 30%, #000 75%);
+}
+.provapa-hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 3rem;
+  align-items: center;
+  padding-block: clamp(2.5rem, 6vw, 4.5rem);
+}
+.provapa-hero__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  margin-bottom: 1rem;
+}
+.provapa-hero__eyebrow::before { content: ''; flex: 0 0 26px; height: 2px; background: var(--color-gold); }
+.provapa-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(3.4rem, 8vw, 6rem);
+  font-weight: 400;
+  line-height: 0.9;
+  text-transform: uppercase;
+  color: var(--color-cream);
+  text-shadow: 0 6px 40px rgba(0, 0, 0, 0.55);
+  margin-bottom: 0;
+  isolation: isolate;               /* keeps the brush stroke behind the word, not behind the page */
+}
+.provapa-hero__line { display: block; position: relative; width: fit-content; max-width: 100%; }
+.provapa-hero__line--gold { color: var(--color-gold-light); }
+.provapa-hero__stroke {
+  position: absolute;
+  left: -3%;
+  bottom: -0.16em;
+  width: 106%;
+  height: 0.3em;
+  z-index: -1;
+  overflow: visible;
+  fill: var(--color-gold);
+}
+.provapa-hero__sub {
+  font-family: var(--font-condensed);
+  font-weight: 500;
+  font-size: clamp(1.15rem, 2vw, 1.35rem);
+  line-height: 1.45;
+  color: var(--color-grey-light);
+  max-width: 30rem;
+  margin-top: 1.7rem;
+  margin-bottom: 1.9rem;
+}
+.provapa-hero__actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+.provapa-hero__actions .btn { letter-spacing: 0.08em; padding: 0.95em 1.5em; }
+@media (max-width: 480px) { .provapa-hero__actions .btn { flex: 1 1 100%; justify-content: center; } }
+
+.provapa-hero__visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 1.2rem 1.2rem 2.6rem;
+}
+.provapa-polaroid {
+  position: relative;
+  width: min(340px, 80%);
+  margin: 0;
+  padding: 10px 10px 44px;
+  background: var(--color-beige);
+  transform: rotate(2.5deg);
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.75);
+}
+.provapa-polaroid__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  filter: contrast(1.05) saturate(1.05);
+}
+.provapa-polaroid__cap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  padding-inline: 1rem;
+  text-align: center;
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+}
+.provapa-polaroid__tape {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  width: 92px;
+  height: 26px;
+  margin-left: -46px;
+  background: rgba(212, 160, 23, 0.78);
+  transform: rotate(-4deg);
+}
+.provapa-sticker {
+  position: absolute;
+  right: -46px;
+  bottom: -34px;
+  z-index: 2;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background: var(--color-gold);
+  color: var(--color-black);
+  transform: rotate(-9deg);
+  box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.65);
+}
+.provapa-sticker::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 2px dashed rgba(20, 21, 26, 0.45);
+}
+.provapa-sticker__big {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+.provapa-sticker__small {
+  display: block;
+  max-width: 7.5em;
+  margin: 0.2rem auto 0;
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+/* No photo chosen yet: just a big sticker with a ring around it (concept alternative A) */
+.provapa-hero__visual--no-photo { min-height: 300px; }
+.provapa-hero__visual--no-photo .provapa-sticker { position: relative; right: auto; bottom: auto; width: 210px; height: 210px; }
+.provapa-hero__visual--no-photo .provapa-sticker::before { inset: 9px; }
+.provapa-hero__visual--no-photo .provapa-sticker__big { font-size: 3.6rem; }
+.provapa-hero__visual--no-photo .provapa-sticker__small { font-size: 1.05rem; }
+.provapa-hero__ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  margin: -150px 0 0 -150px;
+  border-radius: 50%;
+  border: 2px solid rgba(212, 160, 23, 0.22);
+}
+
+@media (max-width: 900px) {
+  .provapa-hero__inner { grid-template-columns: 1fr; gap: 2rem; }
+  .provapa-hero__visual { padding-bottom: 3rem; }
+}
+@media (max-width: 480px) {
+  .provapa-polaroid { width: min(280px, 74%); }
+  .provapa-sticker { width: 118px; height: 118px; right: -28px; bottom: -30px; }
+  .provapa-sticker__big { font-size: 2rem; }
+  .provapa-sticker__small { font-size: 0.85rem; }
+  .provapa-hero__visual--no-photo { min-height: 240px; }
+  .provapa-hero__visual--no-photo .provapa-sticker { width: 170px; height: 170px; }
+  .provapa-hero__visual--no-photo .provapa-sticker__big { font-size: 2.9rem; }
+  .provapa-hero__ring { width: 230px; height: 230px; margin: -115px 0 0 -115px; }
+}
+
+/* ── Season closed ── */
+.provapa-closed {
+  background: var(--color-coal);
+  border-top: 3px solid var(--color-orange);
+  border-bottom: 1px solid rgba(212, 160, 23, 0.25);
+  padding-block: 1.4rem;
+}
+.provapa-closed__title {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  color: var(--color-gold-light);
+  margin-bottom: 0.3rem;
+}
+.provapa-closed__text { font-size: 1.05rem; color: var(--color-cream); max-width: 60ch; }
+
+/* ── Facts strip ── */
+.provapa-facts {
+  background: linear-gradient(90deg, var(--color-coal), var(--color-dust) 130%);
+  border-top: 1px solid rgba(212, 160, 23, 0.25);
+  border-bottom: 1px solid rgba(212, 160, 23, 0.25);
+}
+.provapa-facts__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem 1rem;
+  padding-block: 1.8rem;
+}
+.provapa-fact { flex: 1 1 120px; text-align: center; }
+.provapa-fact__num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2.3rem;
+  line-height: 1;
+  color: var(--color-gold-light);
+}
+.provapa-fact__label {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--font-condensed);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-grey-light);
+}
+@media (max-width: 600px) {
+  .provapa-fact { flex-basis: 40%; }
+}
+
+/* ── For adults → Sliding ── */
+.provapa-adult { background: var(--color-black); border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+.provapa-adult__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem 1rem;
+  padding-block: 0.9rem;
+  font-size: 1rem;
+  color: var(--color-grey-light);
+  text-align: center;
+}
+.provapa-adult__inner a { color: var(--color-gold); font-weight: 600; text-underline-offset: 3px; }
+.provapa-adult__inner a:hover { color: var(--color-gold-light); }
+
+/* ── "Come to a regular training" (beige) ── */
+.provapa-read__grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3rem;
+  align-items: center;
+}
+.provapa-note {
+  background: var(--color-beige-deep);
+  border-left: 3px solid var(--color-gold);
+  padding: 1.1rem 1.3rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-ink-soft);
+}
+.provapa-note + .provapa-note { margin-top: 0.9rem; }
+.provapa-note--orange { border-left-color: var(--color-orange); }
+.provapa-note strong { color: var(--color-ink); }
+.provapa-note__link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: var(--color-rust);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.provapa-note__link:hover { color: var(--color-ink); }
+
+.provapa-schedule { display: flex; flex-direction: column; gap: 1rem; }
+.provapa-schedule__card {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  background: var(--color-beige-deep);
+  border-left: 3px solid var(--color-gold);
+  padding: 1.3rem 1.5rem;
+}
+.provapa-schedule__day {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+.provapa-schedule__time {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--color-rust);
+}
+.provapa-schedule__note { font-size: 1rem; line-height: 1.6; color: var(--color-ink-soft); margin: 0.2rem 0 0; }
+@media (max-width: 900px) {
+  .provapa-read__grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ── Four steps (dark) ── */
+.provapa-steps { background: var(--color-dark); }
+.provapa-steps__head { text-align: center; margin-bottom: 2.5rem; }
+.provapa-steps__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem 1.5rem;
+  counter-reset: provapa-step;
+}
+.provapa-step { position: relative; padding-top: 2.8rem; }
+.provapa-step::before {
+  counter-increment: provapa-step;
+  content: counter(provapa-step);
+  position: absolute;
+  top: -0.3rem;
+  left: 0;
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  line-height: 1;
+  color: var(--color-gold);
+}
+.provapa-step__title {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-cream);
+  margin-bottom: 0.4rem;
+}
+.provapa-step__text { font-size: 1rem; line-height: 1.6; color: var(--color-grey-light); }
+@media (max-width: 900px) { .provapa-steps__grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .provapa-steps__grid { grid-template-columns: 1fr; } }
+
+/* ── Good to know: questions that fold out (beige) ── */
+.provapa-faq__inner { max-width: var(--container-narrow); }
+.provapa-faq__list { border-top: 1px solid rgba(36, 31, 24, 0.15); }
+.provapa-faq__item { border-bottom: 1px solid rgba(36, 31, 24, 0.15); }
+.provapa-faq__q {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 0.2rem;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
+  color: var(--color-ink);
+}
+.provapa-faq__q::-webkit-details-marker { display: none; }
+.provapa-faq__q::after {
+  content: '+';
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--color-rust);
+  color: var(--color-rust);
+  font-family: var(--font-body);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.provapa-faq__item[open] .provapa-faq__q::after { content: '−'; }
+.provapa-faq__q:hover { color: var(--color-rust); }
+.provapa-faq__a { padding: 0 0.2rem 1.3rem; font-size: 1.05rem; line-height: 1.7; color: var(--color-ink-soft); max-width: 65ch; }
+.provapa-faq__a p { margin-bottom: 0.7em; }
+
+/* ── Get in touch before you come: the form (deeper beige) ── */
+.provapa-book { background: var(--color-beige-deep); color: var(--color-ink); }
+.provapa-book .label { color: var(--color-rust); }
+.provapa-book .provapa-title { color: var(--color-ink); }
+.provapa-book__grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 3.5rem;
+  align-items: start;
+}
+.provapa-book__needs {
+  background: var(--color-beige);
+  border-left: 3px solid var(--color-gold);
+  padding: 1.2rem 1.5rem;
+}
+.provapa-book__needs-title {
+  font-family: var(--font-condensed);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-rust);
+  margin-bottom: 0.5rem;
+}
+.provapa-book__needs ul { list-style: none; margin: 0; padding: 0; }
+.provapa-book__needs li { position: relative; padding-left: 1.3rem; font-size: 1rem; line-height: 1.5; color: var(--color-ink-soft); margin-bottom: 0.35rem; }
+.provapa-book__needs li::before { content: '◆'; position: absolute; left: 0; top: 0.1em; color: var(--color-gold-dim); }
+
+.provapa-form { display: flex; flex-direction: column; gap: 1rem; }
+.provapa-book .tmc-form-field label {
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+.provapa-book .tmc-form-field input,
+.provapa-book .tmc-form-field textarea,
+.provapa-book .tmc-form-field select {
+  background-color: var(--color-beige);
+  border: 1px solid var(--color-beige-line);
+  border-radius: var(--radius);
+  color: var(--color-ink);
+  font-size: 1.05rem;
+}
+.provapa-book .tmc-form-field input::placeholder,
+.provapa-book .tmc-form-field textarea::placeholder { color: var(--color-ink-soft); opacity: 0.8; }
+.provapa-book .tmc-form-field input:focus,
+.provapa-book .tmc-form-field textarea:focus,
+.provapa-book .tmc-form-field select:focus { border-color: var(--color-orange); box-shadow: 0 0 0 2px rgba(224, 132, 44, 0.35); }
+.provapa-book .tmc-form-field select {
+  background-image: linear-gradient(45deg, transparent 50%, var(--color-ink) 50%), linear-gradient(135deg, var(--color-ink) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50%;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 2.2rem;
+}
+.provapa-form__submit { width: 100%; justify-content: center; margin-top: 0.4rem; padding-block: 1rem; }
+
+.provapa-book .pp-form-success,
+.provapa-book .pp-form-error {
+  background: var(--color-beige);
+  border: 0;
+  border-left: 3px solid var(--color-gold);
+  color: var(--color-ink-soft);
+  text-align: left;
+  padding: 1.5rem 1.6rem;
+}
+.provapa-book .pp-form-error { border-left-color: var(--color-red); margin-bottom: 1.2rem; }
+.provapa-book .pp-form-success h3,
+.provapa-book .pp-form-error h3 { font-size: 1.7rem; color: var(--color-ink); }
+.provapa-book .pp-form-error h3 { color: var(--color-red-dark); }
+.provapa-book__icon { font-size: 2rem; line-height: 1; color: var(--color-gold-dim); margin-bottom: 0.4rem; }
+
+.provapa-book__direct {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  margin-top: 1.4rem;
+  font-size: 1rem;
+  color: var(--color-ink-soft);
+}
+.provapa-book__direct a { color: var(--color-rust); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+
+@media (max-width: 900px) {
+  .provapa-book__grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+@media (max-width: 520px) {
+  .provapa-book .pp-form-row { grid-template-columns: 1fr; }
+}

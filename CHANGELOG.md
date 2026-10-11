@@ -3,6 +3,22 @@
 Alla märkbara ändringar i temat. Format efter [Keep a Changelog](https://keepachangelog.com/sv/1.1.0/),
 versionsnummer enligt [semantisk versionering](https://semver.org/lang/sv/) (`ÖVERGRIPANDE.NYTT.RÄTTNING`).
 
+## [2.1.0] — 2026-10-11
+
+Prova På-sidan (barn & ungdom) i v2-stilen, enligt `design/concepts/koncept-provapa.html` med hero "D".
+
+### Nytt
+- **Prova På — ny hero:** affischrubrik ("Prova på" i guld, "speedway" med penseldrag), gnistor i bakgrunden och foto i polaroidram med klistermärket "0 kr under 12 år". Fotot är sidans **Utvald bild**; utan bild visas bara klistermärket (ingen tom ram).
+- **Prova På — nya sektioner:** faktaremsa, beige "Kom till en vanlig träning" med tider och licensinfo (länk till Svemo), "Fyra enkla steg", "Bra att veta" med frågor som fälls ut, och formuläret på beige.
+- **Anpassa → Prova På — Sidan:** alla texter på sidan går att ändra (standard = nuvarande text). Tomt fält döljer den delen. Träningstiderna styr både tidskorten och valen i formuläret; en tredje tid kan läggas till.
+- Webbläsartesterna återger nu den **riktiga** PHP-mallen för Prova På (`tests/browser/render_page.php`) och kontrollerar bl.a. bredder, klistermärket, säsongsstängning och minsta textstorlek.
+
+### Ändrat
+- Prova På: texten om att höra av sig säger nu att det annars är risk att motorcyklar inte är förberedda (inte "väder eller banans skick").
+- Prova På: formuläret visas igen tillsammans med felmeddelandet (förut försvann det), med ifyllda fält kvar. Fälten har nu etiketter kopplade till rutorna (bättre för skärmläsare). "Namn" heter "Barnets namn".
+- Prova På: utrustning, säkerhet, fler tillfällen och "nästa steg" (medlemskap, trackracing-skolan, tävla) ligger nu som frågor under "Bra att veta" i stället för egna långa sektioner.
+- Rutan **"Prova På — Utrustningsikoner"** i sidredigeraren är borttagen (används inte av den nya sidan). Sparade värden ligger kvar i databasen men visas inte.
+
 ## [2.0.0] — 2026-10-10
 
 Första versionen av det nya utseendet ("v2"): varm svart / guld / rost, med grädde och beige där man läser.
