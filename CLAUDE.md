@@ -26,9 +26,9 @@ theme/tandstiftet-theme-v2/   temat (det som blir zip). THEME_SLUG i scripts/con
 design/concepts/              godkända konceptsidor (HTML) — designfacit per sida
 sites/sparks-flytt/           fristående "Sparks har flyttat"-sida
 archive/                      backuper (gamla "Ytterligare CSS")
-scripts/                      check.sh · test.sh · build.sh · bump-version.sh · changelog-section.sh
+scripts/                      check.sh · test.sh · build.sh · bump-version.sh · changelog-section.sh · deploy.sh
 tests/php|css|browser|meta/   tester (se nedan)
-docs/                         DESIGN.md (designregler) · PROJEKTKONTEXT.md (bakgrund/beslut/att-göra) · KOMMA-IGANG.md (GitHub)
+docs/                         DESIGN.md (designregler) · PROJEKTKONTEXT.md (bakgrund/beslut/att-göra) · KOMMA-IGANG.md (GitHub) · PUBLICERA.md (knappen som lägger upp temat på one.com)
 ```
 
 ## Kommandon
@@ -39,6 +39,7 @@ bash scripts/test.sh                  # PHP-, CSS- och webbläsartester (--no-br
 bash scripts/build.sh --with-tests    # kör allt och bygger dist/tandstiftet-theme-v2-<version>.zip
 bash scripts/bump-version.sh 2.1.0    # ny version i style.css + ny rubrik i CHANGELOG.md
 python3 tests/meta/mutation_check.py  # förstör koden med flit och kontrollerar att testerna slår larm
+bash scripts/deploy.sh check          # (med SFTP-uppgifter i miljön) testa anslutningen till webbhotellet
 ```
 
 Krav lokalt: `bash`, `php` 8.x, `zip`; valfritt `node`; för webbläsartester `pip install -r tests/browser/requirements.txt`,
@@ -55,9 +56,10 @@ Krav lokalt: `bash`, `php` 8.x, `zip`; valfritt `node`; för webbläsartester `p
 5. **Ingen text som styrelsen kan vilja ändra får vara hårdkodad i en mall.** Lägg ett Customizer-fält (med standardvärde som är den nuvarande texten).
 6. **Förutsätt inte att innehåll finns** (bilder, menyer, inlägg). Innehållet bor i WordPress databas, inte i repot. Bygg snälla tomlägen.
 7. **Inget PHP-tillägg utöver standard** — använd inte `mb_*`. (`strtolower` hanterar inte Å/Ä/Ö sedan PHP 8.2; normalisera manuellt som i `tmc_maybe_hide_events_menu_item`.)
-8. **Inga hemligheter, lösenord, `wp-config.php` eller databasdumpar i repot.** Repot ska vara **privat** (det finns foto på en ung person i `design/concepts/images/`).
-9. **Ändringslogg:** varje märkbar ändring → `CHANGELOG.md`. Release = höj version, tagga `vX.Y.Z` (GitHub Actions bygger zip).
-10. **Rör inte det gamla temat** (v1 ligger kvar på sajten som reträtt).
+8. **Publicering** sker med knappen *Actions → Publicera tema* (`docs/PUBLICERA.md`). Inloggningen ligger som GitHub Secrets i miljöerna `beta`/`live` — be aldrig om den och skriv aldrig in den själv. Live bara från `master`.
+9. **Inga hemligheter, lösenord, `wp-config.php` eller databasdumpar i repot.** Repot ska vara **privat** (det finns foto på en ung person i `design/concepts/images/`).
+10. **Ändringslogg:** varje märkbar ändring → `CHANGELOG.md`. Release = höj version, tagga `vX.Y.Z` (GitHub Actions bygger zip).
+11. **Rör inte det gamla temat** (v1 ligger kvar på sajten som reträtt).
 
 ## Teknisk karta (temat)
 

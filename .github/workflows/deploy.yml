@@ -1,0 +1,71 @@
+name: Publicera tema
+
+# Startas med en knapp: GitHub → Actions → "Publicera tema" → Run workflow.
+# Kör först ALLA tester (samma som CI); är något rött publiceras ingenting.
+# Inloggningen till webbhotellet ligger som Secrets i miljöerna "beta" och "live"
+# (Settings → Environments) — aldrig i repot. Se docs/PUBLICERA.md.
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Vart? (beta = betasajten, live = riktiga sajten)"
+        type: choice
+        options: [beta, live]
+        default: beta
+      mode:
+        description: "Vad? (testa-anslutning ändrar ingenting)"
+        type: choice
+        options: [publicera, testa-anslutning]
+        default: publicera
+
+permissions:
+  contents: read
+
+# Never two publishes to the same site at once.
+concurrency:
+  group: deploy-${{ inputs.target }}
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    name: Alla tester
+    if: inputs.mode == 'publicera'
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    name: ${{ inputs.mode == 'publicera' && 'Publicera till' || 'Testa anslutningen till' }} ${{ inputs.target }}
+    needs: tests
+    if: always() && (inputs.mode == 'testa-anslutning' || needs.tests.result == 'success')
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.target }}
+    env:
+      CI: "true"
+      SFTP_HOST: ${{ secrets.SFTP_HOST }}
+      SFTP_PORT: ${{ secrets.SFTP_PORT }}
+      SFTP_USER: ${{ secrets.SFTP_USER }}
+      SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+      SFTP_KEY: ${{ secrets.SFTP_KEY }}
+      SFTP_KNOWN_HOSTS: ${{ secrets.SFTP_KNOWN_HOSTS }}
+      THEMES_DIR: ${{ secrets.THEMES_DIR }}
+      SITE_URL: ${{ secrets.SITE_URL }}
+    steps:
+      - name: Riktiga sajten bara från master
+        if: inputs.target == 'live' && inputs.mode == 'publicera' && github.ref_name != 'master'
+        run: |
+          echo "::error::Till live publiceras bara från grenen master (du valde ${GITHUB_REF_NAME}). Slå ihop ändringarna först, eller publicera till beta."
+          exit 1
+      - uses: actions/checkout@v4
+      - name: Verktyg (lftp för SFTP)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+      - name: Hämta det testade temapaketet
+        if: inputs.mode == 'publicera'
+        uses: actions/download-artifact@v4
+        with:
+          name: tema-paket
+          path: dist
+      - name: Testa anslutningen
+        if: inputs.mode == 'testa-anslutning'
+        run: bash scripts/deploy.sh check
+      - name: Publicera
+        if: inputs.mode == 'publicera'
+        run: bash scripts/deploy.sh publish dist/*.zip

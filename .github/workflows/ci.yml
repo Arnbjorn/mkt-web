@@ -1,10 +1,12 @@
 name: CI
 
-# Runs on every push to main and on every pull request.
+# Runs on every push to master (and main), on every pull request, and as the
+# test step of "Publicera tema" (deploy.yml calls it before uploading anything).
 on:
   push:
-    branches: [main]
+    branches: [master, main]
   pull_request:
+  workflow_call:
 
 permissions:
   contents: read
@@ -53,9 +55,17 @@ jobs:
       - name: Webbläsartester
         run: python tests/browser/run.py
 
+  deploy-script:
+    name: Publiceringsskriptet (mot en riktig SFTP-server på maskinen)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Logga in, ladda upp, byt version och backa vid fel
+        run: bash tests/deploy/run.sh
+
   build:
     name: Bygg tema-paketet
-    needs: [checks, browser]
+    needs: [checks, browser, deploy-script]
     runs-on: ubuntu-latest
     env:
       CI: "true"

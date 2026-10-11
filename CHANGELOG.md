@@ -11,6 +11,7 @@ Prova På-sidan (barn & ungdom) i v2-stilen, enligt `design/concepts/koncept-pro
 - **Prova På — ny hero:** affischrubrik ("Prova på" i guld, "speedway" med penseldrag), gnistor i bakgrunden och foto i polaroidram med klistermärket "0 kr under 12 år". Fotot är sidans **Utvald bild**; utan bild visas bara klistermärket (ingen tom ram).
 - **Prova På — nya sektioner:** faktaremsa, beige "Kom till en vanlig träning" med tider och licensinfo (länk till Svemo), "Fyra enkla steg", "Bra att veta" med frågor som fälls ut, och formuläret på beige.
 - **Anpassa → Prova På — Sidan:** alla texter på sidan går att ändra (standard = nuvarande text). Tomt fält döljer den delen. Träningstiderna styr både tidskorten och valen i formuläret; en tredje tid kan läggas till.
+- **Publicera med en knapp:** GitHub → Actions → *Publicera tema* kör alla tester, laddar upp temat till one.com via SFTP, byter version på en sekund, kontrollerar sajten och backar automatiskt vid fel (`scripts/deploy.sh`, `.github/workflows/deploy.yml`). Live bara från `master`. Inställning: `docs/PUBLICERA.md`.
 - Webbläsartesterna återger nu den **riktiga** PHP-mallen för Prova På (`tests/browser/render_page.php`) och kontrollerar bl.a. bredder, klistermärket, säsongsstängning och minsta textstorlek.
 
 ### Ändrat
@@ -18,6 +19,8 @@ Prova På-sidan (barn & ungdom) i v2-stilen, enligt `design/concepts/koncept-pro
 - Prova På: formuläret visas igen tillsammans med felmeddelandet (förut försvann det), med ifyllda fält kvar. Fälten har nu etiketter kopplade till rutorna (bättre för skärmläsare). "Namn" heter "Barnets namn".
 - Prova På: utrustning, säkerhet, fler tillfällen och "nästa steg" (medlemskap, trackracing-skolan, tävla) ligger nu som frågor under "Bra att veta" i stället för egna långa sektioner.
 - Rutan **"Prova På — Utrustningsikoner"** i sidredigeraren är borttagen (används inte av den nya sidan). Sparade värden ligger kvar i databasen men visas inte.
+### Rättat
+- CI kördes bara vid push till `main`, men huvudgrenen heter `master` — testerna kördes alltså aldrig automatiskt vid push. Nu körs de för båda.
 
 ## [2.0.0] — 2026-10-10
 
