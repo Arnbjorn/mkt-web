@@ -115,7 +115,7 @@ with sync_playwright() as p:
     print("\nMinsta renderade textstorlek")
     MIN_PX = 13.0
     checks = [("home", 1280), ("home", 390), ("menu4", 1280), ("menu4", 390)]
-    if harness.HAVE_PHP: checks += [("provapa", 1280), ("provapa", 390), ("provapa-closed", 390), ("page", 1280), ("page", 390)]
+    if harness.HAVE_PHP: checks += [("provapa", 1280), ("provapa", 390), ("provapa-closed", 390), ("page", 1280), ("page", 390), ("sliding", 1280), ("sliding", 390), ("sliding-paused", 390)]
     for name, w in checks:
         pg = open_page(name, w)
         res = pg.evaluate("""() => {
@@ -167,7 +167,46 @@ with sync_playwright() as p:
             f"säsong stängd: meddelande visas, formulär och 'hör av dig'-knapp döljs; Sliding pausad: ingen vuxenhänvisning ({state})")
         pg.close()
 
-    # 8. A normal page (page.php) --------------------------------------------------------
+    # 8. Sliding (the real PHP template, with a made-up calendar) ------------------------
+    print("\nSliding-sidan (riktiga PHP-mallen)")
+    if harness.HAVE_PHP:
+        pg = open_page("sliding", 390)
+        cal = pg.evaluate("""(()=>({ days: document.querySelectorAll('#pp-cal-grid .pp-calendar__day:not(.is-empty)').length,
+            bookable: document.querySelectorAll('#pp-cal-grid button.pp-calendar__day').length,
+            tags: [...document.querySelectorAll('.pp-calendar__day-tag')].map(t=>t.textContent),
+            tagPx: Math.min(...[...document.querySelectorAll('.pp-calendar__day-tag')].map(t=>parseFloat(getComputedStyle(t).fontSize)), 99) }))()""")
+        (ok if cal["days"] >= 28 and cal["bookable"] >= 1 else bad)(f"kalendern ritas upp ({cal['days']} dagar, {cal['bookable']} bokningsbara knappar)")
+        (ok if "Fullt" in cal["tags"] and "Ring" in cal["tags"] else bad)(f"fulla dagar och dagar inom 24 h märks ({cal['tags']})")
+        (ok if cal["tagPx"] >= 14 else bad)(f"dag-etiketterna är läsbara på mobil ({cal['tagPx']:.1f} px, minst 14)")
+        dialogs = []
+        pg.on("dialog", lambda d: (dialogs.append(d.message), d.dismiss()))
+        pg.fill("#pp_name", "Test"); pg.fill("#pp_email", "test@example.com")
+        pg.click("#pp_submit_btn"); pg.wait_for_timeout(200)
+        shown = pg.evaluate("!document.getElementById('pp-date-missing').hidden")
+        (ok if shown and not dialogs else bad)("skicka utan datum → tydligt meddelande på sidan (ingen popup)")
+        pg.click("#pp-cal-grid button.pp-calendar__day"); pg.wait_for_timeout(100)
+        st = pg.evaluate("({d: document.getElementById('pp_date_input').value, shown: document.getElementById('pp_date_display').value, err: document.getElementById('pp-date-missing').hidden})")
+        (ok if st["d"] and st["shown"] and st["err"] else bad)(f"klick på ledig dag väljer datumet ({st['shown'] or 'inget'})")
+        if pg.query_selector(".pp-discipline-tab[data-discipline=flattrack]"):
+            pg.click(".pp-discipline-tab[data-discipline=flattrack]"); pg.wait_for_timeout(100)
+            st2 = pg.evaluate("({d: document.getElementById('pp_date_input').value, disc: document.getElementById('pp_discipline_input').value})")
+            (ok if st2 == {"d": "", "disc": "flattrack"} else bad)(f"byte till Flat track nollställer valt datum ({st2})")
+        pg.close()
+        pg = open_page("sliding-noft", 1280)
+        st = pg.evaluate("""({tabs: !!document.querySelector('.pp-discipline-tabs'), partner: !!document.querySelector('.sliding-partner'),
+            ftcard: [...document.querySelectorAll('.sliding-disc__name')].map(e=>e.textContent),
+            facts: [...document.querySelectorAll('.provapa-fact__num')].map(e=>e.textContent),
+            text: document.body.innerText.toLowerCase()})""")
+        (ok if not st["tabs"] and not st["partner"] and st["ftcard"] == ["Speedway"] else bad)(f"Flat track avstängt: inga flikar, ingen samarbetsruta, bara Speedway-kortet ({st['ftcard']})")
+        (ok if "Speedway" in st["facts"] and "2" not in st["facts"] else bad)(f"Flat track avstängt: faktaremsan säger Speedway ({st['facts']})")
+        (ok if "flat track eller speedway" not in st["text"] else bad)("Flat track avstängt: texterna nämner inte flat track som val")
+        pg.close()
+        pg = open_page("sliding-paused", 1280)
+        st = pg.evaluate("({form: !!document.querySelector('#pp-sliding-form'), cal: !!document.querySelector('#pp-calendar'), paused: !!document.querySelector('.sliding-paused')})")
+        (ok if st == {"form": False, "cal": False, "paused": True} else bad)(f"Sliding pausat: pausmeddelande, ingen kalender och inget formulär ({st})")
+        pg.close()
+
+    # 8b. A normal page (page.php) --------------------------------------------------------
     print("\nVanlig sida (riktiga page.php)")
     if harness.HAVE_PHP:
         pg = open_page("page", 1280)

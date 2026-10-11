@@ -63,11 +63,36 @@ function the_content() {
 		. '<div class="wp-block-buttons"><div class="wp-block-button"><a class="wp-block-button__link" href="#">Prova på →</a></div></div>';
 }
 
+/* For the Sliding page */
+function get_the_post_thumbnail_url( $id = null, $size = '' ) { return $GLOBALS['__photo']; }
+function wp_json_encode( $v ) { return json_encode( $v ); }
+// A believable calendar: open Wednesdays and Saturdays; tomorrow is "within 24 h",
+// the second open day is full, the third has only 2 places left.
+function tmc_sliding_get_calendar_data( $days = 90 ) {
+	$out = [];
+	foreach ( [ 'speedway', 'flattrack' ] as $disc ) {
+		$n = 0;
+		for ( $i = 0; $i < $days; $i++ ) {
+			$d = ( new DateTime( 'today' ) )->modify( "+$i days" );
+			$open = in_array( (int) $d->format( 'N' ), $disc === 'speedway' ? [ 3, 6 ] : [ 4 ], true ) || $i === 1;
+			if ( $open && $i > 1 ) $n++;
+			$out[ $disc ][ $d->format( 'Y-m-d' ) ] = [
+				'open' => $open, 'within24h' => $i <= 1, 'time' => '18:00',
+				'remaining' => ! $open ? 0 : ( $n === 2 ? 0 : ( $n === 3 ? 2 : 8 ) ),
+			];
+		}
+	}
+	return $out;
+}
+$GLOBALS['__mods'] += [ 'tmc_sliding_hours_wed_speedway' => '18:00', 'tmc_sliding_hours_sat_speedway' => '10:00', 'tmc_sliding_hours_thu_flattrack' => '18:00' ];
+
 /* The theme's real helpers */
 tmc_load( [
-	'tmc_sliding_enabled', 'tmc_provapa_season_open', 'tmc_provapa_season_message',
+	'tmc_sliding_enabled', 'tmc_flattrack_enabled', 'tmc_provapa_season_open', 'tmc_provapa_season_message',
+	'tmc_page_text_sets', 'tmc_page_text', 'tmc_page_items',
 	'tmc_provapa_fields', 'tmc_provapa_text', 'tmc_provapa_slots', 'tmc_provapa_items', 'tmc_provapa_lines',
-	'tmc_antispam_fields', 'tmc_page_header', 'tmc_breadcrumbs',
+	'tmc_sliding_fields', 'tmc_sliding_text', 'tmc_sliding_items', 'tmc_sliding_facts', 'tmc_sliding_schedule_summary',
+	'tmc_hero_title_html', 'tmc_antispam_fields', 'tmc_page_header', 'tmc_breadcrumbs',
 ] );
 // Theme mods arrive as strings from the command line; '0' must mean "off" like WordPress' stored false.
 foreach ( $GLOBALS['__mods'] as $k => $v ) { if ( $v === '0' ) $GLOBALS['__mods'][ $k ] = false; }

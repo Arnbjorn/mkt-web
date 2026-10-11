@@ -1,6 +1,6 @@
 <?php
 /* Prova På page: every text comes from the Customizer, with the current text as default. */
-tmc_load( [ 'tmc_provapa_fields', 'tmc_provapa_text', 'tmc_provapa_slots', 'tmc_provapa_items', 'tmc_provapa_lines' ] );
+tmc_load( [ 'tmc_page_text_sets', 'tmc_page_text', 'tmc_page_items', 'tmc_sliding_fields', 'tmc_provapa_fields', 'tmc_provapa_text', 'tmc_provapa_slots', 'tmc_provapa_items', 'tmc_provapa_lines' ] );
 section( 'Prova På-sidans texter' );
 
 test( 'alla fält har grupp, etikett, standardtext och giltig typ', function () {

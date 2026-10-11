@@ -3,319 +3,231 @@
  * Template Name: Sliding (Prova På Vuxna)
  * Description: Sliding — Prova På för vuxna, mot en avgift. Flat track eller speedway beroende på lämplighet/tillgänglighet/önskemål.
  *
+ * v2-layout enligt design/concepts/koncept-sliding.html. Alla texter ändras i
+ * Utseende → Anpassa → Sliding — Sidan (tmc_sliding_fields() i functions.php);
+ * fotot i toppen är sidans Utvald bild. Delar komponenter (faktaremsa, steg,
+ * frågor, formulär) med Prova På — därför klasserna "provapa-".
+ *
  * @package tandstiftet
  */
 get_header();
 
 $page_id = get_the_ID();
-$pp_page = get_page_by_path('prova-pa');
-$pp_url  = $pp_page ? get_permalink( $pp_page->ID ) : home_url('/prova-pa/');
+$pp_page = get_page_by_path( 'prova-pa' );
+$pp_url  = $pp_page ? get_permalink( $pp_page->ID ) : home_url( '/prova-pa/' );
+$t       = 'tmc_sliding_text';
+$ft_on   = tmc_flattrack_enabled();
+$contact_email = get_theme_mod( 'tmc_contact_email' );
+$contact_phone = get_theme_mod( 'tmc_contact_phone' );
 
 if ( ! tmc_sliding_enabled() ) : ?>
 
-	<?php tmc_page_header(
-		__('Sliding','tandstiftet'),
-		__('Just nu pausat — men snart tillbaka.','tandstiftet'),
-		'SLIDING'
-	); ?>
+	<?php tmc_page_header( __( 'Sliding', 'tandstiftet' ), '', 'SLIDING' ); ?>
 
-	<section class="section">
-		<div class="container container--page" style="max-width:700px;text-align:center">
-			<div class="pp-safety-note" style="text-align:left">
-				<div class="pp-safety-note__title"><?php esc_html_e('Sliding är tillfälligt pausat','tandstiftet'); ?></div>
-				<p><?php esc_html_e('Vi jobbar just nu på vuxen-erbjudandet och tar en kort paus. Vill du prova på speedway eller flat track ändå, hör av dig direkt så hjälper vi dig — eller kolla in Prova På för barn & ungdom nedan.','tandstiftet'); ?></p>
-			</div>
-			<div style="margin-top:var(--space-xl);display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap">
-				<a href="<?php echo esc_url( $pp_url ); ?>" class="btn btn--primary"><?php esc_html_e('Se Prova På — Barn & Ungdom','tandstiftet'); ?></a>
-				<?php $email = get_theme_mod('tmc_contact_email'); $phone = get_theme_mod('tmc_contact_phone'); ?>
-				<?php if ($phone) : ?><a href="tel:<?php echo esc_attr(preg_replace('/\s+/','',$phone)); ?>" class="btn btn--outline">☎ <?php echo esc_html($phone); ?></a><?php endif; ?>
-				<?php if ($email) : ?><a href="mailto:<?php echo esc_attr($email); ?>" class="btn btn--outline">✉ <?php echo esc_html($email); ?></a><?php endif; ?>
+	<main class="section section--beige sliding-paused" id="main">
+		<div class="container sliding-paused__inner">
+			<?php if ( $t( 'paused_title' ) ) : ?><h2 class="provapa-title"><?php echo esc_html( $t( 'paused_title' ) ); ?></h2><?php endif; ?>
+			<?php if ( $t( 'paused_text' ) ) : ?><p class="provapa-read__lead"><?php echo esc_html( $t( 'paused_text' ) ); ?></p><?php endif; ?>
+			<div class="sliding-paused__actions">
+				<?php if ( $t( 'paused_btn' ) ) : ?><a href="<?php echo esc_url( $pp_url ); ?>" class="btn btn--primary"><?php echo esc_html( $t( 'paused_btn' ) ); ?></a><?php endif; ?>
+				<?php if ( $contact_phone ) : ?><a href="tel:<?php echo esc_attr( preg_replace( '/\s+/', '', $contact_phone ) ); ?>" class="btn btn--outline"><?php echo esc_html( $contact_phone ); ?></a><?php endif; ?>
+				<?php if ( $contact_email ) : ?><a href="mailto:<?php echo esc_attr( $contact_email ); ?>" class="btn btn--outline"><?php echo esc_html( $contact_email ); ?></a><?php endif; ?>
 			</div>
 		</div>
-	</section>
+	</main>
 
 	<?php get_footer(); return; endif; ?>
 
-<?php tmc_page_header(
-	__('Sliding','tandstiftet'),
-	__('Prova På för vuxna — ingen erfarenhet krävs. Vi lånar ut allt och har instruktörer på plats.','tandstiftet'),
-	'SLIDING'
-); ?>
-
-<!-- ═══ BARN-HÄNVISNING ═══ -->
-<div class="pp-audience-note">
-	<div class="container container--page pp-audience-note__inner">
-		<span><?php esc_html_e('Sliding är vår Prova På för vuxna. Har du barn eller är ungdom som vill prova på?','tandstiftet'); ?></span>
-		<a href="<?php echo esc_url( $pp_url ); ?>" class="btn btn--outline btn--sm"><?php esc_html_e('Se Prova På för barn & ungdom — gratis →','tandstiftet'); ?></a>
-	</div>
-</div>
-
-<!-- ═══ FACTS STRIP ═══ -->
-<div class="pp-facts-strip">
-	<div class="container container--page pp-facts-strip__inner">
-		<div class="pp-facts-strip__fact">
-			<span class="pp-facts-strip__number">800</span>
-			<span class="pp-facts-strip__label"><?php esc_html_e('kr inkl. utrustning','tandstiftet'); ?></span>
-			<span class="pp-facts-strip__sublabel"><?php esc_html_e('+225 kr licens','tandstiftet'); ?></span>
-		</div>
-		<div class="pp-facts-strip__divider"></div>
-		<div class="pp-facts-strip__fact">
-			<span class="pp-facts-strip__number">1,5</span>
-			<span class="pp-facts-strip__label"><?php esc_html_e('timmar på banan','tandstiftet'); ?></span>
-		</div>
-		<div class="pp-facts-strip__divider"></div>
-		<div class="pp-facts-strip__fact">
-			<span class="pp-facts-strip__number"><?php echo tmc_flattrack_enabled() ? '2' : '1'; ?></span>
-			<span class="pp-facts-strip__label"><?php echo tmc_flattrack_enabled() ? esc_html__('discipliner att välja mellan','tandstiftet') : esc_html__('disciplin — speedway','tandstiftet'); ?></span>
-		</div>
-		<div class="pp-facts-strip__divider"></div>
-		<div class="pp-facts-strip__fact">
-			<span class="pp-facts-strip__number">0</span>
-			<span class="pp-facts-strip__label"><?php esc_html_e('krav på erfarenhet','tandstiftet'); ?></span>
-		</div>
-		<div class="pp-facts-strip__divider"></div>
-		<div class="pp-facts-strip__cta">
-			<a href="#boka" class="btn btn--primary"><?php esc_html_e('Boka din plats','tandstiftet'); ?> →</a>
-			<a href="#vad-hander" class="btn btn--outline"><?php esc_html_e('Vad händer på dagen?','tandstiftet'); ?></a>
-		</div>
-	</div>
-</div>
-
-<!-- ═══ PRIS — tydlig uppdelning, lätt att missa annars ═══ -->
-<div class="pp-price-callout">
-	<div class="container container--page">
-		<div class="pp-price-callout__inner">
-			<div class="pp-price-callout__row">
-				<span><strong>800 kr</strong> <?php esc_html_e('till klubben — utrustning, instruktör & bana ingår','tandstiftet'); ?></span>
-				<span class="pp-price-callout__plus">+</span>
-				<span><strong>225 kr</strong> <?php esc_html_e('Svemo Prova På-licens — betalas separat, direkt till Svemo','tandstiftet'); ?></span>
-			</div>
-			<p class="pp-price-callout__note"><?php esc_html_e('Räkna alltså med ca 1 025 kr totalt. Licensen är inte en klubbavgift och syns inte i vår bokningsbekräftelse.','tandstiftet'); ?></p>
-		</div>
-	</div>
-</div>
-
-<!-- ═══ BOKNING & GRUPPER/KALAS/EVENT ═══ -->
-<section class="section section--dark" id="grupper-kalas">
-	<div class="container container--page">
-		<div class="section-header">
-			<div class="label"><?php esc_html_e('Alltid bokat i förväg','tandstiftet'); ?></div>
-			<h2 class="section-title"><?php esc_html_e('Själv, med kompisar eller ett helt kalas','tandstiftet'); ?></h2>
-		</div>
-		<p class="pp-intro-text"><?php esc_html_e('Sliding är ingen drop-in-aktivitet — du bokar alltid en tid i förväg, oavsett om du kommer själv eller är flera. Sliding är samtidigt vårt sätt att ta emot grupper, kalas och event: samma upplägg, samma pris per person, men bokat som ett eget tillfälle för ert sällskap.','tandstiftet'); ?></p>
-		<div class="pp-next-grid">
-			<div class="pp-next-card">
-				<div class="pp-next-card__icon">🙋</div>
-				<h3 class="pp-next-card__title"><?php esc_html_e('På egen hand','tandstiftet'); ?></h3>
-				<p class="pp-next-card__desc"><?php esc_html_e('Boka en plats för dig själv — vi slår ofta ihop enskilda bokningar till samma pass.','tandstiftet'); ?></p>
-			</div>
-			<div class="pp-next-card">
-				<div class="pp-next-card__icon">👥</div>
-				<h3 class="pp-next-card__title"><?php esc_html_e('Sällskap & vänner','tandstiftet'); ?></h3>
-				<p class="pp-next-card__desc"><?php esc_html_e('Kom några stycken tillsammans — ange gärna hur många ni är när ni bokar så planerar vi passet efter er grupp.','tandstiftet'); ?></p>
-			</div>
-			<div class="pp-next-card">
-				<div class="pp-next-card__icon">🎉</div>
-				<h3 class="pp-next-card__title"><?php esc_html_e('Kalas, möhippa & event','tandstiftet'); ?></h3>
-				<p class="pp-next-card__desc"><?php esc_html_e('Firma, möhippa, svensexa eller födelsedag — boka Sliding som ett eget event för hela sällskapet. Hör av dig i god tid så bokar vi in er.','tandstiftet'); ?></p>
-			</div>
+<?php
+$photo = has_post_thumbnail( $page_id ) ? get_the_post_thumbnail_url( $page_id, 'full' ) : '';
+$torn  = $photo && get_theme_mod( 'tmc_hero_torn_edge', true );
+?>
+<!-- ═══ HERO ═══ -->
+<section class="hero hero--page<?php echo $torn ? ' hero--torn' : ''; ?><?php echo $photo ? '' : ' hero--no-photo'; ?>">
+	<?php if ( $photo ) : ?>
+		<div class="hero__bg" style="background-image:url('<?php echo esc_url( $photo ); ?>')" aria-hidden="true"></div>
+	<?php endif; ?>
+	<div class="hero__overlay"></div>
+	<div class="hero__content">
+		<?php if ( $t( 'hero_eyebrow' ) ) : ?><p class="hero__kicker"><?php echo esc_html( $t( 'hero_eyebrow' ) ); ?></p><?php endif; ?>
+		<?php if ( $t( 'hero_title' ) ) : ?><h1 class="hero__title"><?php echo tmc_hero_title_html( $t( 'hero_title' ) ); // escaped inside ?></h1><?php endif; ?>
+		<?php if ( $t( 'hero_text' ) ) : ?><p class="hero__subtitle"><?php echo esc_html( $t( 'hero_text' ) ); ?></p><?php endif; ?>
+		<div class="hero__actions">
+			<?php if ( $t( 'hero_btn_1' ) ) : ?><a href="#boka" class="btn btn--primary"><?php echo esc_html( $t( 'hero_btn_1' ) ); ?></a><?php endif; ?>
+			<?php if ( $t( 'hero_btn_2' ) ) : ?><a href="<?php echo $ft_on ? '#disciplin' : '#vad-hander'; ?>" class="btn btn--outline provapa-btn--light"><?php echo esc_html( $t( 'hero_btn_2' ) ); ?></a><?php endif; ?>
 		</div>
 	</div>
 </section>
 
-<!-- ═══ VILKEN DISCIPLIN ═══ -->
-<section class="section" id="disciplin">
-	<div class="container container--page">
-		<?php if ( tmc_flattrack_enabled() ) : ?>
-			<div class="section-header">
-				<div class="label"><?php esc_html_e('Flat track eller speedway?','tandstiftet'); ?></div>
-				<h2 class="section-title"><?php esc_html_e('Vi hjälper dig hitta rätt','tandstiftet'); ?></h2>
+<!-- ═══ FAKTAREMSA ═══ -->
+<section class="provapa-facts" aria-label="<?php esc_attr_e( 'Snabbfakta', 'tandstiftet' ); ?>">
+	<div class="container provapa-facts__inner">
+		<?php foreach ( tmc_sliding_facts() as $fact ) : ?>
+			<div class="provapa-fact">
+				<span class="provapa-fact__num"><?php echo esc_html( $fact['num'] ); ?></span>
+				<?php if ( $fact['label'] ) : ?><span class="provapa-fact__label"><?php echo esc_html( $fact['label'] ); ?></span><?php endif; ?>
 			</div>
-			<p class="pp-intro-text"><?php esc_html_e('Som vuxen provar du flat track eller speedway — vilket som passar beror på din erfarenhet, vad som finns tillgängligt just den dagen och vad du själv önskar. Instruktören hjälper dig avgöra vad som är lämpligast om du är osäker.','tandstiftet'); ?></p>
-			<div class="pp-schedule-grid">
-				<div class="pp-next-card">
-					<div class="pp-next-card__icon">🏍️</div>
-					<h3 class="pp-next-card__title"><?php esc_html_e('Flat Track','tandstiftet'); ?></h3>
-					<p class="pp-next-card__desc"><?php esc_html_e('Dirt track med bromsar — ofta det naturliga förstavalet för helt nya förare. Mer tillgängligt och förlåtande att lära sig på.','tandstiftet'); ?></p>
-				</div>
-				<div class="pp-next-card">
-					<div class="pp-next-card__icon">🏁</div>
-					<h3 class="pp-next-card__title"><?php esc_html_e('Speedway','tandstiftet'); ?></h3>
-					<p class="pp-next-card__desc"><?php esc_html_e('Oval bana utan broms — för dig med tidigare erfarenhet av motorcykel eller som vill utmana dig direkt, i mån av tillgänglig maskin.','tandstiftet'); ?></p>
-				</div>
-			</div>
+		<?php endforeach; ?>
+	</div>
+</section>
 
-			<div class="pp-partner-callout">
-				<div class="pp-partner-callout__body">
-					<span class="pp-partner-callout__label"><?php esc_html_e('Flat track sker i samarbete med','tandstiftet'); ?></span>
-					<a href="https://sparks.tändstiftet.se/" target="_blank" rel="noopener" class="pp-partner-callout__title-link"><span class="pp-partner-callout__title">The Sparks Flattrack School</span></a>
-					<p class="pp-partner-callout__desc"><?php esc_html_e('Vet du redan att det är flat track du vill köra? Då kan du höra av dig direkt till Sparks eget tränarteam istället för att boka via formuläret nedan — de svarar snabbast på specifika frågor om flat track-passen.','tandstiftet'); ?></p>
-					<a href="https://sparks.tändstiftet.se/" target="_blank" rel="noopener" class="pp-partner-callout__more-link"><?php esc_html_e('Läs mer om Sparks Flattrack School','tandstiftet'); ?> →</a>
-				</div>
-				<div class="pp-partner-callout__contact">
-					<span class="pp-partner-callout__contact-name">Sören Teil Hansen</span>
-					<span class="pp-partner-callout__contact-role"><?php esc_html_e('Regerande svensk mästare, Hooligan Class Flattrack (Harley-Davidson)','tandstiftet'); ?></span>
-					<a href="tel:0700055982" class="pp-partner-callout__contact-phone">070-005 59 82</a>
-				</div>
+<?php if ( $t( 'kids_link' ) ) : ?>
+<!-- ═══ BARN-HÄNVISNING ═══ -->
+<div class="provapa-adult">
+	<div class="container provapa-adult__inner">
+		<?php if ( $t( 'kids_text' ) ) : ?><span><?php echo esc_html( $t( 'kids_text' ) ); ?></span><?php endif; ?>
+		<a href="<?php echo esc_url( $pp_url ); ?>"><?php echo esc_html( $t( 'kids_link' ) ); ?></a>
+	</div>
+</div>
+<?php endif; ?>
+
+<!-- ═══ PRIS + GRUPPER (beige) ═══ -->
+<section class="section section--beige sliding-intro" id="pris">
+	<div class="container">
+		<div class="sliding-price">
+			<div class="sliding-price__head">
+				<?php if ( $t( 'price_eyebrow' ) ) : ?><p class="label"><?php echo esc_html( $t( 'price_eyebrow' ) ); ?></p><?php endif; ?>
+				<?php if ( $t( 'price_title' ) ) : ?><h2 class="provapa-title"><?php echo esc_html( $t( 'price_title' ) ); ?></h2><?php endif; ?>
 			</div>
-		<?php else : ?>
-			<div class="section-header">
-				<div class="label"><?php esc_html_e('Disciplin','tandstiftet'); ?></div>
-				<h2 class="section-title"><?php esc_html_e('Speedway','tandstiftet'); ?></h2>
+			<div class="sliding-price__boxes">
+				<?php if ( $t( 'price_club' ) ) : ?>
+					<div class="sliding-price__box"><span class="sliding-price__amount"><?php echo esc_html( $t( 'price_club' ) ); ?></span><span class="sliding-price__what"><?php echo esc_html( $t( 'price_club_text' ) ); ?></span></div>
+				<?php endif; ?>
+				<?php if ( $t( 'price_club' ) && $t( 'price_license' ) ) : ?><span class="sliding-price__plus" aria-hidden="true">+</span><?php endif; ?>
+				<?php if ( $t( 'price_license' ) ) : ?>
+					<div class="sliding-price__box sliding-price__box--license"><span class="sliding-price__amount"><?php echo esc_html( $t( 'price_license' ) ); ?></span><span class="sliding-price__what"><?php echo esc_html( $t( 'price_license_text' ) ); ?></span></div>
+				<?php endif; ?>
 			</div>
-			<p class="pp-intro-text"><?php esc_html_e('Sliding kör vi just nu på speedway — en oval bana utan broms. Ingen erfarenhet krävs, instruktören hjälper dig komma igång i din egen takt.','tandstiftet'); ?></p>
+			<?php if ( $t( 'price_note' ) || ( $t( 'license_link' ) && $t( 'license_url' ) ) ) : ?>
+				<p class="sliding-price__note">
+					<?php echo esc_html( $t( 'price_note' ) ); ?>
+					<?php if ( $t( 'license_link' ) && $t( 'license_url' ) ) : ?>
+						<a class="provapa-note__link" href="<?php echo esc_url( $t( 'license_url' ) ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $t( 'license_link' ) ); ?></a>
+					<?php endif; ?>
+				</p>
+			<?php endif; ?>
+		</div>
+
+		<?php $groups = tmc_sliding_items( 'group_%d_', [ 'title', 'text' ], 3 ); ?>
+		<?php if ( $groups ) : ?>
+		<div class="sliding-groups" id="grupper-kalas">
+			<?php if ( $t( 'groups_eyebrow' ) ) : ?><p class="label"><?php echo esc_html( $t( 'groups_eyebrow' ) ); ?></p><?php endif; ?>
+			<?php if ( $t( 'groups_title' ) ) : ?><h2 class="provapa-title"><?php echo esc_html( $t( 'groups_title' ) ); ?></h2><?php endif; ?>
+			<?php if ( $t( 'groups_text' ) ) : ?><p class="provapa-read__lead sliding-groups__lead"><?php echo esc_html( $t( 'groups_text' ) ); ?></p><?php endif; ?>
+			<div class="sliding-cards">
+				<?php foreach ( $groups as $g ) : ?>
+					<div class="sliding-card">
+						<h3 class="sliding-card__title"><?php echo esc_html( $g['title'] ); ?></h3>
+						<?php if ( $g['text'] ) : ?><p class="sliding-card__text"><?php echo esc_html( $g['text'] ); ?></p><?php endif; ?>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		</div>
 		<?php endif; ?>
 	</div>
 </section>
 
-<!-- ═══ UTRUSTNING — kort sammanfattning, ingen genomgång behövs på sidan ═══ -->
-<section class="section section--dark" id="utrustning">
-	<div class="container container--page">
-		<div class="section-header">
-			<div class="label"><?php esc_html_e('Ingår i priset','tandstiftet'); ?></div>
-			<h2 class="section-title"><?php esc_html_e('Vi hjälper dig med utrustningen','tandstiftet'); ?></h2>
+<!-- ═══ DISCIPLINER ═══ -->
+<section class="section sliding-disc" id="disciplin">
+	<div class="container">
+		<div class="sliding-disc__head">
+			<?php if ( $t( 'disc_eyebrow' ) ) : ?><p class="provapa-eyebrow"><?php echo esc_html( $t( 'disc_eyebrow' ) ); ?></p><?php endif; ?>
+			<?php if ( $t( 'disc_title' ) ) : ?><h2 class="provapa-title"><?php echo esc_html( $t( 'disc_title' ) ); ?></h2><?php endif; ?>
+			<?php if ( $t( 'disc_text' ) ) : ?><p class="sliding-disc__text"><?php echo esc_html( $t( 'disc_text' ) ); ?></p><?php endif; ?>
 		</div>
-		<p class="pp-intro-text"><?php esc_html_e('Efter säkerhetsgenomgången hjälper instruktören dig att prova ut all skyddsutrustning som klubben tillhandahåller. Du behöver inte äga något själv eller fundera på det i förväg.','tandstiftet'); ?></p>
+		<div class="sliding-disc__grid<?php echo $ft_on ? '' : ' sliding-disc__grid--one'; ?>">
+			<?php if ( $ft_on && $t( 'ft_title' ) ) : ?>
+				<div class="sliding-disc__card">
+					<h3 class="sliding-disc__name"><?php echo esc_html( $t( 'ft_title' ) ); ?></h3>
+					<p><?php echo esc_html( $t( 'ft_text' ) ); ?></p>
+				</div>
+			<?php endif; ?>
+			<?php if ( $t( 'sw_title' ) ) : ?>
+				<div class="sliding-disc__card">
+					<h3 class="sliding-disc__name"><?php echo esc_html( $t( 'sw_title' ) ); ?></h3>
+					<p><?php echo esc_html( $t( 'sw_text' ) ); ?></p>
+				</div>
+			<?php endif; ?>
+		</div>
 
-		<div class="pp-gear-bring">
-			<div class="pp-gear-bring__title"><?php esc_html_e('Ingår i priset','tandstiftet'); ?></div>
-			<div class="pp-gear-bring__items">
-				<span><?php esc_html_e('Hjälm','tandstiftet'); ?></span>
-				<span><?php esc_html_e('Cross-jacka & byxor','tandstiftet'); ?></span>
-				<span><?php esc_html_e('Rygg-, nack- & armbågsskydd','tandstiftet'); ?></span>
-				<span><?php esc_html_e('Stövlar & handskar','tandstiftet'); ?></span>
-				<span><?php echo tmc_flattrack_enabled() ? esc_html__('Motorcykel — flat track eller speedway','tandstiftet') : esc_html__('Motorcykel — speedway','tandstiftet'); ?></span>
-				<span><?php esc_html_e('Personlig instruktör hela passet','tandstiftet'); ?></span>
+		<?php if ( $ft_on && $t( 'partner_title' ) ) : ?>
+		<!-- Samarbetsruta (redigerbar; töm rubriken i Anpassa för att dölja) -->
+		<div class="sliding-partner">
+			<div class="sliding-partner__body">
+				<?php if ( $t( 'partner_label' ) ) : ?><p class="sliding-partner__label"><?php echo esc_html( $t( 'partner_label' ) ); ?></p><?php endif; ?>
+				<p class="sliding-partner__title"><?php echo esc_html( $t( 'partner_title' ) ); ?></p>
+				<?php if ( $t( 'partner_text' ) ) : ?><p class="sliding-partner__text"><?php echo esc_html( $t( 'partner_text' ) ); ?></p><?php endif; ?>
+				<?php if ( $t( 'partner_url' ) && $t( 'partner_link' ) ) : ?>
+					<a class="sliding-partner__link" href="<?php echo esc_url( $t( 'partner_url' ) ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $t( 'partner_link' ) ); ?></a>
+				<?php endif; ?>
 			</div>
+			<?php if ( $t( 'partner_contact_name' ) ) : ?>
+				<div class="sliding-partner__contact">
+					<span class="sliding-partner__name"><?php echo esc_html( $t( 'partner_contact_name' ) ); ?></span>
+					<?php if ( $t( 'partner_contact_role' ) ) : ?><span class="sliding-partner__role"><?php echo esc_html( $t( 'partner_contact_role' ) ); ?></span><?php endif; ?>
+					<?php if ( $t( 'partner_contact_phone' ) ) : ?><a class="sliding-partner__phone" href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $t( 'partner_contact_phone' ) ) ); ?>"><?php echo esc_html( $t( 'partner_contact_phone' ) ); ?></a><?php endif; ?>
+				</div>
+			<?php endif; ?>
 		</div>
-		<div class="pp-gear-bring" style="margin-top:var(--space-md)">
-			<div class="pp-gear-bring__title"><?php esc_html_e('Det enda du tar med','tandstiftet'); ?></div>
-			<div class="pp-gear-bring__items">
-				<span><?php esc_html_e('Långa underbyxor & undertröja','tandstiftet'); ?></span>
-				<span><?php esc_html_e('Strumpor som täcker ankeln','tandstiftet'); ?></span>
-				<span><?php esc_html_e('Kläder du inte är rädd om','tandstiftet'); ?></span>
-				<span><?php esc_html_e('Vatten','tandstiftet'); ?></span>
-			</div>
-		</div>
+		<?php endif; ?>
 	</div>
 </section>
 
-<!-- ═══ VAD HÄNDER PÅ DAGEN ═══ -->
-<section class="section pp-day-section" id="vad-hander">
-	<div class="container container--page">
-		<div class="section-header">
-			<div class="label"><?php esc_html_e('Steg för steg','tandstiftet'); ?></div>
-			<h2 class="section-title"><?php esc_html_e('Så går dagen till','tandstiftet'); ?></h2>
+<?php $steps = tmc_sliding_items( 'step_%d_', [ 'title', 'text' ], 4 ); if ( $steps ) : ?>
+<!-- ═══ SÅ GÅR DAGEN TILL (mörk) ═══ -->
+<section class="section provapa-steps sliding-steps" id="vad-hander">
+	<div class="container">
+		<div class="provapa-steps__head">
+			<?php if ( $t( 'steps_eyebrow' ) ) : ?><p class="provapa-eyebrow"><?php echo esc_html( $t( 'steps_eyebrow' ) ); ?></p><?php endif; ?>
+			<?php if ( $t( 'steps_title' ) ) : ?><h2 class="provapa-title"><?php echo esc_html( $t( 'steps_title' ) ); ?></h2><?php endif; ?>
 		</div>
-		<div class="pp-steps">
-			<div class="pp-step">
-				<div class="pp-step__num">1</div>
-				<div class="pp-step__body">
-					<h3 class="pp-step__title"><?php esc_html_e('Ankomst — 30 min före start','tandstiftet'); ?></h3>
-					<p class="pp-step__desc"><?php echo tmc_flattrack_enabled() ? esc_html__('Kom i god tid. Visa licens och betala. Vi pratar igenom vilken disciplin — flat track eller speedway — som passar dig bäst.','tandstiftet') : esc_html__('Kom i god tid. Visa licens och betala.','tandstiftet'); ?></p>
-				</div>
-			</div>
-			<div class="pp-step">
-				<div class="pp-step__num">2</div>
-				<div class="pp-step__body">
-					<h3 class="pp-step__title"><?php esc_html_e('Säkerhetsgenomgång','tandstiftet'); ?></h3>
-					<p class="pp-step__desc"><?php esc_html_e('Instruktören går igenom säkerhetsregler, signaler på banan och grundläggande körteknik, och hjälper dig samtidigt med skyddsutrustningen. Ca 20 minuter — obligatoriskt för alla.','tandstiftet'); ?></p>
-				</div>
-			</div>
-			<div class="pp-step">
-				<div class="pp-step__num">3</div>
-				<div class="pp-step__body">
-					<h3 class="pp-step__title"><?php esc_html_e('Ut på banan','tandstiftet'); ?></h3>
-					<p class="pp-step__desc"><?php esc_html_e('Du börjar i liten grupp med max 3–4 nybörjare. Instruktören styr tempot. Pausa när du vill — ingen stress.','tandstiftet'); ?></p>
-				</div>
-			</div>
-			<div class="pp-step">
-				<div class="pp-step__num">4</div>
-				<div class="pp-step__body">
-					<h3 class="pp-step__title"><?php esc_html_e('Banunderhåll & pauser','tandstiftet'); ?></h3>
-					<p class="pp-step__desc"><?php esc_html_e('Banan vattnas och fixas regelbundet. Vid underhåll stannar all körning. Instruktören ger klartecken när det är dags igen.','tandstiftet'); ?></p>
-				</div>
-			</div>
-			<div class="pp-step">
-				<div class="pp-step__num">5</div>
-				<div class="pp-step__body">
-					<h3 class="pp-step__title"><?php esc_html_e('Eftersnack','tandstiftet'); ?></h3>
-					<p class="pp-step__desc"><?php esc_html_e('Vi pratar igenom hur det gick, svarar på frågor och berättar om nästa steg om du vill fortsätta.','tandstiftet'); ?></p>
-				</div>
-			</div>
+		<ol class="provapa-steps__grid">
+			<?php foreach ( $steps as $step ) : ?>
+				<li class="provapa-step">
+					<h3 class="provapa-step__title"><?php echo esc_html( $step['title'] ); ?></h3>
+					<?php if ( $step['text'] ) : ?><p class="provapa-step__text"><?php echo esc_html( $step['text'] ); ?></p><?php endif; ?>
+				</li>
+			<?php endforeach; ?>
+		</ol>
+	</div>
+</section>
+<?php endif; ?>
+
+<?php $faqs = tmc_sliding_items( 'faq_%d_', [ 'q', 'a' ], 6 ); if ( $faqs ) : ?>
+<!-- ═══ BRA ATT VETA (beige) ═══ -->
+<section class="section section--beige provapa-faq" id="bra-att-veta">
+	<div class="container provapa-faq__inner">
+		<?php if ( $t( 'faq_eyebrow' ) ) : ?><p class="label"><?php echo esc_html( $t( 'faq_eyebrow' ) ); ?></p><?php endif; ?>
+		<?php if ( $t( 'faq_title' ) ) : ?><h2 class="provapa-title"><?php echo esc_html( $t( 'faq_title' ) ); ?></h2><?php endif; ?>
+		<div class="provapa-faq__list">
+			<?php foreach ( $faqs as $faq ) : ?>
+				<details class="provapa-faq__item">
+					<summary class="provapa-faq__q"><?php echo esc_html( $faq['q'] ); ?></summary>
+					<div class="provapa-faq__a">
+						<?php foreach ( tmc_provapa_lines( $faq['a'] ) as $para ) : ?><p><?php echo esc_html( $para ); ?></p><?php endforeach; ?>
+					</div>
+				</details>
+			<?php endforeach; ?>
 		</div>
 	</div>
 </section>
+<?php endif; ?>
 
-<!-- ═══ LICENS ═══ -->
-<section class="section section--dark" id="licens">
-	<div class="container container--page">
-		<div class="section-header">
-			<div class="label"><?php esc_html_e('Svemo','tandstiftet'); ?></div>
-			<h2 class="section-title"><?php esc_html_e('Licens — snabbt och enkelt','tandstiftet'); ?></h2>
+<!-- ═══ BOKA (beige, kalender + formulär) ═══ -->
+<section class="section provapa-book sliding-book" id="boka">
+	<div class="container provapa-book__grid sliding-book__grid">
+		<div class="provapa-book__text">
+			<?php if ( $t( 'book_eyebrow' ) ) : ?><p class="label"><?php echo esc_html( $t( 'book_eyebrow' ) ); ?></p><?php endif; ?>
+			<?php if ( $t( 'book_title' ) ) : ?><h2 class="provapa-title"><?php echo esc_html( $t( 'book_title' ) ); ?></h2><?php endif; ?>
+			<?php if ( $t( 'book_text' ) ) : ?><p class="provapa-read__lead"><?php echo esc_html( $t( 'book_text' ) ); ?></p><?php endif; ?>
+			<?php $needs = tmc_provapa_lines( $t( 'book_needs' ) ); if ( $needs ) : ?>
+				<div class="provapa-book__needs">
+					<?php if ( $t( 'book_needs_title' ) ) : ?><p class="provapa-book__needs-title"><?php echo esc_html( $t( 'book_needs_title' ) ); ?></p><?php endif; ?>
+					<ul><?php foreach ( $needs as $need ) : ?><li><?php echo esc_html( $need ); ?></li><?php endforeach; ?></ul>
+				</div>
+			<?php endif; ?>
 		</div>
-		<div class="pp-license-grid">
-			<div class="pp-license-card pp-license-card--highlight">
-				<div class="pp-license-card__price">225 kr</div>
-				<div class="pp-license-card__title"><?php esc_html_e('Prova På-licens','tandstiftet'); ?></div>
-				<p class="pp-license-card__desc"><?php esc_html_e('Köps på provapasvemo.se. Gäller bara angiven dag och bana. Lös den på morgonen — inte i förväg ifall vi ställer in.','tandstiftet'); ?></p>
-				<a href="https://www.provapasvemo.se" target="_blank" rel="noopener" class="btn btn--outline btn--sm" style="margin-top:1rem"><?php esc_html_e('Köp licens →','tandstiftet'); ?></a>
-			</div>
-		</div>
-		<div class="pp-license-note">
-			<?php esc_html_e('OBS: licensen på 225 kr betalas separat till Svemo — den ingår inte i klubbens pris på 800 kr. Sliding-priset inkluderar dock MKT-medlemskap för resten av kalenderåret — du är redan halvvägs in i klubben.','tandstiftet'); ?>
-		</div>
-	</div>
-</section>
-
-<!-- ═══ NÄSTA STEG ═══ -->
-<section class="section" id="nasta-steg">
-	<div class="container container--page">
-		<div class="section-header">
-			<div class="label"><?php esc_html_e('Gillade du det?','tandstiftet'); ?></div>
-			<h2 class="section-title"><?php esc_html_e('Nästa steg','tandstiftet'); ?></h2>
-		</div>
-		<div class="pp-next-grid">
-			<div class="pp-next-card">
-				<div class="pp-next-card__icon">🏁</div>
-				<h3 class="pp-next-card__title"><?php esc_html_e('Bli aktiv medlem','tandstiftet'); ?></h3>
-				<p class="pp-next-card__desc"><?php esc_html_e('500 kr/år. Lös träningslicens via Svemo och börja träna regelbundet med klubben.','tandstiftet'); ?></p>
-				<a href="/klubbinfo/#bli-medlem" class="pp-next-card__link"><?php esc_html_e('Läs mer om medlemskap','tandstiftet'); ?> →</a>
-			</div>
-			<div class="pp-next-card">
-				<div class="pp-next-card__icon">🎓</div>
-				<h3 class="pp-next-card__title"><?php esc_html_e('Veteranklassen','tandstiftet'); ?></h3>
-				<p class="pp-next-card__desc"><?php esc_html_e('Kör du 40+ finns en avslappnad grupp med klassiska maskiner — hör av dig så berättar vi mer.','tandstiftet'); ?></p>
-				<a href="/sektioner/veteran/" class="pp-next-card__link"><?php esc_html_e('Läs mer om Veteran','tandstiftet'); ?> →</a>
-			</div>
-			<div class="pp-next-card">
-				<div class="pp-next-card__icon">🏆</div>
-				<h3 class="pp-next-card__title"><?php esc_html_e('Tävla','tandstiftet'); ?></h3>
-				<p class="pp-next-card__desc"><?php esc_html_e('Lös tävlingslicens och ta steget in i seriespelet. Vår Division 1-trupp söker alltid talanger.','tandstiftet'); ?></p>
-				<a href="/forare-och-lag/" class="pp-next-card__link"><?php esc_html_e('Se förare & lag','tandstiftet'); ?> →</a>
-			</div>
-		</div>
-	</div>
-</section>
-
-<!-- ═══ BOKA ═══ -->
-<section class="pp-book-section" id="boka">
-	<div class="pp-book-section__bg" aria-hidden="true"></div>
-	<div class="container pp-book-section__inner">
-		<div class="pp-book-section__text">
-			<div class="label" style="margin-bottom:0.5rem"><?php esc_html_e('Redo?','tandstiftet'); ?></div>
-			<h2 class="pp-book-section__title"><?php esc_html_e('Boka din plats','tandstiftet'); ?></h2>
-			<p class="pp-book-section__desc"><?php esc_html_e('Sliding bokas alltid i förväg — vi tar inte drop-in. Välj ett ledigt datum i kalendern, fyll i formuläret och skicka.','tandstiftet'); ?></p>
-			<div class="pp-book-needs">
-				<div class="pp-book-needs__title"><?php esc_html_e('Vi behöver veta:','tandstiftet'); ?></div>
-				<p>◆ &nbsp;<?php esc_html_e('Namn och ålder','tandstiftet'); ?></p>
-				<p>◆ &nbsp;<?php esc_html_e('Antal personer (om ni är flera / kalas)','tandstiftet'); ?></p>
-				<p>◆ &nbsp;<?php esc_html_e('Skostorlek (för stövlar)','tandstiftet'); ?></p>
-				<p>◆ &nbsp;<?php esc_html_e('Ungefärlig längd (för overall)','tandstiftet'); ?></p>
-				<?php if ( tmc_flattrack_enabled() ) : ?><p>◆ &nbsp;<?php esc_html_e('Önskad disciplin (flat track / speedway)','tandstiftet'); ?></p><?php endif; ?>
-			</div>
-		</div>
-		<div class="pp-book-section__form">
+		<div class="provapa-book__form">
 			<?php
 			// Handle form
 			$success = false;
@@ -333,7 +245,7 @@ if ( ! tmc_sliding_enabled() ) : ?>
 				$shoe       = sanitize_text_field($_POST['pp_shoe'] ?? '');
 				$height     = sanitize_text_field($_POST['pp_height'] ?? '');
 				$discipline = sanitize_text_field($_POST['pp_discipline'] ?? 'speedway');
-				if ( $discipline !== 'flattrack' || ! tmc_flattrack_enabled() ) $discipline = 'speedway';
+				if ( $discipline !== 'flattrack' || ! $ft_on ) $discipline = 'speedway';
 				$discipline_label = $discipline === 'flattrack' ? 'Flat track' : 'Speedway';
 				$date       = sanitize_text_field($_POST['pp_date'] ?? '');
 				$group_size = max( 1, (int) ($_POST['pp_group_size'] ?? 1) );
@@ -406,43 +318,38 @@ if ( ! tmc_sliding_enabled() ) : ?>
 				}
 			}
 			?>
-			<?php if ($success) : ?>
-				<div class="pp-form-success">
-					<div style="font-size:2rem;margin-bottom:0.5rem">✓</div>
-					<h3><?php esc_html_e('Bokning mottagen!','tandstiftet'); ?></h3>
-					<p><?php echo esc_html( sprintf( __('Din plats den %s är reserverad. Vi återkommer med bekräftelse inom kort. Kom ihåg att lösa licens på provapasvemo.se.','tandstiftet'), $date ) ); ?></p>
+			<?php if ( $success ) : ?>
+				<div class="pp-form-success" role="status">
+					<p class="provapa-book__icon" aria-hidden="true">✓</p>
+					<h3><?php echo esc_html( $t( 'book_success_title' ) ); ?></h3>
+					<p><?php echo esc_html( str_replace( '{datum}', $date, $t( 'book_success_text' ) ) ); ?></p>
 				</div>
-			<?php elseif ($mail_error) : ?>
-				<div class="pp-form-error">
-					<div style="font-size:2rem;margin-bottom:0.5rem">⚠</div>
-					<h3><?php esc_html_e('Något gick fel','tandstiftet'); ?></h3>
-					<p><?php esc_html_e('Bokningen kunde inte skickas just nu. Testa gärna igen om en stund, eller kontakta oss direkt nedan.','tandstiftet'); ?></p>
+			<?php elseif ( $mail_error ) : ?>
+				<div class="pp-form-error" role="alert">
+					<h3><?php esc_html_e( 'Något gick fel', 'tandstiftet' ); ?></h3>
+					<p><?php esc_html_e( 'Bokningen kunde inte skickas just nu. Testa gärna igen om en stund, eller kontakta oss direkt nedan.', 'tandstiftet' ); ?></p>
 				</div>
 			<?php else : ?>
 
 				<?php if ( $spam_error ) : ?>
-					<div class="pp-form-error" style="margin-bottom:var(--space-lg)">
-						<div style="font-size:2rem;margin-bottom:0.5rem">⚠</div>
-						<h3><?php esc_html_e('Kunde inte tolka uppgifterna','tandstiftet'); ?></h3>
-						<p><?php esc_html_e('Kontrollera att åldern är ett rimligt tal och att meddelandet inte innehåller länkar, och skicka igen.','tandstiftet'); ?></p>
+					<div class="pp-form-error" role="alert">
+						<h3><?php esc_html_e( 'Kunde inte tolka uppgifterna', 'tandstiftet' ); ?></h3>
+						<p><?php esc_html_e( 'Kontrollera att åldern är ett rimligt tal och att meddelandet inte innehåller länkar, och skicka igen.', 'tandstiftet' ); ?></p>
 					</div>
 				<?php elseif ( $date_full_error ) : ?>
-					<div class="pp-form-error" style="margin-bottom:var(--space-lg)">
-						<div style="font-size:2rem;margin-bottom:0.5rem">⚠</div>
-						<h3><?php esc_html_e('Det datumet går inte att boka','tandstiftet'); ?></h3>
-						<p><?php esc_html_e('Antingen blev det precis fullbokat, eller så erbjuder vi inte Sliding den dagen. Välj ett annat datum i kalendern nedan och skicka igen.','tandstiftet'); ?></p>
+					<div class="pp-form-error" role="alert">
+						<h3><?php esc_html_e( 'Det datumet går inte att boka', 'tandstiftet' ); ?></h3>
+						<p><?php esc_html_e( 'Antingen blev det precis fullbokat, eller så erbjuder vi inte Sliding den dagen. Välj ett annat datum i kalendern och skicka igen.', 'tandstiftet' ); ?></p>
 					</div>
 				<?php elseif ( $date_invalid_error ) : ?>
-					<div class="pp-form-error" style="margin-bottom:var(--space-lg)">
-						<div style="font-size:2rem;margin-bottom:0.5rem">⚠</div>
-						<h3><?php esc_html_e('Välj ett datum','tandstiftet'); ?></h3>
-						<p><?php esc_html_e('Klicka på ett ledigt datum i kalendern innan du skickar formuläret.','tandstiftet'); ?></p>
+					<div class="pp-form-error" role="alert">
+						<h3><?php esc_html_e( 'Välj ett datum', 'tandstiftet' ); ?></h3>
+						<p><?php esc_html_e( 'Klicka på ett ledigt datum i kalendern innan du skickar formuläret.', 'tandstiftet' ); ?></p>
 					</div>
 				<?php elseif ( $within_24h_error ) : ?>
-					<div class="pp-form-error" style="margin-bottom:var(--space-lg)">
-						<div style="font-size:2rem;margin-bottom:0.5rem">⚠</div>
-						<h3><?php esc_html_e('För sent för bokning online','tandstiftet'); ?></h3>
-						<p><?php esc_html_e('Det här datumet ligger mindre än 24 timmar bort. Hör av er direkt via telefon eller mejl nedan så löser vi det tillsammans.','tandstiftet'); ?></p>
+					<div class="pp-form-error" role="alert">
+						<h3><?php esc_html_e( 'För sent för bokning online', 'tandstiftet' ); ?></h3>
+						<p><?php esc_html_e( 'Det här datumet ligger mindre än 24 timmar bort. Hör av er direkt via telefon eller mejl nedan så löser vi det tillsammans.', 'tandstiftet' ); ?></p>
 					</div>
 				<?php endif; ?>
 
@@ -452,139 +359,136 @@ if ( ! tmc_sliding_enabled() ) : ?>
 					5 => 'Fredagar', 6 => 'Lördagar', 7 => 'Söndagar',
 				];
 				$days_map = [1=>'mon',2=>'tue',3=>'wed',4=>'thu',5=>'fri',6=>'sat',7=>'sun'];
-				$speedway_summary = tmc_sliding_schedule_summary( $weekday_labels, $days_map, '_speedway' );
-				$flattrack_summary = tmc_flattrack_enabled() ? tmc_sliding_schedule_summary( $weekday_labels, $days_map, '_flattrack' ) : [];
+				$speedway_summary  = tmc_sliding_schedule_summary( $weekday_labels, $days_map, '_speedway' );
+				$flattrack_summary = $ft_on ? tmc_sliding_schedule_summary( $weekday_labels, $days_map, '_flattrack' ) : [];
+				$is_ft = isset( $discipline ) && $discipline === 'flattrack';
 				?>
-				<?php if ( tmc_flattrack_enabled() ) : ?>
-					<div class="pp-discipline-tabs" id="pp-discipline-tabs">
-						<button type="button" class="pp-discipline-tab<?php echo ( ! isset($discipline) || $discipline !== 'flattrack' ) ? ' is-active' : ''; ?>" data-discipline="speedway"><?php esc_html_e('Speedway','tandstiftet'); ?></button>
-						<button type="button" class="pp-discipline-tab<?php echo ( isset($discipline) && $discipline === 'flattrack' ) ? ' is-active' : ''; ?>" data-discipline="flattrack"><?php esc_html_e('Flat track','tandstiftet'); ?></button>
+				<?php if ( $ft_on ) : ?>
+					<div class="pp-discipline-tabs" id="pp-discipline-tabs" role="group" aria-label="<?php esc_attr_e( 'Välj disciplin', 'tandstiftet' ); ?>">
+						<button type="button" class="pp-discipline-tab<?php echo $is_ft ? '' : ' is-active'; ?>" data-discipline="speedway" aria-pressed="<?php echo $is_ft ? 'false' : 'true'; ?>"><?php esc_html_e( 'Speedway', 'tandstiftet' ); ?></button>
+						<button type="button" class="pp-discipline-tab<?php echo $is_ft ? ' is-active' : ''; ?>" data-discipline="flattrack" aria-pressed="<?php echo $is_ft ? 'true' : 'false'; ?>"><?php esc_html_e( 'Flat track', 'tandstiftet' ); ?></button>
 					</div>
 					<?php if ( $speedway_summary ) : ?>
-						<p class="pp-schedule-summary" data-discipline="speedway" style="color:var(--color-grey-light);margin-bottom:var(--space-md)<?php echo ( isset($discipline) && $discipline === 'flattrack' ) ? ';display:none' : ''; ?>">
-							<?php echo esc_html__( 'Speedway erbjuds normalt: ', 'tandstiftet' ) . esc_html( implode( ', ', $speedway_summary ) ); ?>
-						</p>
+						<p class="pp-schedule-summary" data-discipline="speedway"<?php echo $is_ft ? ' hidden' : ''; ?>><?php echo esc_html__( 'Speedway erbjuds normalt: ', 'tandstiftet' ) . esc_html( implode( ', ', $speedway_summary ) ); ?></p>
 					<?php endif; ?>
 					<?php if ( $flattrack_summary ) : ?>
-						<p class="pp-schedule-summary" data-discipline="flattrack" style="color:var(--color-grey-light);margin-bottom:var(--space-md)<?php echo ( isset($discipline) && $discipline === 'flattrack' ) ? '' : ';display:none'; ?>">
-							<?php echo esc_html__( 'Flat track erbjuds normalt: ', 'tandstiftet' ) . esc_html( implode( ', ', $flattrack_summary ) ); ?>
-						</p>
+						<p class="pp-schedule-summary" data-discipline="flattrack"<?php echo $is_ft ? '' : ' hidden'; ?>><?php echo esc_html__( 'Flat track erbjuds normalt: ', 'tandstiftet' ) . esc_html( implode( ', ', $flattrack_summary ) ); ?></p>
 					<?php endif; ?>
 				<?php elseif ( $speedway_summary ) : ?>
-					<p style="color:var(--color-grey-light);margin-bottom:var(--space-md)">
-						<?php echo esc_html__( 'Sliding erbjuds normalt: ', 'tandstiftet' ) . esc_html( implode( ', ', $speedway_summary ) ); ?>
-					</p>
+					<p class="pp-schedule-summary"><?php echo esc_html__( 'Sliding erbjuds normalt: ', 'tandstiftet' ) . esc_html( implode( ', ', $speedway_summary ) ); ?></p>
 				<?php endif; ?>
 
-				<div class="pp-calendar" id="pp-calendar" data-availability="<?php echo esc_attr( wp_json_encode( tmc_sliding_get_calendar_data( 90 ) ) ); ?>" data-flattrack-enabled="<?php echo tmc_flattrack_enabled() ? '1' : '0'; ?>">
+				<div class="pp-calendar" id="pp-calendar" data-availability="<?php echo esc_attr( wp_json_encode( tmc_sliding_get_calendar_data( 90 ) ) ); ?>" data-flattrack-enabled="<?php echo $ft_on ? '1' : '0'; ?>">
 					<div class="pp-calendar__nav">
-						<button type="button" class="pp-calendar__nav-btn" id="pp-cal-prev">←</button>
-						<span class="pp-calendar__month-label" id="pp-cal-label"></span>
-						<button type="button" class="pp-calendar__nav-btn" id="pp-cal-next">→</button>
+						<button type="button" class="pp-calendar__nav-btn" id="pp-cal-prev" aria-label="<?php esc_attr_e( 'Föregående månad', 'tandstiftet' ); ?>">←</button>
+						<span class="pp-calendar__month-label" id="pp-cal-label" aria-live="polite"></span>
+						<button type="button" class="pp-calendar__nav-btn" id="pp-cal-next" aria-label="<?php esc_attr_e( 'Nästa månad', 'tandstiftet' ); ?>">→</button>
 					</div>
-					<div class="pp-calendar__weekdays">
+					<div class="pp-calendar__weekdays" aria-hidden="true">
 						<span>Mån</span><span>Tis</span><span>Ons</span><span>Tor</span><span>Fre</span><span>Lör</span><span>Sön</span>
 					</div>
 					<div class="pp-calendar__grid" id="pp-cal-grid"></div>
 					<div class="pp-calendar__legend">
-						<span><i class="i-avail"></i> <?php esc_html_e('Lediga platser','tandstiftet'); ?></span>
-						<span><i class="i-low"></i> <?php esc_html_e('Få platser kvar','tandstiftet'); ?></span>
-						<span><i class="i-contact"></i> <?php esc_html_e('Inom 24h — kontakta oss direkt','tandstiftet'); ?></span>
-						<span><i class="i-full"></i> <?php esc_html_e('Fullt / stängt','tandstiftet'); ?></span>
+						<span><i class="i-avail"></i> <?php esc_html_e( 'Ledigt', 'tandstiftet' ); ?></span>
+						<span><i class="i-low"></i> <?php esc_html_e( 'Få platser kvar', 'tandstiftet' ); ?></span>
+						<span><i class="i-contact"></i> <?php esc_html_e( 'Inom 24 h — ring oss', 'tandstiftet' ); ?></span>
+						<span><i class="i-full"></i> <?php esc_html_e( 'Fullt eller stängt', 'tandstiftet' ); ?></span>
 					</div>
-					<div class="pp-calendar__selected-info" id="pp-cal-selected-info" style="display:none"></div>
+					<p class="pp-calendar__selected-info" id="pp-cal-selected-info" aria-live="polite" hidden></p>
 				</div>
 
-			<form method="post" class="pp-form" action="#boka" id="pp-sliding-form">
-				<?php wp_nonce_field('pp_booking','pp_nonce'); ?>
-				<?php tmc_antispam_fields(); ?>
-				<input type="hidden" name="pp_date" id="pp_date_input" value="<?php echo esc_attr($date ?? ''); ?>">
-				<div class="pp-form-row">
-					<div class="tmc-form-field">
-						<label><?php esc_html_e('Namn *','tandstiftet'); ?></label>
-						<input type="text" name="pp_name" required autocomplete="name" value="<?php echo esc_attr($name ?? ''); ?>">
+				<form method="post" class="pp-form provapa-form" action="#boka" id="pp-sliding-form">
+					<?php wp_nonce_field('pp_booking','pp_nonce'); ?>
+					<?php tmc_antispam_fields(); ?>
+					<input type="hidden" name="pp_date" id="pp_date_input" value="<?php echo esc_attr($date ?? ''); ?>">
+					<p class="sliding-form__error" id="pp-date-missing" role="alert" hidden><?php esc_html_e( 'Välj ett ledigt datum i kalendern ovan innan du skickar bokningen.', 'tandstiftet' ); ?></p>
+					<div class="pp-form-row">
+						<div class="tmc-form-field">
+							<label for="pp_name"><?php esc_html_e('Namn *','tandstiftet'); ?></label>
+							<input type="text" id="pp_name" name="pp_name" required autocomplete="name" value="<?php echo esc_attr($name ?? ''); ?>">
+						</div>
+						<div class="tmc-form-field">
+							<label for="pp_age"><?php esc_html_e('Ålder','tandstiftet'); ?></label>
+							<input type="text" id="pp_age" name="pp_age" inputmode="numeric" value="<?php echo esc_attr($age ?? ''); ?>">
+						</div>
 					</div>
-					<div class="tmc-form-field">
-						<label><?php esc_html_e('Ålder','tandstiftet'); ?></label>
-						<input type="text" name="pp_age" value="<?php echo esc_attr($age ?? ''); ?>">
+					<div class="pp-form-row">
+						<div class="tmc-form-field">
+							<label for="pp_email"><?php esc_html_e('E-post *','tandstiftet'); ?></label>
+							<input type="email" id="pp_email" name="pp_email" required autocomplete="email" value="<?php echo esc_attr($email ?? ''); ?>">
+						</div>
+						<div class="tmc-form-field">
+							<label for="pp_phone"><?php esc_html_e('Telefon','tandstiftet'); ?></label>
+							<input type="tel" id="pp_phone" name="pp_phone" autocomplete="tel" value="<?php echo esc_attr($phone ?? ''); ?>">
+						</div>
 					</div>
-				</div>
-				<div class="pp-form-row">
-					<div class="tmc-form-field">
-						<label><?php esc_html_e('E-post *','tandstiftet'); ?></label>
-						<input type="email" name="pp_email" required autocomplete="email" value="<?php echo esc_attr($email ?? ''); ?>">
+					<div class="pp-form-row">
+						<div class="tmc-form-field">
+							<label for="pp_shoe"><?php esc_html_e('Skostorlek','tandstiftet'); ?></label>
+							<input type="text" id="pp_shoe" name="pp_shoe" inputmode="numeric" placeholder="<?php esc_attr_e( 't.ex. 42', 'tandstiftet' ); ?>" value="<?php echo esc_attr($shoe ?? ''); ?>">
+						</div>
+						<div class="tmc-form-field">
+							<label for="pp_height"><?php esc_html_e('Längd (cm)','tandstiftet'); ?></label>
+							<input type="text" id="pp_height" name="pp_height" inputmode="numeric" placeholder="<?php esc_attr_e( 't.ex. 175', 'tandstiftet' ); ?>" value="<?php echo esc_attr($height ?? ''); ?>">
+						</div>
 					</div>
-					<div class="tmc-form-field">
-						<label><?php esc_html_e('Telefon','tandstiftet'); ?></label>
-						<input type="tel" name="pp_phone" autocomplete="tel" value="<?php echo esc_attr($phone ?? ''); ?>">
+					<div class="pp-form-row">
+						<div class="tmc-form-field">
+							<label for="pp_group_type"><?php esc_html_e('Typ av bokning','tandstiftet'); ?></label>
+							<select id="pp_group_type" name="pp_group_type">
+								<?php $gt = $group_type ?? 'Enskild'; ?>
+								<option value="Enskild" <?php selected($gt, 'Enskild'); ?>><?php esc_html_e('Enskild — bara jag','tandstiftet'); ?></option>
+								<option value="Sällskap/vänner" <?php selected($gt, 'Sällskap/vänner'); ?>><?php esc_html_e('Sällskap / vänner','tandstiftet'); ?></option>
+								<option value="Kalas/möhippa/svensexa" <?php selected($gt, 'Kalas/möhippa/svensexa'); ?>><?php esc_html_e('Kalas / möhippa / svensexa','tandstiftet'); ?></option>
+								<option value="Företag/personalaktivitet" <?php selected($gt, 'Företag/personalaktivitet'); ?>><?php esc_html_e('Företag / personalaktivitet','tandstiftet'); ?></option>
+							</select>
+						</div>
+						<div class="tmc-form-field">
+							<label for="pp_group_size"><?php esc_html_e('Antal personer','tandstiftet'); ?></label>
+							<input type="number" id="pp_group_size" min="1" name="pp_group_size" value="<?php echo esc_attr($group_size ?? 1); ?>">
+						</div>
 					</div>
-				</div>
-				<div class="pp-form-row">
-					<div class="tmc-form-field">
-						<label><?php esc_html_e('Skostorlek','tandstiftet'); ?></label>
-						<input type="text" name="pp_shoe" placeholder="t.ex. 42" value="<?php echo esc_attr($shoe ?? ''); ?>">
-					</div>
-					<div class="tmc-form-field">
-						<label><?php esc_html_e('Längd (cm)','tandstiftet'); ?></label>
-						<input type="text" name="pp_height" placeholder="t.ex. 175" value="<?php echo esc_attr($height ?? ''); ?>">
-					</div>
-				</div>
-				<div class="pp-form-row">
-					<div class="tmc-form-field">
-						<label><?php esc_html_e('Typ av bokning','tandstiftet'); ?></label>
-						<select name="pp_group_type">
-							<?php $gt = $group_type ?? 'Enskild'; ?>
-							<option value="Enskild" <?php selected($gt, 'Enskild'); ?>><?php esc_html_e('Enskild — bara jag','tandstiftet'); ?></option>
-							<option value="Sällskap/vänner" <?php selected($gt, 'Sällskap/vänner'); ?>><?php esc_html_e('Sällskap / vänner','tandstiftet'); ?></option>
-							<option value="Kalas/möhippa/svensexa" <?php selected($gt, 'Kalas/möhippa/svensexa'); ?>><?php esc_html_e('Kalas / möhippa / svensexa','tandstiftet'); ?></option>
-							<option value="Företag/personalaktivitet" <?php selected($gt, 'Företag/personalaktivitet'); ?>><?php esc_html_e('Företag / personalaktivitet','tandstiftet'); ?></option>
-						</select>
-					</div>
-					<div class="tmc-form-field">
-						<label><?php esc_html_e('Antal personer','tandstiftet'); ?></label>
-						<input type="number" min="1" name="pp_group_size" value="<?php echo esc_attr($group_size ?? 1); ?>">
-					</div>
-				</div>
-				<div class="pp-form-row">
-					<div class="tmc-form-field">
-						<label><?php esc_html_e('Disciplin','tandstiftet'); ?></label>
-						<?php
-						$repop_discipline = ( isset($discipline) && $discipline === 'flattrack' ) ? 'flattrack' : ( tmc_flattrack_enabled() ? '' : 'speedway' );
-						$repop_discipline_label = $repop_discipline === 'flattrack' ? 'Flat track' : ( $repop_discipline === 'speedway' ? 'Speedway' : '' );
-						?>
-						<input type="text" id="pp_discipline_display" readonly value="<?php echo esc_attr($repop_discipline_label); ?>" style="cursor:default">
-						<input type="hidden" name="pp_discipline" id="pp_discipline_input" value="<?php echo esc_attr($repop_discipline ?: 'speedway'); ?>">
-					</div>
-					<div class="tmc-form-field">
-						<label><?php esc_html_e('Valt datum','tandstiftet'); ?></label>
-						<?php
-						$repop_date_label = '';
-						if ( ! empty( $date ) ) {
-							$d2 = DateTime::createFromFormat('Y-m-d', $date);
-							if ( $d2 ) {
-								$dagar = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
-								$manader = ['','Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'];
-								$repop_date_label = $dagar[(int)$d2->format('w')] . ' ' . (int)$d2->format('j') . ' ' . $manader[(int)$d2->format('n')];
+					<div class="pp-form-row">
+						<div class="tmc-form-field">
+							<label for="pp_discipline_display"><?php esc_html_e('Disciplin','tandstiftet'); ?></label>
+							<?php
+							$repop_discipline = $is_ft ? 'flattrack' : ( $ft_on ? '' : 'speedway' );
+							$repop_discipline_label = $repop_discipline === 'flattrack' ? 'Flat track' : ( $repop_discipline === 'speedway' ? 'Speedway' : '' );
+							?>
+							<input type="text" id="pp_discipline_display" readonly value="<?php echo esc_attr($repop_discipline_label); ?>">
+							<input type="hidden" name="pp_discipline" id="pp_discipline_input" value="<?php echo esc_attr($repop_discipline ?: 'speedway'); ?>">
+						</div>
+						<div class="tmc-form-field">
+							<label for="pp_date_display"><?php esc_html_e('Valt datum','tandstiftet'); ?></label>
+							<?php
+							$repop_date_label = '';
+							if ( ! empty( $date ) ) {
+								$d2 = DateTime::createFromFormat('Y-m-d', $date);
+								if ( $d2 ) {
+									$dagar = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
+									$manader = ['','januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
+									$repop_date_label = $dagar[(int)$d2->format('w')] . ' ' . (int)$d2->format('j') . ' ' . $manader[(int)$d2->format('n')];
+								}
 							}
-						}
-						?>
-						<input type="text" id="pp_date_display" readonly value="<?php echo esc_attr($repop_date_label); ?>" placeholder="<?php esc_attr_e('Välj i kalendern ovan','tandstiftet'); ?>" style="cursor:default">
+							?>
+							<input type="text" id="pp_date_display" readonly value="<?php echo esc_attr($repop_date_label); ?>" placeholder="<?php esc_attr_e('Välj i kalendern','tandstiftet'); ?>">
+						</div>
 					</div>
-				</div>
-				<div class="tmc-form-field">
-					<label><?php esc_html_e('Övrigt (frågor, tidigare erfarenhet etc.)','tandstiftet'); ?></label>
-					<textarea name="pp_message" rows="3"><?php echo esc_textarea($msg ?? ''); ?></textarea>
-				</div>
-				<button type="submit" class="btn btn--primary" style="width:100%;justify-content:center" id="pp_submit_btn"><?php esc_html_e('Skicka bokning','tandstiftet'); ?></button>
-			</form>
+					<div class="tmc-form-field">
+						<label for="pp_message"><?php esc_html_e('Övrigt (frågor, tidigare erfarenhet …)','tandstiftet'); ?></label>
+						<textarea id="pp_message" name="pp_message" rows="3"><?php echo esc_textarea($msg ?? ''); ?></textarea>
+					</div>
+					<button type="submit" class="btn btn--primary provapa-form__submit" id="pp_submit_btn"><?php esc_html_e('Skicka bokning','tandstiftet'); ?></button>
+				</form>
 			<?php endif; ?>
 
-			<div class="pp-book-direct">
-				<span><?php esc_html_e('Eller kontakta oss direkt:','tandstiftet'); ?></span>
-				<?php $email = get_theme_mod('tmc_contact_email'); $phone = get_theme_mod('tmc_contact_phone'); ?>
-				<?php if ($email) : ?><a href="mailto:<?php echo esc_attr($email); ?>">✉ <?php echo esc_html($email); ?></a><?php endif; ?>
-				<?php if ($phone) : ?><a href="tel:<?php echo esc_attr(preg_replace('/\s+/','',$phone)); ?>">☎ <?php echo esc_html($phone); ?></a><?php endif; ?>
+			<?php if ( $contact_email || $contact_phone ) : ?>
+			<div class="provapa-book__direct">
+				<?php if ( $t( 'book_direct' ) ) : ?><span><?php echo esc_html( $t( 'book_direct' ) ); ?></span><?php endif; ?>
+				<?php if ( $contact_email ) : ?><a href="mailto:<?php echo esc_attr( $contact_email ); ?>"><?php echo esc_html( $contact_email ); ?></a><?php endif; ?>
+				<?php if ( $contact_phone ) : ?><a href="tel:<?php echo esc_attr( preg_replace( '/\s+/', '', $contact_phone ) ); ?>"><?php echo esc_html( $contact_phone ); ?></a><?php endif; ?>
 			</div>
+			<?php endif; ?>
 		</div>
 	</div>
 </section>
@@ -601,6 +505,7 @@ if ( ! tmc_sliding_enabled() ) : ?>
 	var disciplineInput = document.getElementById('pp_discipline_input');
 	var disciplineDisplay = document.getElementById('pp_discipline_display');
 	var selectedInfo = document.getElementById('pp-cal-selected-info');
+	var missing = document.getElementById('pp-date-missing');
 	var grid = document.getElementById('pp-cal-grid');
 	var label = document.getElementById('pp-cal-label');
 	var prevBtn = document.getElementById('pp-cal-prev');
@@ -610,7 +515,8 @@ if ( ! tmc_sliding_enabled() ) : ?>
 	// so the visitor doesn't have to re-pick their date/discipline.
 	var currentDiscipline = disciplineInput.value || 'speedway';
 
-	var monthNames = ['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'];
+	var monthNames = ['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'];
+	var dayNames = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
 	var today = new Date(); today.setHours(0,0,0,0);
 	var viewYear = today.getFullYear();
 	var viewMonth = today.getMonth();
@@ -620,9 +526,9 @@ if ( ! tmc_sliding_enabled() ) : ?>
 		if (!isNaN(preDate.getTime())) {
 			viewYear = preDate.getFullYear();
 			viewMonth = preDate.getMonth();
-			if (selectedInfo && dateDisplay.value) {
-				selectedInfo.style.display = 'block';
-				selectedInfo.textContent = (currentDiscipline === 'flattrack' ? 'Flat track' : 'Speedway') + ' — Valt: ' + dateDisplay.value;
+			if (dateDisplay.value) {
+				selectedInfo.hidden = false;
+				selectedInfo.textContent = disciplineLabel(currentDiscipline) + ' — valt: ' + dateDisplay.value;
 			}
 		}
 	}
@@ -633,15 +539,15 @@ if ( ! tmc_sliding_enabled() ) : ?>
 	function fmt(y,m,d){
 		return y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
 	}
-
 	function disciplineLabel(key){
 		return key === 'flattrack' ? 'Flat track' : 'Speedway';
 	}
+	function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
 
 	function render(){
 		var availability = availabilityByDiscipline[currentDiscipline] || {};
 		grid.innerHTML = '';
-		label.textContent = monthNames[viewMonth] + ' ' + viewYear;
+		label.textContent = cap(monthNames[viewMonth]) + ' ' + viewYear;
 
 		var firstDay = new Date(viewYear, viewMonth, 1);
 		var startOffset = (firstDay.getDay() + 6) % 7; // Monday-first
@@ -654,14 +560,6 @@ if ( ! tmc_sliding_enabled() ) : ?>
 		}
 
 		for (var d = 1; d <= daysInMonth; d++) {
-			var cell = document.createElement('div');
-			cell.className = 'pp-calendar__day';
-
-			var numEl = document.createElement('span');
-			numEl.className = 'pp-calendar__day-num';
-			numEl.textContent = d;
-			cell.appendChild(numEl);
-
 			var key = fmt(viewYear, viewMonth, d);
 			var cellDate = new Date(viewYear, viewMonth, d);
 			var info = availability.hasOwnProperty(key) ? availability[key] : null;
@@ -669,36 +567,46 @@ if ( ! tmc_sliding_enabled() ) : ?>
 			var remaining = info ? info.remaining : 0;
 			var within24h = info ? info.within24h : true;
 			var slotTime = info ? info.time : '';
+			var bookable = !(cellDate < minDate || cellDate > maxDate || !info || !open) && remaining > 0 && !within24h;
 
+			// Bookable days are real buttons (keyboard + screen readers); the rest are plain cells.
+			var cell = document.createElement(bookable ? 'button' : 'div');
+			if (bookable) cell.type = 'button';
+			cell.className = 'pp-calendar__day';
+
+			var numEl = document.createElement('span');
+			numEl.className = 'pp-calendar__day-num';
+			numEl.textContent = d;
+			cell.appendChild(numEl);
+
+			var spoken = d + ' ' + monthNames[viewMonth];
 			if (cellDate < minDate || cellDate > maxDate || !info || !open) {
 				// Either outside the bookable window, or simply not a day this
 				// discipline runs on this week — no "Fullt" tag, it just isn't a service day.
 				cell.classList.add('is-disabled');
 			} else if (remaining <= 0) {
-				cell.classList.add('is-disabled');
-				var tagFull = document.createElement('span');
-				tagFull.className = 'pp-calendar__day-tag';
-				tagFull.textContent = 'Fullt';
-				cell.appendChild(tagFull);
+				cell.classList.add('is-disabled', 'is-full');
+				addTag(cell, 'Fullt');
 			} else if (within24h) {
 				cell.classList.add('is-contact');
-				var tagContact = document.createElement('span');
-				tagContact.className = 'pp-calendar__day-tag';
-				tagContact.textContent = 'Ring oss';
-				cell.appendChild(tagContact);
+				addTag(cell, 'Ring');
 			} else {
 				if (remaining <= 2) cell.classList.add('is-low');
-				if (dateInput.value === key && disciplineInput.value === currentDiscipline) cell.classList.add('is-selected');
+				if (dateInput.value === key && disciplineInput.value === currentDiscipline) {
+					cell.classList.add('is-selected');
+					cell.setAttribute('aria-pressed', 'true');
+				}
+				cell.setAttribute('aria-label', spoken + ', ' + remaining + ' platser kvar' + (slotTime ? ', kl ' + slotTime : ''));
 				cell.addEventListener('click', (function(key, remaining, slotTime, discipline){
 					return function(){
 						dateInput.value = key;
 						disciplineInput.value = discipline;
 						disciplineDisplay.value = disciplineLabel(discipline);
 						var d2 = new Date(key + 'T00:00:00');
-						var dayNames = ['Söndag','Måndag','Tisdag','Onsdag','Torsdag','Fredag','Lördag'];
 						dateDisplay.value = dayNames[d2.getDay()] + ' ' + d2.getDate() + ' ' + monthNames[d2.getMonth()] + (slotTime ? ' kl ' + slotTime : '');
-						selectedInfo.style.display = 'block';
-						selectedInfo.textContent = disciplineLabel(discipline) + ' — Valt: ' + dateDisplay.value + ' — ' + remaining + ' platser kvar';
+						selectedInfo.hidden = false;
+						selectedInfo.textContent = disciplineLabel(discipline) + ' — valt: ' + dateDisplay.value + ' — ' + remaining + ' platser kvar';
+						if (missing) missing.hidden = true;
 						render();
 					};
 				})(key, remaining, slotTime, currentDiscipline));
@@ -710,6 +618,12 @@ if ( ! tmc_sliding_enabled() ) : ?>
 		var maxMonthIndex = maxDate.getFullYear()*12 + maxDate.getMonth();
 		var curMonthIndex = viewYear*12 + viewMonth;
 		nextBtn.disabled = curMonthIndex >= maxMonthIndex;
+	}
+	function addTag(cell, text){
+		var tag = document.createElement('span');
+		tag.className = 'pp-calendar__day-tag';
+		tag.textContent = text;
+		cell.appendChild(tag);
 	}
 
 	prevBtn.addEventListener('click', function(){
@@ -726,16 +640,19 @@ if ( ! tmc_sliding_enabled() ) : ?>
 		tabs.forEach(function(tab){
 			tab.addEventListener('click', function(){
 				currentDiscipline = tab.dataset.discipline;
-				tabs.forEach(function(t){ t.classList.toggle('is-active', t === tab); });
-				document.querySelectorAll('.pp-schedule-summary').forEach(function(el){
-					el.style.display = (el.dataset.discipline === currentDiscipline) ? 'block' : 'none';
+				tabs.forEach(function(t){
+					t.classList.toggle('is-active', t === tab);
+					t.setAttribute('aria-pressed', t === tab ? 'true' : 'false');
+				});
+				document.querySelectorAll('.pp-schedule-summary[data-discipline]').forEach(function(el){
+					el.hidden = el.dataset.discipline !== currentDiscipline;
 				});
 				// switching discipline invalidates any previously chosen date
 				dateInput.value = '';
 				disciplineInput.value = currentDiscipline;
 				disciplineDisplay.value = disciplineLabel(currentDiscipline);
 				dateDisplay.value = '';
-				selectedInfo.style.display = 'none';
+				selectedInfo.hidden = true;
 				render();
 			});
 		});
@@ -744,10 +661,12 @@ if ( ! tmc_sliding_enabled() ) : ?>
 		disciplineDisplay.value = 'Speedway';
 	}
 
-	document.getElementById('pp-sliding-form') && document.getElementById('pp-sliding-form').addEventListener('submit', function(e){
+	var form = document.getElementById('pp-sliding-form');
+	if (form) form.addEventListener('submit', function(e){
 		if (!dateInput.value) {
 			e.preventDefault();
-			alert('Välj ett datum i kalendern innan du skickar bokningen.');
+			if (missing) { missing.hidden = false; }
+			calEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 		}
 	});
 

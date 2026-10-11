@@ -30,8 +30,8 @@ Kontrasten för nyckelparen vaktas av `tests/css/run.py`.
 - **Rubriker:** Bebas Neue (versaler). **Etiketter/knappar:** Barlow Condensed 600–700. **Brödtext:** Barlow.
 - **Bastextstorlek 18 px** på dator/surfplatta (`html { font-size: 112.5% }`) och **17 px** på mobil (≤480 px). Allt är i `rem` och skalar med.
   Procent (inte px) gör att besökare som höjt webbläsarens egen textstorlek får det respekterat.
-- Målet är ingen text under ca 14 px. **Tre kända undantag** (testet tillåter exakt tre och får bara minska): kalenderns dag-etiketter
-  `.pp-calendar__day-tag` (≈12 px), texten i hero-märket `.hero__badge-text` (≈12 px) och headerknappen på mobil `.site-header__cta` (≈13 px).
+- Målet är ingen text under ca 14 px. **Två kända undantag** (testet tillåter exakt två och får bara minska; kalenderetiketterna rättades i 2.1.0): kalenderns dag-etiketter
+  texten i hero-märket `.hero__badge-text` (≈12 px) och headerknappen på mobil `.site-header__cta` (≈13 px).
   Tunn text (vikt 300) undviks — den är svår att läsa för många.
 - Brett bokstavsavstånd (>0,2em) undviks på små etiketter.
 - Läsare: många är äldre och har sämre syn. När du är osäker — gör texten större och kontrasten starkare, inte tvärtom.
@@ -63,6 +63,7 @@ Menyn kompakteras automatiskt om den inte ryms på en rad (`main.js`, `fitHeader
 |---|---|
 | `v2 FOUNDATION` | header, navigation, mobilmeny, footer, fokus/markering, återställda breddtak |
 | `v2 — STARTSIDA` | hero, statistikrad, nästa-tävling-remsa, `.section--beige`, sponsorremsa |
+| `v2 — SLIDING` | `sliding-*`: pris, grupper, discipliner, samarbetsruta, kalender på beige; hero = startsidans `.hero` + `.hero--page` |
 | `v2 — VANLIG SIDA` | `page-read`: Standardmallen — beige läsyta, smal spalt, typografi för editorinnehåll (rubriker, listor, citat, knappblock) |
 | `v2 — PROVA PÅ` | `provapa-*`: hero D (polaroid, klistermärke, penseldrag), faktaremsa, tidskort, steg, fällbara frågor, formulär på beige. Eget prefix — de äldre `pp-*` delas med Sliding |
 | Övriga block ovanför | v1:s komponenter (kort, formulär, Prova På, Sliding, kalender …) — omfärgade via variablerna |
@@ -83,4 +84,4 @@ Senare regler vinner över tidigare (samma specificitet). Därför ligger v2-blo
 
 - **Gamla `max-width: 100%`-regeln** (i "GLOBAL MOBILFIX") upphävde containerbredderna. v2 återställer dem; ta inte bort `Restore the width caps` i slutet av `style.css`.
 - **Scroll-animationen** (`main.js`) sätter korten (`.news-card`, `.rider-card`, `.event-card`) till opacitet 0 tills man skrollar förbi dem. En skärmdump utan skrollning ser därför tom ut.
-- **Kalenderns små etiketter** ("Fullt", "Ring oss") är fortfarande små (0,68 rem). Görs om när Sliding-sidan tas.
+- Kalenderetiketterna ("Fullt", "Ring") är 0,85 rem sedan 2.1.0.

@@ -21,7 +21,7 @@ BASE_ITEMS = [("Start", "/"), ("Förare & Lag", "/forare-och-lag/"), ("Prova På
 EXTRA_ITEMS = [("Tävlingar", "/tavlingar/"), ("Klubbinfo", "/klubbinfo/"), ("Regler & Säkerhet", "/regler/")]
 
 def e(s): return _html.escape(s, quote=True)
-def url(p): return "file://" + str(p)
+def url(p): return pathlib.Path(p).resolve().as_uri()   # file:///C:/… — backslashes would break CSS url()
 
 def menu(items, current="Start", css="menu"):
     li = "".join(f'<li class="menu-item{" current-menu-item" if t == current else ""}"><a href="{u}">{e(t)}</a></li>' for t, u in items)
@@ -109,6 +109,9 @@ if HAVE_PHP:
         "provapa":         lambda: provapa_page(True),
         "provapa-nophoto": lambda: provapa_page(False),
         "provapa-closed":  lambda: provapa_page(True, "tmc_provapa_season_open=0", "tmc_sliding_enabled=0"),
+        "sliding":         lambda: php_page("templates/page-sliding.php", url(IMG / "action-1.jpg"), title="Sliding", current="Sliding"),
+        "sliding-noft":    lambda: php_page("templates/page-sliding.php", "", "tmc_flattrack_enabled=0", title="Sliding utan flat track", current="Sliding"),
+        "sliding-paused":  lambda: php_page("templates/page-sliding.php", "", "tmc_sliding_enabled=0", title="Sliding pausad", current="Sliding"),
         "page":            lambda: php_page("page.php", "", title="Vanlig sida", current=""),
         "page-photo":      lambda: php_page("page.php", url(IMG / "action-1.jpg"), title="Vanlig sida med bild", current=""),
     })

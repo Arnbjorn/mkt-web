@@ -80,7 +80,7 @@ weak = [a for a in low_alpha if float(a) < 0.8]
 print("\nTextstorlek")
 FLOOR_REM = 0.68             # nothing may be set smaller than this
 SMALL_REM = 0.85             # "small" threshold for the ratchet
-SMALL_TEXT_BASELINE = 3      # fixed sizes below SMALL_REM today: .pp-calendar__day-tag, .hero__badge-text, mobile .site-header__cta — may only go down
+SMALL_TEXT_BASELINE = 2      # fixed sizes below SMALL_REM today: .hero__badge-text, mobile .site-header__cta — may only go down (calendar tags fixed in 2.1.0)
 def to_rem(value):
     value = value.strip()
     m = re.fullmatch(r"([\d.]+)rem", value)

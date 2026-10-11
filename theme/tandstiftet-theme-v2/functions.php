@@ -655,12 +655,41 @@ function tmc_provapa_fields() {
 	];
 }
 
-/* One text from the Prova På page. A field the board has emptied stays empty
-   (that is how a part is hidden); an unknown key gives ''. */
-function tmc_provapa_text( $key ) {
-	$fields = tmc_provapa_fields();
+/* Editable page texts. Each page has a field list ( key => [ group, label, default, type ] )
+   and a theme-mod prefix. A field the board has emptied stays empty (that is how a part
+   is hidden); an unknown key gives ''. */
+function tmc_page_text_sets() {
+	return [
+		'provapa' => [ 'tmc_provapa_fields', 'tmc_pp_' ],
+		'sliding' => [ 'tmc_sliding_fields', 'tmc_sl_' ],
+	];
+}
+function tmc_page_text( $set, $key ) {
+	$sets = tmc_page_text_sets();
+	if ( ! isset( $sets[ $set ] ) ) return '';
+	$fields = call_user_func( $sets[ $set ][0] );
 	if ( ! isset( $fields[ $key ] ) ) return '';
-	return trim( (string) get_theme_mod( 'tmc_pp_' . $key, $fields[ $key ][2] ) );
+	return trim( (string) get_theme_mod( $sets[ $set ][1] . $key, $fields[ $key ][2] ) );
+}
+
+/* Numbered items (facts, steps, questions) that the board has not emptied.
+   $text is the page's text function; $pattern uses %d for the number, e.g.
+   tmc_page_items( 'tmc_provapa_text', 'fact_%d_', [ 'num', 'label' ], 6 ).
+   An item is kept only when its FIRST part has text. */
+function tmc_page_items( $text, $pattern, array $parts, $max ) {
+	$items = [];
+	for ( $i = 1; $i <= $max; $i++ ) {
+		$item = [];
+		foreach ( $parts as $part ) $item[ $part ] = call_user_func( $text, sprintf( $pattern, $i ) . $part );
+		if ( $item[ $parts[0] ] === '' ) continue;
+		$items[] = $item;
+	}
+	return $items;
+}
+
+/* One text from the Prova På page. */
+function tmc_provapa_text( $key ) {
+	return tmc_page_text( 'provapa', $key );
 }
 
 /* Training times shown as cards and offered in the form: [ [ 'day' => , 'time' => ], … ].
@@ -675,23 +704,159 @@ function tmc_provapa_slots() {
 	return $slots;
 }
 
-/* Numbered items (facts, steps, questions) that the board has not emptied.
-   $pattern uses %d for the number, e.g. tmc_provapa_items( 'fact_%d_', [ 'num', 'label' ], 6 ).
-   An item is kept only when its FIRST part has text. */
+/* Numbered items on the Prova På page, e.g. tmc_provapa_items( 'fact_%d_', [ 'num', 'label' ], 6 ). */
 function tmc_provapa_items( $pattern, array $parts, $max ) {
-	$items = [];
-	for ( $i = 1; $i <= $max; $i++ ) {
-		$item = [];
-		foreach ( $parts as $part ) $item[ $part ] = tmc_provapa_text( sprintf( $pattern, $i ) . $part );
-		if ( $item[ $parts[0] ] === '' ) continue;
-		$items[] = $item;
-	}
-	return $items;
+	return tmc_page_items( 'tmc_provapa_text', $pattern, $parts, $max );
 }
 
 /* A textarea split into its non-empty lines (for bullet lists and paragraphs). */
 function tmc_provapa_lines( $text ) {
 	return array_values( array_filter( array_map( 'trim', preg_split( '/\R/', (string) $text ) ), 'strlen' ) );
+}
+
+
+/* Sliding (vuxna) — sidans texter. Ändras i Utseende > Anpassa > Sliding — Sidan.
+   Nycklar som slutar på _no_ft är varianter som används automatiskt när Flat track är
+   avstängt (tmc_flattrack_enabled) — t.ex. 'hero_text' / 'hero_text_no_ft'.
+   Inställningen heter 'tmc_sl_' . nyckel. */
+function tmc_sliding_fields() {
+	return [
+		// Hero
+		'hero_eyebrow'     => [ 'Hero', 'Liten rad ovanför rubriken', __( 'Vuxna · Bokas i förväg', 'tandstiftet' ), 'text' ],
+		'hero_title'       => [ 'Hero', 'Rubrik (sista ordet blir guld)', __( 'Känn sladden', 'tandstiftet' ), 'text' ],
+		'hero_text'        => [ 'Hero', 'Text under rubriken', __( 'Flat track eller speedway — ingen erfarenhet krävs. Vi lånar ut allt och har instruktörer på plats.', 'tandstiftet' ), 'textarea' ],
+		'hero_text_no_ft'  => [ 'Hero', 'Text under rubriken (när Flat track är avstängt)', __( 'Speedway för vuxna — ingen erfarenhet krävs. Vi lånar ut allt och har instruktörer på plats.', 'tandstiftet' ), 'textarea' ],
+		'hero_btn_1'       => [ 'Hero', 'Knapp 1 (till bokningen)', __( 'Boka din plats →', 'tandstiftet' ), 'text' ],
+		'hero_btn_2'       => [ 'Hero', 'Knapp 2 (till disciplinerna)', __( 'Se disciplinerna', 'tandstiftet' ), 'text' ],
+		'hero_btn_2_no_ft' => [ 'Hero', 'Knapp 2 (när Flat track är avstängt)', __( 'Så går det till', 'tandstiftet' ), 'text' ],
+
+		// Faktaremsa (antal discipliner läggs till automatiskt efter fakta 2)
+		'fact_1_num'   => [ 'Faktaremsa', 'Fakta 1 — siffra', __( '800 kr', 'tandstiftet' ), 'text' ],
+		'fact_1_label' => [ 'Faktaremsa', 'Fakta 1 — text', __( 'Till klubben', 'tandstiftet' ), 'text' ],
+		'fact_2_num'   => [ 'Faktaremsa', 'Fakta 2 — siffra', __( '225 kr', 'tandstiftet' ), 'text' ],
+		'fact_2_label' => [ 'Faktaremsa', 'Fakta 2 — text', __( 'Svemo-licens', 'tandstiftet' ), 'text' ],
+		'fact_3_num'   => [ 'Faktaremsa', 'Fakta 3 — siffra', __( '1,5 h', 'tandstiftet' ), 'text' ],
+		'fact_3_label' => [ 'Faktaremsa', 'Fakta 3 — text', __( 'På banan', 'tandstiftet' ), 'text' ],
+		'fact_4_num'   => [ 'Faktaremsa', 'Fakta 4 — siffra', __( '0', 'tandstiftet' ), 'text' ],
+		'fact_4_label' => [ 'Faktaremsa', 'Fakta 4 — text', __( 'Erfarenhet krävs', 'tandstiftet' ), 'text' ],
+
+		// Hänvisning till Prova På
+		'kids_text' => [ 'Barn', 'Hänvisning till Prova På — text', __( 'Sliding är vår Prova På för vuxna. Har du barn som vill prova på?', 'tandstiftet' ), 'text' ],
+		'kids_link' => [ 'Barn', 'Hänvisning till Prova På — länktext', __( 'Prova På för barn och ungdom — gratis →', 'tandstiftet' ), 'text' ],
+
+		// Pris
+		'price_eyebrow'      => [ 'Pris', 'Liten rad ovanför rubriken', __( 'Vad kostar det?', 'tandstiftet' ), 'text' ],
+		'price_title'        => [ 'Pris', 'Rubrik', __( 'Ca 1 025 kr totalt', 'tandstiftet' ), 'text' ],
+		'price_club'         => [ 'Pris', 'Ruta 1 — belopp', __( '800 kr', 'tandstiftet' ), 'text' ],
+		'price_club_text'    => [ 'Pris', 'Ruta 1 — text', __( 'till klubben — utrustning, instruktör och bana ingår', 'tandstiftet' ), 'text' ],
+		'price_license'      => [ 'Pris', 'Ruta 2 — belopp', __( '225 kr', 'tandstiftet' ), 'text' ],
+		'price_license_text' => [ 'Pris', 'Ruta 2 — text', __( 'Svemo prova på-licens — betalas separat, direkt till Svemo', 'tandstiftet' ), 'text' ],
+		'price_note'         => [ 'Pris', 'Text under rutorna', __( 'Licensen är inte en klubbavgift och syns inte i vår bokningsbekräftelse. Lös den samma morgon, inte i förväg, ifall vi måste ställa in. Sliding-priset inkluderar medlemskap i MKT resten av kalenderåret.', 'tandstiftet' ), 'textarea' ],
+		'license_link'       => [ 'Pris', 'Länktext till Svemo', __( 'Köp licensen hos Svemo →', 'tandstiftet' ), 'text' ],
+		'license_url'        => [ 'Pris', 'Länkadress till Svemo', 'https://www.provapasvemo.se', 'url' ],
+
+		// Grupper
+		'groups_eyebrow' => [ 'Grupper', 'Liten rad ovanför rubriken', __( 'Alltid bokat i förväg', 'tandstiftet' ), 'text' ],
+		'groups_title'   => [ 'Grupper', 'Rubrik', __( 'Själv, med kompisar eller ett helt kalas', 'tandstiftet' ), 'text' ],
+		'groups_text'    => [ 'Grupper', 'Text', __( 'Sliding är ingen drop-in-aktivitet — du bokar alltid en tid i förväg, oavsett om du kommer själv eller är flera. Grupper, kalas och event får samma upplägg och samma pris per person, men som ett eget tillfälle för ert sällskap.', 'tandstiftet' ), 'textarea' ],
+		'group_1_title'  => [ 'Grupper', 'Kort 1 — rubrik', __( 'På egen hand', 'tandstiftet' ), 'text' ],
+		'group_1_text'   => [ 'Grupper', 'Kort 1 — text', __( 'Boka en plats för dig själv — vi slår ofta ihop enskilda bokningar till samma pass.', 'tandstiftet' ), 'textarea' ],
+		'group_2_title'  => [ 'Grupper', 'Kort 2 — rubrik', __( 'Sällskap och vänner', 'tandstiftet' ), 'text' ],
+		'group_2_text'   => [ 'Grupper', 'Kort 2 — text', __( 'Kom några stycken tillsammans — ange hur många ni är när ni bokar, så planerar vi passet efter er grupp.', 'tandstiftet' ), 'textarea' ],
+		'group_3_title'  => [ 'Grupper', 'Kort 3 — rubrik', __( 'Kalas, möhippa och företag', 'tandstiftet' ), 'text' ],
+		'group_3_text'   => [ 'Grupper', 'Kort 3 — text', __( 'Firma, möhippa, svensexa eller födelsedag — boka Sliding som ett eget event för hela sällskapet. Hör av dig i god tid.', 'tandstiftet' ), 'textarea' ],
+
+		// Discipliner
+		'disc_eyebrow'       => [ 'Discipliner', 'Liten rad ovanför rubriken', __( 'Flat track eller speedway?', 'tandstiftet' ), 'text' ],
+		'disc_eyebrow_no_ft' => [ 'Discipliner', 'Liten rad (när Flat track är avstängt)', __( 'Disciplin', 'tandstiftet' ), 'text' ],
+		'disc_title'         => [ 'Discipliner', 'Rubrik', __( 'Vi hjälper dig hitta rätt', 'tandstiftet' ), 'text' ],
+		'disc_title_no_ft'   => [ 'Discipliner', 'Rubrik (när Flat track är avstängt)', __( 'Speedway', 'tandstiftet' ), 'text' ],
+		'disc_text'          => [ 'Discipliner', 'Text', __( 'Vilket som passar beror på din erfarenhet, vad som finns tillgängligt just den dagen och vad du själv önskar. Instruktören hjälper dig avgöra om du är osäker.', 'tandstiftet' ), 'textarea' ],
+		'disc_text_no_ft'    => [ 'Discipliner', 'Text (när Flat track är avstängt)', __( 'Sliding kör vi just nu på speedway — en oval bana utan broms. Ingen erfarenhet krävs, instruktören hjälper dig komma igång i din egen takt.', 'tandstiftet' ), 'textarea' ],
+		'ft_title'           => [ 'Discipliner', 'Flat track — rubrik', __( 'Flat track', 'tandstiftet' ), 'text' ],
+		'ft_text'            => [ 'Discipliner', 'Flat track — text', __( 'Dirt track med bromsar — ofta det naturliga förstavalet för helt nya förare. Mer tillgängligt och förlåtande att lära sig på.', 'tandstiftet' ), 'textarea' ],
+		'sw_title'           => [ 'Discipliner', 'Speedway — rubrik', __( 'Speedway', 'tandstiftet' ), 'text' ],
+		'sw_text'            => [ 'Discipliner', 'Speedway — text', __( 'Oval bana utan broms — för dig med tidigare erfarenhet av motorcykel eller som vill utmana dig direkt, i mån av tillgänglig maskin.', 'tandstiftet' ), 'textarea' ],
+
+		// Samarbetsruta (visas bara när Flat track är på; tom rubrik = rutan döljs)
+		'partner_label'         => [ 'Samarbete', 'Liten rad (tom rubrik nedan = hela rutan döljs)', __( 'Flat track i samarbete med', 'tandstiftet' ), 'text' ],
+		'partner_title'         => [ 'Samarbete', 'Rubrik — töm för att dölja rutan', 'The Sparks Flattrack School', 'text' ],
+		'partner_text'          => [ 'Samarbete', 'Text', __( 'Vet du redan att det är flat track du vill köra? Då kan du höra av dig direkt till Sparks tränarteam i stället för att boka via formuläret nedan.', 'tandstiftet' ), 'textarea' ],
+		'partner_url'           => [ 'Samarbete', 'Länkadress (tom = ingen länk)', 'https://sparks.tändstiftet.se/', 'url' ],
+		'partner_link'          => [ 'Samarbete', 'Länktext', __( 'Läs mer om Sparks Flattrack School →', 'tandstiftet' ), 'text' ],
+		'partner_contact_name'  => [ 'Samarbete', 'Kontaktperson — namn (tom = ingen kontakt visas)', 'Sören Teil Hansen', 'text' ],
+		'partner_contact_role'  => [ 'Samarbete', 'Kontaktperson — titel', __( 'Regerande svensk mästare, Hooligan Class Flattrack (Harley-Davidson)', 'tandstiftet' ), 'text' ],
+		'partner_contact_phone' => [ 'Samarbete', 'Kontaktperson — telefon', '070-005 59 82', 'text' ],
+
+		// Steg
+		'steps_eyebrow'     => [ 'Steg', 'Liten rad ovanför rubriken', __( 'Steg för steg', 'tandstiftet' ), 'text' ],
+		'steps_title'       => [ 'Steg', 'Rubrik', __( 'Så går dagen till', 'tandstiftet' ), 'text' ],
+		'step_1_title'      => [ 'Steg', 'Steg 1 — rubrik', __( 'Ankomst — 30 min före', 'tandstiftet' ), 'text' ],
+		'step_1_text'       => [ 'Steg', 'Steg 1 — text', __( 'Kom i god tid. Visa licens och betala. Vi pratar igenom vilken disciplin — flat track eller speedway — som passar dig bäst.', 'tandstiftet' ), 'textarea' ],
+		'step_1_text_no_ft' => [ 'Steg', 'Steg 1 — text (när Flat track är avstängt)', __( 'Kom i god tid. Visa licens och betala.', 'tandstiftet' ), 'textarea' ],
+		'step_2_title'      => [ 'Steg', 'Steg 2 — rubrik', __( 'Säkerhetsgenomgång', 'tandstiftet' ), 'text' ],
+		'step_2_text'       => [ 'Steg', 'Steg 2 — text', __( 'Säkerhetsregler, signaler på banan och grundläggande körteknik — och hjälp med skyddsutrustningen. Ca 20 minuter, obligatoriskt för alla.', 'tandstiftet' ), 'textarea' ],
+		'step_3_title'      => [ 'Steg', 'Steg 3 — rubrik', __( 'Ut på banan', 'tandstiftet' ), 'text' ],
+		'step_3_text'       => [ 'Steg', 'Steg 3 — text', __( 'Du börjar i liten grupp med max 3–4 nybörjare. Instruktören styr tempot. Pausa när du vill.', 'tandstiftet' ), 'textarea' ],
+		'step_4_title'      => [ 'Steg', 'Steg 4 — rubrik', __( 'Eftersnack', 'tandstiftet' ), 'text' ],
+		'step_4_text'       => [ 'Steg', 'Steg 4 — text', __( 'Vi pratar om hur det gick, svarar på frågor och berättar om nästa steg om du vill fortsätta.', 'tandstiftet' ), 'textarea' ],
+
+		// Bra att veta
+		'faq_eyebrow' => [ 'Bra att veta', 'Liten rad ovanför rubriken', __( 'Frågor och svar', 'tandstiftet' ), 'text' ],
+		'faq_title'   => [ 'Bra att veta', 'Rubrik', __( 'Bra att veta', 'tandstiftet' ), 'text' ],
+		'faq_1_q'     => [ 'Bra att veta', 'Fråga 1', __( 'Vad ingår i priset?', 'tandstiftet' ), 'text' ],
+		'faq_1_a'     => [ 'Bra att veta', 'Svar 1', __( "Hjälm, crosskläder, rygg-, nack- och armbågsskydd, stövlar och handskar, en motorcykel (flat track eller speedway) och en instruktör hela passet.\nInstruktören hjälper dig prova ut utrustningen efter säkerhetsgenomgången — du behöver inte äga något själv.", 'tandstiftet' ), 'textarea' ],
+		'faq_1_a_no_ft' => [ 'Bra att veta', 'Svar 1 (när Flat track är avstängt)', __( "Hjälm, crosskläder, rygg-, nack- och armbågsskydd, stövlar och handskar, en speedwaymotorcykel och en instruktör hela passet.\nInstruktören hjälper dig prova ut utrustningen efter säkerhetsgenomgången — du behöver inte äga något själv.", 'tandstiftet' ), 'textarea' ],
+		'faq_2_q'     => [ 'Bra att veta', 'Fråga 2', __( 'Vad ska jag ta med?', 'tandstiftet' ), 'text' ],
+		'faq_2_a'     => [ 'Bra att veta', 'Svar 2', __( 'Långa underbyxor och undertröja, strumpor som täcker ankeln, kläder du inte är rädd om — och vatten.', 'tandstiftet' ), 'textarea' ],
+		'faq_3_q'     => [ 'Bra att veta', 'Fråga 3', __( 'Vad händer med banan under passet?', 'tandstiftet' ), 'text' ],
+		'faq_3_a'     => [ 'Bra att veta', 'Svar 3', __( 'Banan vattnas och fixas regelbundet. Vid underhåll stannar all körning, och instruktören ger klartecken när det är dags igen.', 'tandstiftet' ), 'textarea' ],
+		'faq_4_q'     => [ 'Bra att veta', 'Fråga 4', __( 'Hur fortsätter man efteråt?', 'tandstiftet' ), 'text' ],
+		'faq_4_a'     => [ 'Bra att veta', 'Svar 4', __( "Bli aktiv medlem (500 kr/år) och lös träningslicens via Svemo, så kan du träna regelbundet med klubben.\nKör du 40+ finns veteranklassen — en avslappnad grupp med klassiska maskiner.\nVill du tävla? Med tävlingslicens kan du ta steget in i seriespelet.", 'tandstiftet' ), 'textarea' ],
+		'faq_5_q'     => [ 'Bra att veta', 'Fråga 5 (tomt = dold)', '', 'text' ],
+		'faq_5_a'     => [ 'Bra att veta', 'Svar 5', '', 'textarea' ],
+		'faq_6_q'     => [ 'Bra att veta', 'Fråga 6 (tomt = dold)', '', 'text' ],
+		'faq_6_a'     => [ 'Bra att veta', 'Svar 6', '', 'textarea' ],
+
+		// Bokning
+		'book_eyebrow'       => [ 'Bokning', 'Liten rad ovanför rubriken', __( 'Redo?', 'tandstiftet' ), 'text' ],
+		'book_title'         => [ 'Bokning', 'Rubrik', __( 'Boka din plats', 'tandstiftet' ), 'text' ],
+		'book_text'          => [ 'Bokning', 'Text', __( 'Sliding bokas alltid i förväg — vi tar inte drop-in. Välj ett ledigt datum i kalendern, fyll i formuläret och skicka.', 'tandstiftet' ), 'textarea' ],
+		'book_needs_title'   => [ 'Bokning', 'Ruta — rubrik', __( 'Vi behöver veta', 'tandstiftet' ), 'text' ],
+		'book_needs'         => [ 'Bokning', 'Ruta — punkter (en per rad)', __( "Namn, ålder och kontaktuppgifter\nAntal personer (om ni är flera eller ett kalas)\nSkostorlek och ungefärlig längd\nÖnskad disciplin (flat track eller speedway)", 'tandstiftet' ), 'textarea' ],
+		'book_needs_no_ft'   => [ 'Bokning', 'Ruta — punkter (när Flat track är avstängt)', __( "Namn, ålder och kontaktuppgifter\nAntal personer (om ni är flera eller ett kalas)\nSkostorlek och ungefärlig längd", 'tandstiftet' ), 'textarea' ],
+		'book_success_title' => [ 'Bokning', 'Tack-rubrik efter bokning', __( 'Bokning mottagen!', 'tandstiftet' ), 'text' ],
+		'book_success_text'  => [ 'Bokning', 'Tack-text ({datum} byts mot valt datum)', __( 'Din plats {datum} är reserverad. Vi återkommer med bekräftelse inom kort. Kom ihåg att lösa licens hos Svemo samma morgon.', 'tandstiftet' ), 'textarea' ],
+		'book_direct'        => [ 'Bokning', 'Text före e-post/telefon', __( 'Eller kontakta oss direkt:', 'tandstiftet' ), 'text' ],
+
+		// Pausat (Anpassa > Sliding — Paus/Aktiv)
+		'paused_title' => [ 'Pausat', 'Rubrik när Sliding är pausat', __( 'Sliding är tillfälligt pausat', 'tandstiftet' ), 'text' ],
+		'paused_text'  => [ 'Pausat', 'Text när Sliding är pausat', __( 'Vi tar en kort paus med vuxenerbjudandet. Vill du prova på speedway eller flat track ändå — hör av dig direkt så hjälper vi dig. Har du barn som vill prova? Se Prova På för barn och ungdom.', 'tandstiftet' ), 'textarea' ],
+		'paused_btn'   => [ 'Pausat', 'Knapp till Prova På', __( 'Se Prova På — barn och ungdom', 'tandstiftet' ), 'text' ],
+	];
+}
+
+/* One text from the Sliding page. When Flat track is switched off, a key with
+   a '_no_ft' variant automatically uses that variant. */
+function tmc_sliding_text( $key ) {
+	if ( ! tmc_flattrack_enabled() && array_key_exists( $key . '_no_ft', tmc_sliding_fields() ) ) $key .= '_no_ft';
+	return tmc_page_text( 'sliding', $key );
+}
+
+/* Numbered items on the Sliding page (same rules as tmc_page_items). */
+function tmc_sliding_items( $pattern, array $parts, $max ) {
+	return tmc_page_items( 'tmc_sliding_text', $pattern, $parts, $max );
+}
+
+/* The facts strip: the editable facts, with the number of disciplines inserted
+   after the second one (it follows the Flat track switch, so it is never wrong). */
+function tmc_sliding_facts() {
+	$facts = tmc_sliding_items( 'fact_%d_', [ 'num', 'label' ], 4 );
+	$disc  = tmc_flattrack_enabled()
+		? [ 'num' => '2', 'label' => __( 'Discipliner', 'tandstiftet' ) ]
+		: [ 'num' => __( 'Speedway', 'tandstiftet' ), 'label' => __( 'Disciplin', 'tandstiftet' ) ];
+	array_splice( $facts, min( 2, count( $facts ) ), 0, [ $disc ] );
+	return $facts;
 }
 
 /* Automatically strip any "Sliding" link from every nav menu while paused,

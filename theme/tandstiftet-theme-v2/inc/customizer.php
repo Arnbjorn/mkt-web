@@ -570,20 +570,34 @@ add_action( 'customize_register', function( $wp_customize ) {
         'priority'    => 5,
     ]);
 
+    tmc_customizer_add_text_fields( $wp_customize, 'tmc_provapa_page', tmc_provapa_fields(), 'tmc_pp_' );
+
+    $wp_customize->add_section('tmc_sliding_page', [
+        'title'       => __('Sliding — Sidan', 'tandstiftet'),
+        'description' => __('Alla texter på Sliding-sidan (vuxna), uppifrån och ner. Töm ett fält för att dölja den delen. Fält märkta "(när Flat track är avstängt)" används automatiskt när Flat track är avstängt under Sliding — Paus/Aktiv. Fotot i toppen är sidans Utvald bild. Schema och platser ställer ni in under Sliding — Speedway-/Flat track-schema.', 'tandstiftet'),
+        'panel'       => 'tmc_panel',
+        'priority'    => 6,
+    ]);
+    tmc_customizer_add_text_fields( $wp_customize, 'tmc_sliding_page', tmc_sliding_fields(), 'tmc_sl_' );
+});
+
+/* Registers one Customizer field per entry in a page's field list
+   ( key => [ group, label, default, 'text'|'textarea'|'url' ] ). */
+function tmc_customizer_add_text_fields( $wp_customize, $section, array $fields, $prefix ) {
     $sanitize = [ 'text' => 'sanitize_text_field', 'textarea' => 'sanitize_textarea_field', 'url' => 'esc_url_raw' ];
-    foreach ( tmc_provapa_fields() as $key => $field ) {
+    foreach ( $fields as $key => $field ) {
         list( $group, $label, $default, $type ) = $field;
-        $wp_customize->add_setting( 'tmc_pp_' . $key, [
+        $wp_customize->add_setting( $prefix . $key, [
             'default'           => $default,
             'sanitize_callback' => $sanitize[ $type ],
         ]);
-        $wp_customize->add_control( 'tmc_pp_' . $key, [
-            'section' => 'tmc_provapa_page',
+        $wp_customize->add_control( $prefix . $key, [
+            'section' => $section,
             'label'   => $group . ' — ' . $label,
-            'type'    => $type === 'textarea' ? 'textarea' : ( $type === 'url' ? 'url' : 'text' ),
+            'type'    => $type,
         ]);
     }
-});
+}
 
 
 /* =========================================================
