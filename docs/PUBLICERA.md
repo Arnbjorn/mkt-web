@@ -31,8 +31,11 @@ Logga in på one.com → kontrollpanelen → leta efter **SSH & SFTP** (eller "S
 
 Ta reda på **sökvägen till temamappen**. Enklast: anslut med ett SFTP-program (t.ex. FileZilla eller WinSCP) med
 uppgifterna ovan och leta upp mappen `wp-content/themes` för **betasajten**. Skriv av hela sökvägen som programmet visar,
-t.ex. `/customers/…/beta.xn--tndstiftet-q5a.se/httpd.www/wp-content/themes`. Den ska sluta på `/wp-content/themes`.
-Betasajten och riktiga sajten har olika mappar.
+t.ex. `/customers/…/test.xn--tndstiftet-q5a.se/httpd.www/wp-content/themes`. Den ska sluta på `/wp-content/themes`.
+Testsajten och riktiga sajten har olika mappar.
+
+> **"beta" i knappen = testsajten**, som just nu är **test.tändstiftet.se** (beta.tändstiftet.se fungerar inte för tillfället).
+> Vilken sajt det blir bestäms helt av Secrets i miljön `beta` — byter ni testsajt senare ändrar ni bara `THEMES_DIR` och `SITE_URL` där.
 
 ### 2. Skapa två miljöer i GitHub
 
@@ -51,7 +54,7 @@ Klicka på miljön → **Add environment secret**. Namnen måste stavas exakt s�
 | `SFTP_USER` | användarnamnet | ja |
 | `SFTP_PASSWORD` | lösenordet | ja (eller `SFTP_KEY`) |
 | `THEMES_DIR` | sökvägen som slutar på `/wp-content/themes` | ja |
-| `SITE_URL` | `https://beta.xn--tndstiftet-q5a.se/` (för live: riktiga adressen) | rekommenderas — utan den görs ingen kontroll/automatisk backning |
+| `SITE_URL` | `https://test.xn--tndstiftet-q5a.se/` (för live: riktiga adressen) | rekommenderas — utan den görs ingen kontroll/automatisk backning |
 | `SFTP_PORT` | bara om det inte är 22 | nej |
 | `SFTP_KEY` | en SSH-nyckel i stället för lösenord (om one.com stöder det) | nej |
 | `SFTP_KNOWN_HOSTS` | serverns fingeravtryck (se nedan) | rekommenderas |
@@ -64,6 +67,20 @@ ssh-keyscan -p 22 ssh.xn--tndstiftet-q5a.se
 ```
 
 Utan det hämtas fingeravtrycket automatiskt vid varje körning (fungerar, men skyddar inte mot en falsk server).
+
+### Vem kan se lösenordet?
+
+Ingen. Ett Secret krypteras när det sparas och kan efteråt bara bytas ut eller tas bort — aldrig visas, inte ens för
+ägaren. Det finns inte i koden eller historiken, visas som `***` i loggarna och ges aldrig till kopior (forks) av repot.
+
+Det enda att tänka på: den som har **skrivrätt** till repot kan i teorin skriva ett eget arbetsflöde som *använder*
+lösenordet. Därför:
+
+1. Ge bara **skrivrätt** till personer ni litar på — andra får läsrätt.
+2. **Lås `live` till `master`:** *Settings → Environments → live → Deployment branches → Selected branches* → `master`.
+   (Gör samma sak för `beta` om ni inte behöver prova sidogrenar på testsajten.)
+3. **Required reviewers** på `live`, så att inget går ut på riktiga sajten utan godkännande.
+4. **Byt lösenordet** hos one.com (och i GitHub) om någon med skrivrätt lämnar.
 
 ### 4. Prova anslutningen — ändrar ingenting
 

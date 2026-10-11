@@ -10,7 +10,7 @@ Det här är bakgrunden från den långa arbetsdiskussionen (flera sessioner i C
 ## 1. Projektet
 
 - **Kund:** Motorklubben Tändstiftet (MKT), Malmö. Speedway och flat track (Division 1 speedway, ungdoms- och nybörjarverksamhet, "Sliding" för vuxna). Svemo-ansluten klubb. Hemmabana: Malmö Motorstadion.
-- **Sajt:** WordPress, hostad hos **one.com**. Beta/test: `https://beta.tändstiftet.se`. Mejl via SMTP (WP Mail SMTP, one.com); SPF-post som ska finnas: `v=spf1 include:_custspf.one.com -all`.
+- **Sajt:** WordPress, hostad hos **one.com**. Testsajt: `https://test.tändstiftet.se` (ny ren WordPress, okt 2026 — `beta.tändstiftet.se` finns men fungerar inte just nu och filerna där går inte att nå). ⚠ Testsajten är **tom**: inga sidor, menyer, bilder eller Anpassa-inställningar, och inget v1-tema att importera inställningar från — allt får läggas in på nytt (se "Verifiera live"). Mejl via SMTP (WP Mail SMTP, one.com); SPF-post som ska finnas: `v=spf1 include:_custspf.one.com -all`.
 - **Användaren** är ingen utvecklare. Styrelsen ska själv kunna uppdatera allt rimligt via *Utseende → Anpassa* och wp-admin.
 - **Publik:** föräldrar, nybörjare och klubbmedlemmar — många **äldre med sämre syn**. Sajten ska vara **inbjudande, snabb att navigera** och inte dra uppmärksamhet till administrativ info (klubbinfo/styrelse) men ändå ha den.
 - **Bakgrund (känsligt, håll det internt):** det finns oenighet i klubben kring **Sparks** (organisationen som lånar ut motorcyklar för flat track), trots att alla är medlemmar. Därför kan **Sliding pausas** och **Flat track stängas av helt**, och Sparks-rutan ska kunna ändras/tas bort. **Sparks tränarteam finns inte just nu.** Skriv aldrig om konflikten på publika sidor.
@@ -96,6 +96,7 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 ## 6. Att göra
 
 ### Verifiera live (användaren)
+- ⬜ **Testsajten test.tändstiftet.se är en ny tom WordPress.** För att se v2 där: publicera temat (knappen, `docs/PUBLICERA.md`) och aktivera det; skapa sidorna (Start som statisk startsida, Prova På med mallen *Prova På (Barn & Ungdom)* och slug `prova-pa`, Sliding m.fl.); sätt menyerna; ladda upp logga och bilder. Importen från v1 gör ingenting här (inget v1-tema på den sajten).
 - ⬜ Aktivera `tandstiftet-theme-v2` på betasajten; kolla att **inställningarna följde med** (logga, kontakt, hero, menyer). *Importen är enhetstestad men aldrig körd i riktig WordPress.*
 - ⬜ Titta på startsidan på dator **och** mobil. Rensa one.com-cachen först.
 - ⬜ **Statistikraden:** standardvärdet för "Grundat" är **1970**, men loggan/footern säger **1924**. ❓ Vilket stämmer? (Anpassa → Statistikrad)

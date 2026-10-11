@@ -7,7 +7,7 @@ Läs det här först. Den längre bakgrunden — varför saker är som de är, b
 
 - Användaren är med i **Motorklubben Tändstiftet Malmö** (speedway & flat track, Division 1, ungdoms- och nybörjarverksamhet). **Inte utvecklare.**
   **Svara alltid på svenska**, enkelt och konkret. Förklara tekniska ord första gången du använder dem.
-- Sajten är WordPress på one.com. Beta/test: `https://beta.tändstiftet.se` (IDN; punycode `xn--tndstiftet-q5a.se`).
+- Sajten är WordPress på one.com. **Testsajt just nu: `https://test.tändstiftet.se`** (punycode `test.xn--tndstiftet-q5a.se`) — ny, ren WordPress-installation (okt 2026) eftersom `beta.tändstiftet.se` slutade fungera och filerna där inte gick att nå. Valet heter ändå **beta** i publiceringsknappen.
 - Läsarna är ofta **äldre och har sämre syn** — läsbarhet går före snygghet (se `docs/DESIGN.md`).
 - Styrelsen ska kunna ändra texter och slå av/på saker **utan kod** → allt sådant ska ligga i Customizer (*Utseende → Anpassa*), med bra standardvärden.
 
