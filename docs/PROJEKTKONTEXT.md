@@ -104,6 +104,7 @@ Alla med Customizer-nycklar (`tmc_…`) — se `CLAUDE.md` för kartan.
 - ⬜ **GitHub Actions** har aldrig körts på GitHub (YAML validerad, kommandon körda lokalt). Titta på fliken *Actions* efter första push.
 
 ### Beslut från användaren
+- ❓ **Hur går testsajten live till slut?** Antingen flyttas hela test.tändstiftet.se (med innehåll) till livesajtens adress, eller så byts bara temat på livesajten (som behåller sitt innehåll). Avgör om innehåll som läggs in på testsajten är "på riktigt" eller bara testdata. Livesajten rörs inte förrän testsajten är klar.
 - ❓ **Permanent mappnamn** för temat (nu `tandstiftet-theme-v2`). Ändras det senare måste inställningarna flyttas igen.
 - ❓ Ska Sparks-rutan bli redigerbar/borttagbar i Anpassa (förslag: ja)?
 - ❓ Ska "Vuxna förare" få en egen sektion/platshållare, eller vänta tills det finns några?
